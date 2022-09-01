@@ -1,0 +1,151 @@
+import UIKit
+import MapKit
+
+class LocationEditViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MKLocalSearchCompleterDelegate {
+    private let contactLocation: ContactLocation
+    private let headerView = LocationEditHeader()
+    private let tableView = UITableView()
+    private let completer = MKLocalSearchCompleter()
+    private var query = "" {
+        didSet {
+            headerView.searchQuery = query
+            if query.isEmpty {
+                tableView.reloadData()
+            } else {
+                completer.queryFragment = query
+            }
+        }
+    }
+
+    init(contactLocation: ContactLocation) {
+        self.contactLocation = contactLocation
+        super.init(nibName: nil, bundle: nil)
+
+        completer.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        view.backgroundColor = .customBackground
+
+        let textChangedAction = UIAction() { _ in
+            self.query = self.headerView.searchQuery
+        }
+        headerView.searchBox.textField.addAction(textChangedAction, for: .editingChanged)
+        view.addSubview(headerView)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(LocationSearchResultTableViewCell.self, forCellReuseIdentifier: LocationSearchResultTableViewCell.reuseIdentifier)
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        headerView.searchBox.focus()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        completer.cancel()
+    }
+
+    private var filteredResults: [MKLocalSearchCompletion] {
+        get {
+            if query.isEmpty {
+                return []
+            }
+            return completer.results.addressableResults()
+        }
+    }
+
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        tableView.reloadData()
+    }
+
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        // TODO: handle
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return filteredResults.count
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return LocationSearchResultTableViewCell.preferredHeight
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: LocationSearchResultTableViewCell.reuseIdentifier, for: indexPath) as! LocationSearchResultTableViewCell
+        let result = filteredResults[indexPath.row]
+        cell.title = result.title
+        cell.subtitle = result.subtitle
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let result = filteredResults[indexPath.row]
+        let searchRequest = MKLocalSearch.Request(completion: result)
+        let search = MKLocalSearch(request: searchRequest)
+        search.start { (response, error) in
+            if error != nil {
+                self.presentMessageAlert(title: "Error", message: "Couldn't fetch result")
+                return
+            }
+            if let mapItem = response?.mapItems.first {
+                if let postalAddress = mapItem.placemark.postalAddress {
+                    let coordinate = mapItem.placemark.coordinate
+                    let address = PostalAddress(
+                        label: PostalAddress.homeLabel,
+                        value: PostalAddressValue(
+                            street: postalAddress.street,
+                            subLocality: postalAddress.subLocality,
+                            city: postalAddress.city,
+                            state: postalAddress.state,
+                            postalCode: postalAddress.postalCode,
+                            country: postalAddress.country
+                        ),
+                        coordinate: coordinate
+                    )
+                    self.updateAddress(postalAddress: address)
+                    return
+                }
+            }
+            self.presentMessageAlert(title: "Error", message: "Unexpected result")
+        }
+    }
+
+    private func updateAddress(postalAddress: PostalAddress) {
+        if let oldPostalAddress = contactLocation.postalAddress {
+            app.contactRepository.updatePostalAddress(contact: contactLocation.contact, old: oldPostalAddress, new: postalAddress)
+        } else {
+            app.contactRepository.addPostalAddress(contact: contactLocation.contact, postalAddress: postalAddress)
+        }
+        let newContactLocation = ContactLocation(
+            contact: contactLocation.contact,
+            postalAddress: postalAddress
+        )
+        app.store.dispatch(ContactLocationEdited(location: newContactLocation))
+    }
+
+}
