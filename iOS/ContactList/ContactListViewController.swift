@@ -79,11 +79,15 @@ struct ContactListViewControllerState {
                 return result.contactLocation
             })
         } else {
+            var adjustedRegion = newState.mapRegion
+            if adjustedRegion.span.longitudeDelta == 0 {
+                adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
+            }
             contactLocations = newState.contacts.map({ contact in
                 return contact.nearestLocation(to: focusedCoordinate)
             }).filter({ result in
                 if let coordinate = result.contactLocation.postalAddress?.coordinate {
-                    return newState.mapRegion.contains(coordinate)
+                    return adjustedRegion.contains(coordinate)
                 } else {
                     return false
                 }
