@@ -41,12 +41,14 @@ class ContactRepository: ObservableObject {
 
     private static func getAuthorizationStatus() -> ContactsAuthStatus {
         switch CNContactStore.authorizationStatus(for: .contacts) {
-        case .notDetermined:
-            return .notDetermined
         case .authorized:
             return .authorized
         case .denied, .restricted:
             return .denied
+        case .notDetermined:
+            return .notDetermined
+        default:
+            return .notDetermined
         }
     }
 

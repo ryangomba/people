@@ -42,7 +42,6 @@ class OnboardingViewController: UINavigationController, StoreSubscriber {
     }
 
     func newState(state: OnboardingViewControllerState) {
-        let prevState = currentState
         currentState = state
 
         updateViewControllers()

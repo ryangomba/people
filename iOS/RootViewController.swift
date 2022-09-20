@@ -107,11 +107,20 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
         onboardingVC.modalPresentationStyle = .fullScreen
         self.onboardingVC = onboardingVC
 
-        var topController = UIApplication.shared.keyWindow!.rootViewController!
-        while let presentedViewController = topController.presentedViewController {
-            topController = presentedViewController
+        let keyWindow = UIApplication.shared.connectedScenes
+            .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+            .first { $0.isKeyWindow }
+        guard let keyWindow = keyWindow else {
+            fatalError("No key window")
         }
-        topController.present(onboardingVC, animated: false)
+
+        guard var topVC = keyWindow.rootViewController else {
+            fatalError("No top view controller")
+        }
+        while let presentedViewController = topVC.presentedViewController {
+            topVC = presentedViewController
+        }
+        topVC.present(onboardingVC, animated: false)
     }
 
     private func dismissOnboarding() {
