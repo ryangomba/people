@@ -31,7 +31,7 @@ class SearchBox: UIView {
             textField.topAnchor.constraint(equalTo: topAnchor),
             textField.bottomAnchor.constraint(equalTo: bottomAnchor),
             textField.leadingAnchor.constraint(equalTo: searchIconView.trailingAnchor, constant: Padding.superTight),
-            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.tight),
+            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.superTight),
         ])
     }
 
