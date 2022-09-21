@@ -31,6 +31,9 @@ class LocationAuthManager: NSObject, CLLocationManagerDelegate {
             return .authorized
         case .denied, .restricted:
             return .denied
+        default:
+            // Assume authorized if we don't recognize the status
+            return .authorized
         }
     }
 

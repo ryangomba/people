@@ -64,56 +64,105 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return nil
+        case 1:
+            return "Suggested photos"
+        default:
+            fatalError("Invalid section: \(section)")
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return postalAddresses.count + 1 // for add location cell
+        switch section {
+        case 0:
+            return postalAddresses.count + 1 // for add location cell
+        case 1:
+            return 1
+        default:
+            fatalError("Invalid section: \(section)")
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row < postalAddresses.count {
-            let postalAddress = postalAddresses[indexPath.row]
-            return ContactLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
+        switch indexPath.section {
+        case 0:
+            if indexPath.row < postalAddresses.count {
+                let postalAddress = postalAddresses[indexPath.row]
+                return ContactLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
+            }
+            return Sizing.defaultListItemHeight
+        case 1:
+            return ContactProfilePhotoTableViewCell.preferredHeight
+        default:
+            fatalError("Invalid section: \(indexPath.section)")
         }
-        return Sizing.defaultListItemHeight
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row < postalAddresses.count {
-            let postalAddress = postalAddresses[indexPath.row]
-            let cell = ContactLocationTableViewCell(contact: contactLocation.contact, postalAddress: postalAddress)
-            cell.viewController = self
-            return cell
-        } else {
-            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-            var config = cell.defaultContentConfiguration()
-            config.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: Padding.normal, bottom: 0, trailing: Padding.normal)
-            config.textProperties.color = .tintColor
-            config.text = "Add location"
-            cell.contentConfiguration = config
-            return cell
+        switch indexPath.section {
+        case 0:
+            if indexPath.row < postalAddresses.count {
+                let postalAddress = postalAddresses[indexPath.row]
+                let cell = ContactLocationTableViewCell(contact: contactLocation.contact, postalAddress: postalAddress)
+                cell.viewController = self
+                return cell
+            } else {
+                let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+                var config = cell.defaultContentConfiguration()
+                config.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: Padding.normal, bottom: 0, trailing: Padding.normal)
+                config.textProperties.color = .tintColor
+                config.text = "Add location"
+                cell.contentConfiguration = config
+                return cell
+            }
+        case 1:
+            return ContactProfilePhotoTableViewCell(contact: contactLocation.contact) // TODO: reuse
+        default:
+            fatalError("Invalid section: \(indexPath.section)")
         }
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let postalAddress = postalAddresses[indexPath.row]
-        return UISwipeActionsConfiguration(actions: [
-            UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
-                self.onConfirmDeleteAddress(postalAddress, didDelete: onCompletion)
-            })
-        ])
+        switch indexPath.section {
+        case 0:
+            if indexPath.row < postalAddresses.count {
+                let postalAddress = postalAddresses[indexPath.row]
+                return UISwipeActionsConfiguration(actions: [
+                    UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
+                        self.onConfirmDeleteAddress(postalAddress, didDelete: onCompletion)
+                    })
+                ])
+            } else {
+                return nil
+            }
+        default:
+            return nil
+        }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.row < contactLocation.contact.postalAddresses.count {
-            let postalAddress = postalAddresses[indexPath.row]
-            let contactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: postalAddress)
-            app.store.dispatch(ContactLocationSelected(location: contactLocation))
-        } else {
-            let newContactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: nil)
-            app.store.dispatch(ContactLocationSelectedForEdit(location: newContactLocation))
+        switch indexPath.section {
+        case 0:
+            if indexPath.row < contactLocation.contact.postalAddresses.count {
+                let postalAddress = postalAddresses[indexPath.row]
+                let contactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: postalAddress)
+                app.store.dispatch(ContactLocationSelected(location: contactLocation))
+            } else {
+                let newContactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: nil)
+                app.store.dispatch(ContactLocationSelectedForEdit(location: newContactLocation))
+            }
+        case 1:
+            let vc = ProfilePhotosViewController(contact: contactLocation.contact)
+            present(vc, animated: true)
+        default:
+            return // noop
         }
     }
 

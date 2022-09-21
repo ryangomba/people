@@ -1,3 +1,4 @@
+import Foundation
 import ReSwift
 
 class App {
@@ -16,6 +17,8 @@ class App {
         )
         locationAuthManager.listenForChanges()
         contactRepository.sync()
+        URLCache.shared.memoryCapacity = 10000000 // 10MB
+        URLCache.shared.diskCapacity = 100000000 // 100MB
     }
 }
 

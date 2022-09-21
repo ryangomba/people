@@ -48,7 +48,8 @@ class ContactRepository: ObservableObject {
         case .notDetermined:
             return .notDetermined
         default:
-            return .notDetermined
+            // Assume authorized if we don't recognize the status
+            return .authorized
         }
     }
 
@@ -64,6 +65,8 @@ class ContactRepository: ObservableObject {
     }
 
     public func requestAuthorization() {
+        assert(Thread.isMainThread)
+
         store.requestAccess(for: .contacts) { ok, error in
             DispatchQueue.main.async {
                 self.updateAuthorizationStatus()
@@ -72,6 +75,8 @@ class ContactRepository: ObservableObject {
     }
 
     public func sync() {
+        assert(Thread.isMainThread)
+
         if authorizationStatus != .authorized {
             return
         }
@@ -172,12 +177,16 @@ class ContactRepository: ObservableObject {
     // Fetching
 
     public func getContact(_ id: String) -> Contact {
+        assert(Thread.isMainThread)
+
         return contacts.first { c in c.id == id }!
     }
 
     // Editing
 
     public func addPostalAddress(contact: Contact, postalAddress: PostalAddress) {
+        assert(Thread.isMainThread)
+
         // Cache the geocoded result for this address, if exists
         // This prevents us from making a redundant geocoder request
         if let coordinate = postalAddress.coordinate {
@@ -190,6 +199,8 @@ class ContactRepository: ObservableObject {
     }
 
     public func updatePostalAddress(contact: Contact, old: PostalAddress, new: PostalAddress) {
+        assert(Thread.isMainThread)
+
         // Cache the geocoded result for this address, if exists
         // This prevents us from making a redundant geocoder request
         if let coordinate = new.coordinate {
@@ -212,6 +223,8 @@ class ContactRepository: ObservableObject {
     }
 
     public func deletePostalAddress(_ postalAddressToDelete: PostalAddress, forContact contact: Contact) {
+        assert(Thread.isMainThread)
+
         let postalAddresses = contact.postalAddresses.filter { postalAddress in
             return postalAddress.id != postalAddressToDelete.id
         }
@@ -237,6 +250,26 @@ class ContactRepository: ObservableObject {
             req.update(mutableContact)
             try! store.execute(req)
         }
+    }
+
+    public func updateContactPhoto(contact: Contact, imageData: Data) {
+        print("Updating contact photo")
+        assert(Thread.isMainThread)
+
+        var newContact = contact
+        newContact.thumbnailImageData = imageData // TODO: check that this isn't massive
+
+        // Update the contact in our own local store
+        updateContacts([newContact])
+
+        // Sync this update with the system
+        let keysToFetch = [CNContactImageDataKey] as [CNKeyDescriptor]
+        let systemContact = try! store.unifiedContact(withIdentifier: contact.id, keysToFetch: keysToFetch)
+        let req = CNSaveRequest()
+        let mutableContact = systemContact.mutableCopy() as! CNMutableContact
+        mutableContact.imageData = imageData
+        req.update(mutableContact)
+        try! store.execute(req)
     }
 
     private func locateContacts(_ contacts: [Contact]) async {
@@ -269,8 +302,9 @@ class ContactRepository: ObservableObject {
 
     // Deleting
 
-    func delete(_ contactToDelete: Contact) {
+    public func delete(_ contactToDelete: Contact) {
         print("Deleting contact")
+        assert(Thread.isMainThread)
 
         // Delete the contact in our own local store
         setContacts(contacts.filter { contact in

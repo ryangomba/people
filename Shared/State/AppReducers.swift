@@ -132,6 +132,13 @@ func appReducer(action: Action, state: AppState?) -> AppState {
             zoomToCoordinate(coordinate: coordinate)
         }
 
+    case let action as ContactPhotoChanged:
+        if action.contact.id == state.selection?.contactLocation?.contact.id {
+            if state.contactDetailsDetentIdentifier == .large {
+                state.contactDetailsDetentIdentifier = .normal
+            }
+        }
+
     default:
         break
     }

@@ -46,6 +46,13 @@
 		94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6428AC9E4000F52EC8 /* Colors.swift */; };
 		94945F6728AC9FC400F52EC8 /* ContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* ContactListHeader.swift */; };
 		94DE155128BDAAF3002281E5 /* PostalAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */; };
+		94E2829928DB710F0009C27F /* NetworkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829828DB710E0009C27F /* NetworkImageView.swift */; };
+		94E2829B28DB71160009C27F /* ContactProfilePhotoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829A28DB71160009C27F /* ContactProfilePhotoTableViewCell.swift */; };
+		94E282A128DB71210009C27F /* ProfilePhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829D28DB71210009C27F /* ProfilePhotoCollectionViewCell.swift */; };
+		94E282A228DB71210009C27F /* ProfilePhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829E28DB71210009C27F /* ProfilePhotoView.swift */; };
+		94E282A328DB71210009C27F /* ProfilePhotosHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829F28DB71210009C27F /* ProfilePhotosHeader.swift */; };
+		94E282A428DB71210009C27F /* ProfilePhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E282A028DB71210009C27F /* ProfilePhotosViewController.swift */; };
+		94E282A728DB713C0009C27F /* GoogleImageSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E282A628DB713C0009C27F /* GoogleImageSearcher.swift */; };
 		94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6128BFE41400D7E68D /* OnboardingViewController.swift */; };
 		94EA8D6428BFEE5200D7E68D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6328BFEE5200D7E68D /* App.swift */; };
 		94EA8D6628BFFC5100D7E68D /* ContactsPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6528BFFC5100D7E68D /* ContactsPermissionsViewController.swift */; };
@@ -108,6 +115,14 @@
 		94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "People--iOS--Info.plist"; sourceTree = "<group>"; };
 		94DE154E28BDAAF3002281E5 /* PeopleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeopleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostalAddressTests.swift; sourceTree = "<group>"; };
+		94E2829728DB70CD0009C27F /* Config-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Config-debug.xcconfig"; path = "Shared/Config-debug.xcconfig"; sourceTree = SOURCE_ROOT; };
+		94E2829828DB710E0009C27F /* NetworkImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkImageView.swift; sourceTree = "<group>"; };
+		94E2829A28DB71160009C27F /* ContactProfilePhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactProfilePhotoTableViewCell.swift; sourceTree = "<group>"; };
+		94E2829D28DB71210009C27F /* ProfilePhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		94E2829E28DB71210009C27F /* ProfilePhotoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotoView.swift; sourceTree = "<group>"; };
+		94E2829F28DB71210009C27F /* ProfilePhotosHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotosHeader.swift; sourceTree = "<group>"; };
+		94E282A028DB71210009C27F /* ProfilePhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotosViewController.swift; sourceTree = "<group>"; };
+		94E282A628DB713C0009C27F /* GoogleImageSearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleImageSearcher.swift; sourceTree = "<group>"; };
 		94EA8D6128BFE41400D7E68D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		94EA8D6328BFEE5200D7E68D /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		94EA8D6528BFFC5100D7E68D /* ContactsPermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsPermissionsViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +170,7 @@
 			children = (
 				9433AC2428ADAD1D00323AAE /* SearchBox.swift */,
 				94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */,
+				94E2829828DB710E0009C27F /* NetworkImageView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -241,6 +257,7 @@
 				94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */,
 				9433AC2828AE834400323AAE /* ContactDetailHeader.swift */,
 				9433AC2B28AE877E00323AAE /* ContactLocationTableViewCell.swift */,
+				94E2829A28DB71160009C27F /* ContactProfilePhotoTableViewCell.swift */,
 			);
 			path = Contact;
 			sourceTree = "<group>";
@@ -266,9 +283,30 @@
 				94945F5B28AC889F00F52EC8 /* ContactList */,
 				94945F5C28AC88A500F52EC8 /* Contact */,
 				9433AC2D28AEA38300323AAE /* LocationEdit */,
+				94E2829C28DB71210009C27F /* ImageSearch */,
 				94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */,
+				94E2829728DB70CD0009C27F /* Config-debug.xcconfig */,
 			);
 			path = iOS;
+			sourceTree = "<group>";
+		};
+		94E2829C28DB71210009C27F /* ImageSearch */ = {
+			isa = PBXGroup;
+			children = (
+				94E2829D28DB71210009C27F /* ProfilePhotoCollectionViewCell.swift */,
+				94E2829E28DB71210009C27F /* ProfilePhotoView.swift */,
+				94E2829F28DB71210009C27F /* ProfilePhotosHeader.swift */,
+				94E282A028DB71210009C27F /* ProfilePhotosViewController.swift */,
+			);
+			path = ImageSearch;
+			sourceTree = "<group>";
+		};
+		94E282A528DB713C0009C27F /* ImageSearch */ = {
+			isa = PBXGroup;
+			children = (
+				94E282A628DB713C0009C27F /* GoogleImageSearcher.swift */,
+			);
+			path = ImageSearch;
 			sourceTree = "<group>";
 		};
 		94EA8D6028BFE40400D7E68D /* Onboarding */ = {
@@ -301,6 +339,7 @@
 				94945F4D28AC4EE700F52EC8 /* Extensions */,
 				94945F4828AC304600F52EC8 /* Geocoding */,
 				94945F6128AC9AB500F52EC8 /* Appearance */,
+				94E282A528DB713C0009C27F /* ImageSearch */,
 				94F5AA88274FF834009276E7 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -473,6 +512,7 @@
 				9433AC4028B99E7D00323AAE /* ContactAnnotation.swift in Sources */,
 				9433AC2928AE834400323AAE /* ContactDetailHeader.swift in Sources */,
 				94EA8D6628BFFC5100D7E68D /* ContactsPermissionsViewController.swift in Sources */,
+				94E2829928DB710F0009C27F /* NetworkImageView.swift in Sources */,
 				9433AC2C28AE877E00323AAE /* ContactLocationTableViewCell.swift in Sources */,
 				9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */,
 				9433AC2F28AEA39D00323AAE /* LocationEditViewController.swift in Sources */,
@@ -482,8 +522,11 @@
 				94945F5528AC791C00F52EC8 /* ContactListViewController.swift in Sources */,
 				94F5AAC327500ED3009276E7 /* ContactRepository.swift in Sources */,
 				9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */,
+				94E282A728DB713C0009C27F /* GoogleImageSearcher.swift in Sources */,
+				94E282A128DB71210009C27F /* ProfilePhotoCollectionViewCell.swift in Sources */,
 				94945F5728AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift in Sources */,
 				9433AC2228AD8C7900323AAE /* MapLayout.swift in Sources */,
+				94E282A428DB71210009C27F /* ProfilePhotosViewController.swift in Sources */,
 				9433AC3128AEA73900323AAE /* LocationEditHeader.swift in Sources */,
 				94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */,
 				94EA8D6E28C0122C00D7E68D /* AppPermissionsView.swift in Sources */,
@@ -497,8 +540,11 @@
 				94F5AAC927501A7A009276E7 /* PersistentCache.swift in Sources */,
 				94EA8D6828BFFCAA00D7E68D /* LocationPermissionsViewController.swift in Sources */,
 				94945F1E28AC2A8A00F52EC8 /* AppState.swift in Sources */,
+				94E282A228DB71210009C27F /* ProfilePhotoView.swift in Sources */,
 				94945F6028AC8BC200F52EC8 /* ContactDetailViewController.swift in Sources */,
 				94945F4A28AC30BE00F52EC8 /* AppDelegate.swift in Sources */,
+				94E2829B28DB71160009C27F /* ContactProfilePhotoTableViewCell.swift in Sources */,
+				94E282A328DB71210009C27F /* ProfilePhotosHeader.swift in Sources */,
 				9433AC3328AEAB6A00323AAE /* LocationSearchResultTableViewCell.swift in Sources */,
 				94945F5E28AC897F00F52EC8 /* RootViewController.swift in Sources */,
 				94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */,
@@ -582,6 +628,7 @@
 		};
 		94F5AAB4274FF834009276E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 94E2829728DB70CD0009C27F /* Config-debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

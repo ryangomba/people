@@ -18,11 +18,14 @@ struct Contact: Identifiable, Equatable, Comparable {
     var thumbnailImageData: Data?
     var postalAddresses: [PostalAddress]
     var displayName: String {
-        if givenName.isEmpty && familyName.isEmpty {
-            fatalError("Expected name for contact")
-        }
         if !nickname.isEmpty {
             return nickname
+        }
+        return fullName
+    }
+    var fullName: String {
+        if givenName.isEmpty && familyName.isEmpty {
+            fatalError("Expected name for contact")
         }
         if familyName.isEmpty {
             return givenName

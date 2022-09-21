@@ -69,3 +69,7 @@ struct ContactDetailsDetentChanged: Action {
 struct ContactLocationEdited: Action {
     let location: ContactLocation
 }
+
+struct ContactPhotoChanged: Action {
+    let contact: Contact
+}
