@@ -224,7 +224,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         case 1:
             return currentState.contactLocations.count
         default:
-            return 0
+            fatalError("Invalid section: \(section)")
         }
     }
 
@@ -235,7 +235,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         case 1:
             return ContactTableViewCell.preferredHeight
         default:
-            return 0
+            fatalError("Invalid section: \(indexPath.section)")
         }
     }
 
@@ -253,12 +253,14 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
             cell.locationScale = currentState.mapZoomScale
             return cell
         default:
-            fatalError()
+            fatalError("Invalid section: \(indexPath.section)")
         }
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         switch indexPath.section {
+        case 0:
+            return nil
         case 1:
             let contactLocation = currentState.contactLocations[indexPath.row]
             return UISwipeActionsConfiguration(actions: [
@@ -267,7 +269,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
                 })
             ])
         default:
-            return nil
+            fatalError("Invalid section: \(indexPath.section)")
         }
     }
 
@@ -295,7 +297,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
             app.store.dispatch(ContactLocationSelected(location: contactLocation))
             tableView.scrollToTop(animated: false)
         default:
-            break
+            fatalError("Invalid section: \(indexPath.section)")
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }

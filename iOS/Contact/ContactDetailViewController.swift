@@ -34,6 +34,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         tableView.automaticallyAdjustsScrollIndicatorInsets = false
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.register(ContactProfilePhotoTableViewCell.self, forCellReuseIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -122,7 +123,9 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 return cell
             }
         case 1:
-            return ContactProfilePhotoTableViewCell(contact: contactLocation.contact) // TODO: reuse
+            let cell = tableView.dequeueReusableCell(withIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier, for: indexPath) as! ContactProfilePhotoTableViewCell
+            cell.contact = contactLocation.contact
+            return cell
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }

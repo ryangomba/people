@@ -62,8 +62,6 @@ class GoogleImageSearcher {
         urlString += "?key=\(getSecret("GOOGLE_SEARCH_KEY"))"
         urlString += "&cx=\(getSecret("GOOGLE_SEARCH_CX"))"
         urlString += "&searchType=image"
-        // TODO: multiselect doesn't work
-        // urlString += "&imgType=face,photo"
         urlString += "&q=" + query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlString)!
         var request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)

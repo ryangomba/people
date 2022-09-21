@@ -2,13 +2,16 @@ import UIKit
 
 class ContactProfilePhotoTableViewCell: UITableViewCell {
     private static let imageViewSize = ContactAvatarView.shadowedSize
+    static let reuseIdentifier = "contactProfilePhotoCell"
     static let preferredHeight: CGFloat = imageViewSize + Padding.normal * 2
     let imageViews: [ProfilePhotoView]
 
-    private var contact: Contact {
+    var contact: Contact? {
         didSet {
             Task {
-                await updateGoogleImages()
+                if let contact = contact {
+                    await updateGoogleImages(contact: contact)
+                }
             }
         }
     }
@@ -17,14 +20,13 @@ class ContactProfilePhotoTableViewCell: UITableViewCell {
         // TODO:
     }
 
-    init(contact: Contact) {
-        self.contact = contact
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         var imageViews: [ProfilePhotoView] = []
         for _ in 0..<4 {
             imageViews.append(ProfilePhotoView(rounded: true))
         }
         self.imageViews = imageViews
-        super.init(style: .default, reuseIdentifier: nil)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         for (i, imageView) in imageViews.enumerated() {
             contentView.addSubview(imageView)
@@ -39,10 +41,6 @@ class ContactProfilePhotoTableViewCell: UITableViewCell {
             imageView.addGestureRecognizer(tap)
             imageView.isUserInteractionEnabled = true
         }
-
-        Task {
-            await updateGoogleImages()
-        }
     }
 
     required init?(coder: NSCoder) {
@@ -55,10 +53,9 @@ class ContactProfilePhotoTableViewCell: UITableViewCell {
         // TODO:
     }
 
-    private func updateGoogleImages() async {
-        let contactToSearch = contact
+    private func updateGoogleImages(contact contactToSearch: Contact) async {
         let results = await GoogleImageSearcher.search(contactToSearch.fullName)
-        if contact.id == contactToSearch.id {
+        if contact?.id == contactToSearch.id {
             for (i, imageView) in imageViews.enumerated() {
                 if results.count > i {
                     imageView.remoteImage = results[i]
@@ -74,8 +71,7 @@ class ContactProfilePhotoTableViewCell: UITableViewCell {
         guard let photoView = tap.view as? ProfilePhotoView else {
             return
         }
-        let contact = contact
-        if let image = photoView.image {
+        if let contact = contact, let image = photoView.image {
             let data = image.jpegData(compressionQuality: 0.95)!
             app.contactRepository.updateContactPhoto(contact: contact, imageData: data)
             app.store.dispatch(ContactPhotoChanged(contact: contact))
