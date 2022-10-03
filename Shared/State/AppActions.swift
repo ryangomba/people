@@ -16,6 +16,10 @@ struct ContactsChanged: Action {
     let newContacts: [Contact]
 }
 
+struct GeocoderQueueCountChanged: Action {
+    let newCount: Int
+}
+
 // Map
 
 struct MapRegionChanged: Action {

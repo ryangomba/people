@@ -17,6 +17,8 @@ class OnboardingViewController: UINavigationController, StoreSubscriber {
     private let contactsPermissionVC = ContactsPermissionsViewController()
     private let locationPermissionVC = LocationPermissionsViewController()
     private let contactIngestionVC = ContactIngestionViewController()
+    private var didShowContactPermissions = false
+    private var didShowLocationPermissions = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,14 +50,17 @@ class OnboardingViewController: UINavigationController, StoreSubscriber {
     }
 
     private func updateViewControllers() {
-        var vcs: [UIViewController] = [
-            contactsPermissionVC,
-        ]
-        if currentState.contactsAccessGranted {
+        var vcs: [UIViewController] = []
+        if didShowContactPermissions || !currentState.contactsAccessGranted {
+            didShowContactPermissions = true
+            vcs.append(contactsPermissionVC)
+        }
+        if didShowLocationPermissions || (!currentState.locationAccessGranted && currentState.contactsAccessGranted) {
+            didShowLocationPermissions = true
             vcs.append(locationPermissionVC)
-            if currentState.locationAccessGranted {
-                vcs.append(contactIngestionVC)
-            }
+        }
+        if currentState.contactsAccessGranted && currentState.locationAccessGranted {
+            vcs.append(contactIngestionVC)
         }
         setViewControllers(vcs, animated: true)
     }

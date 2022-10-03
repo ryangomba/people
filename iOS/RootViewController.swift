@@ -3,14 +3,18 @@ import CoreLocation
 import ReSwift
 
 struct RootViewControllerState: Equatable {
-    var needsOnboarding: Bool
+    var contactsAccessGranted: Bool
+    var locationAccessGranted: Bool
+    var geocoderQueueCount: Int
     var contentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
     var contentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
     var selectedContact: ContactSelection?
     var selectedContactLocationForEdit: ContactLocation?
 
     init(newState: AppState) {
-        needsOnboarding = newState.contactsAuthStatus != .authorized || newState.locationAuthStatus != .authorized
+        contactsAccessGranted = newState.contactsAuthStatus == .authorized
+        locationAccessGranted = newState.locationAuthStatus == .authorized
+        geocoderQueueCount = newState.geocoderQueueCount
         contentListDetentIdentifer = newState.contactListDetentIdentifier
         contentDetailsDetentIdentifer = newState.contactDetailsDetentIdentifier
         selectedContact = newState.selection
@@ -80,9 +84,7 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
                 dismissContactLocationForEdit()
             }
         }
-        if state.needsOnboarding != prevState?.needsOnboarding {
-            presentOrDismissOnboarding()
-        }
+        presentOrDismissOnboarding()
     }
 
     func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
@@ -94,7 +96,10 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
     }
 
     private func presentOrDismissOnboarding() {
-        let needsOnboarding = currentState?.needsOnboarding ?? false
+        var needsOnboarding = false
+        if let currentState = currentState {
+            needsOnboarding = !currentState.contactsAccessGranted || !currentState.locationAccessGranted || currentState.geocoderQueueCount > 3 || (currentState.geocoderQueueCount > 0 && onboardingVC != nil)
+        }
         if needsOnboarding {
             presentOnboarding()
         } else {
@@ -103,6 +108,10 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
     }
 
     private func presentOnboarding() {
+        if self.onboardingVC != nil {
+            return
+        }
+
         let onboardingVC = OnboardingViewController()
         onboardingVC.modalPresentationStyle = .fullScreen
         self.onboardingVC = onboardingVC

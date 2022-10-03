@@ -39,6 +39,9 @@ func appReducer(action: Action, state: AppState?) -> AppState {
             }
         }
 
+    case let action as GeocoderQueueCountChanged:
+        state.geocoderQueueCount = action.newCount
+
     case let action as MapRegionChanged:
         state.mapRegion = action.region
 

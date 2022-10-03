@@ -84,9 +84,7 @@ class ContactRepository: ObservableObject {
             let newContacts = await fetchSystemContacts()
             DispatchQueue.main.async {
                 self.setContacts(newContacts)
-                Task.init {
-                    await self.locateContacts(self.contacts)
-                }
+                self.locateContacts(self.contacts)
                 Task.init {
                     await self.registerContactsWithSpotlight(self.contacts)
                 }
@@ -272,10 +270,12 @@ class ContactRepository: ObservableObject {
         try! store.execute(req)
     }
 
-    private func locateContacts(_ contacts: [Contact]) async {
+    private func locateContacts(_ contacts: [Contact]) {
         for contact in contacts {
             for postalAddress in contact.postalAddresses {
-                await locateContactPostalAddress(contact, postalAddress: postalAddress)
+                Task {
+                    await locateContactPostalAddress(contact, postalAddress: postalAddress)
+                }
             }
         }
     }
@@ -284,7 +284,6 @@ class ContactRepository: ObservableObject {
         if postalAddress.coordinate != nil {
             return // coordinate already exists, no need to locate
         }
-        // TODO: rate limit!
         if let result = await geocoder.geocodePostalAddress(postalAddress.value) {
             if postalAddress.coordinate == result.coordinate {
                 return // no change to coordinate, ignore

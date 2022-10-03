@@ -12,6 +12,7 @@ struct AppState {
     var locationAuthStatus: LocationAuthStatus
     var contactsAuthStatus: ContactsAuthStatus
     var contacts: [Contact] = []
+    var geocoderQueueCount: Int = 0
     var mapRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(),
         span: MKCoordinateSpan(latitudeDelta: MapSpanDelta.normal, longitudeDelta: 0)

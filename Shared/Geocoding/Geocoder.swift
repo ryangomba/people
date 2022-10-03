@@ -9,11 +9,43 @@ struct GeocodeResult: Codable {
     }
 }
 
+class SerialGeocoder {
+    private let geocoder = CLGeocoder()
+    private var geocodeLock = NSLock()
+    func geocodePostalAddress(_ value: CNPostalAddress) async throws -> [CLPlacemark] {
+        return try await withCheckedThrowingContinuation { continuation in
+            geocodePostalAddress(value) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    private func geocodePostalAddress(_ value: CNPostalAddress, completion:  @escaping (Result<[CLPlacemark], Error>) -> Void) {
+        geocodeLock.lock()
+        geocoder.geocodePostalAddress(value) { placemarks, error in
+            self.geocodeLock.unlock()
+            if let placemarks = placemarks {
+                completion(.success(placemarks))
+            } else {
+                completion(.failure(error!))
+            }
+        }
+    }
+}
+
 class Geocoder {
     private let queue = DispatchQueue(label: "geocoder", qos: .background)
-    private let geocoder = CLGeocoder()
+    private let geocoder = SerialGeocoder()
     private let cacheManager = PersistentCache<GeocodeResult>(name: "geocodeCache_v2")
     private var lastGeocode = Date.distantPast
+    private var queueCount = 0 {
+        didSet {
+            let newCount = queueCount
+            print("Geocode queue count: \(newCount)")
+            DispatchQueue.main.async {
+                app.store.dispatch(GeocoderQueueCountChanged(newCount: newCount))
+            }
+        }
+    }
 
     private func keyForPostalAddress(_ postalAddress: PostalAddressValue) -> String {
         return postalAddress.id
@@ -42,6 +74,7 @@ class Geocoder {
             return lookup.result
         }
         let timeoutSeconds = queue.sync {
+            queueCount += 1
             let now = Date()
             var timeoutSeconds: Double = 0
             let secondsSinceLastGeocode = now.timeIntervalSince(lastGeocode)
@@ -55,7 +88,6 @@ class Geocoder {
             try! await Task.sleep(nanoseconds: UInt64(timeoutSeconds) * 1000000000)
         }
         do {
-            print("Geocoding address")
             let placemarks = try await geocoder.geocodePostalAddress(postalAddress.cnValue)
             if let placemark = placemarks.first {
                 let coordinate = placemark.location?.coordinate
@@ -63,6 +95,7 @@ class Geocoder {
                     let result = GeocodeResult(latitude: coordinate.latitude, longitude: coordinate.longitude)
                     queue.sync {
                         cacheManager.update(key, result: result)
+                        queueCount -= 1
                     }
                     return result
                 }
@@ -80,6 +113,9 @@ class Geocoder {
                 }
             }
             print("Failed to geocode \(postalAddress), error: \(error), reason: \(reason)")
+        }
+        queue.sync {
+            queueCount -= 1
         }
         return nil
     }
