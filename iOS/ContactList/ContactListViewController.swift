@@ -38,12 +38,11 @@ struct ContactListViewControllerState {
             var postalAddresses: [PostalAddress] = []
             newState.contacts.forEach({ contact in
                 // Be sure to only select the first matching address in the case of duplicates
-                let matchingAddress = contact.postalAddresses.first { postalAddress in
-                    return postalAddress.coordinate == coordinate
-                }
-                if let matchingAddress = matchingAddress {
-                    postalAddresses.append(matchingAddress)
-                    contactLocations.append(ContactLocation(contact: contact, postalAddress: matchingAddress))
+                contact.homeAddresses.forEach { postalAddress in
+                    if postalAddress.coordinate == coordinate {
+                        postalAddresses.append(postalAddress)
+                        contactLocations.append(ContactLocation(contact: contact, postalAddress: postalAddress))
+                    }
                 }
             })
             clusterTitle = postalAddresses.sameLocationSharedDescription
@@ -76,7 +75,7 @@ struct ContactListViewControllerState {
                 }
                 return r1.contact.displayName < r2.contact.displayName // TODO: sort by best natural match
             }).map({ searchResult in
-                return searchResult.contact.nearestLocation(to: focusedCoordinate)
+                return searchResult.contact.nearestHomeLocation(to: focusedCoordinate)
             }).map({ result in
                 return result.contactLocation
             })
@@ -86,7 +85,7 @@ struct ContactListViewControllerState {
                 adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
             }
             contactLocations = newState.contacts.map({ contact in
-                return contact.nearestLocation(to: focusedCoordinate)
+                return contact.nearestHomeLocation(to: focusedCoordinate)
             }).filter({ result in
                 if let coordinate = result.contactLocation.postalAddress?.coordinate {
                     return adjustedRegion.contains(coordinate)

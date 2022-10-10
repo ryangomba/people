@@ -9,7 +9,7 @@ struct MapViewControllerState: Equatable {
     init(newState: AppState) {
         region = newState.mapRegion
         newState.contacts.forEach { contact in
-            contact.postalAddresses.removingDuplicateIDs().forEach { postalAddress in
+            contact.homeAddresses.forEach { postalAddress in
                 if postalAddress.coordinate != nil {
                     locatedContacts.append(ContactLocation(contact: contact, postalAddress: postalAddress))
                 }

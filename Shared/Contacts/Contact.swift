@@ -62,6 +62,9 @@ struct Contact: Identifiable, Equatable, Comparable {
         }
         return components.joined(separator: " ").lowercased()
     }
+    var homeAddresses: [PostalAddress] {
+        return postalAddresses.excludingWork().removingDuplicateIDs()
+    }
 }
 
 struct ContactLocation: Identifiable, Equatable {
@@ -86,10 +89,10 @@ struct ContactLocationResult {
 }
 
 extension Contact {
-    func nearestLocation(to target: CLLocationCoordinate2D) -> ContactLocationResult {
+    func nearestHomeLocation(to target: CLLocationCoordinate2D) -> ContactLocationResult {
         var nearestPostalAddress: PostalAddress?
         var nearestDistance: CLLocationDistance = .infinity
-        postalAddresses.forEach { postalAddress in
+        homeAddresses.forEach { postalAddress in
             if let coordinate = postalAddress.coordinate {
                 let distance = CLLocation.distance(from: coordinate, to: target)
                 if distance < nearestDistance {

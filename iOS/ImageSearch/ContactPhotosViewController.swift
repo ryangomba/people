@@ -6,13 +6,13 @@ struct ContactPhotosViewControllerState {
 
     init(newState: AppState) {
         contacts = newState.contacts.filter({ contact in
-            var hasPostalAddress = false
-            contact.postalAddresses.forEach { postalAddress in
+            var hasCoordinate = false
+            contact.homeAddresses.forEach { postalAddress in
                 if postalAddress.coordinate != nil {
-                    hasPostalAddress = true
+                    hasCoordinate = true
                 }
             }
-            return hasPostalAddress
+            return hasCoordinate
         })
     }
 }

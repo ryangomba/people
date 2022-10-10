@@ -54,9 +54,9 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         }
     }
 
-    var postalAddresses: [PostalAddress] {
+    var homeAddresses: [PostalAddress] {
         get {
-            return contactLocation.contact.postalAddresses
+            return contactLocation.contact.homeAddresses
         }
     }
 
@@ -82,7 +82,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return postalAddresses.count + 1 // for add location cell
+            return homeAddresses.count + 1 // for add location cell
         case 1:
             return 1
         default:
@@ -93,8 +93,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            if indexPath.row < postalAddresses.count {
-                let postalAddress = postalAddresses[indexPath.row]
+            if indexPath.row < homeAddresses.count {
+                let postalAddress = homeAddresses[indexPath.row]
                 return ContactLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
             }
             return Sizing.defaultListItemHeight
@@ -108,8 +108,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if indexPath.row < postalAddresses.count {
-                let postalAddress = postalAddresses[indexPath.row]
+            if indexPath.row < homeAddresses.count {
+                let postalAddress = homeAddresses[indexPath.row]
                 let cell = ContactLocationTableViewCell(contact: contactLocation.contact, postalAddress: postalAddress)
                 cell.viewController = self
                 return cell
@@ -134,8 +134,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         switch indexPath.section {
         case 0:
-            if indexPath.row < postalAddresses.count {
-                let postalAddress = postalAddresses[indexPath.row]
+            if indexPath.row < homeAddresses.count {
+                let postalAddress = homeAddresses[indexPath.row]
                 return UISwipeActionsConfiguration(actions: [
                     UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
                         self.onConfirmDeleteAddress(postalAddress, didDelete: onCompletion)
@@ -157,8 +157,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case 0:
-            if indexPath.row < contactLocation.contact.postalAddresses.count {
-                let postalAddress = postalAddresses[indexPath.row]
+            if indexPath.row < homeAddresses.count {
+                let postalAddress = homeAddresses[indexPath.row]
                 let contactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: postalAddress)
                 app.store.dispatch(ContactLocationSelected(location: contactLocation))
             } else {

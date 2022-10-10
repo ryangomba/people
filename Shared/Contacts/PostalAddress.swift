@@ -111,6 +111,14 @@ extension PostalAddress {
 }
 
 extension [PostalAddress] {
+    public func excludingWork() -> Self {
+        return self.filter { postalAddress in
+            return !(postalAddress.label?.lowercased() == "work")
+        }
+    }
+}
+
+extension [PostalAddress] {
     public var sameLocationSharedDescription: String {
         let values = self.map { $0.value }
         if let firstValue = values.first {
