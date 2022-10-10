@@ -35,7 +35,7 @@ class SerialGeocoder {
 class Geocoder {
     private let queue = DispatchQueue(label: "geocoder", qos: .background)
     private let geocoder = SerialGeocoder()
-    private let cacheManager = PersistentCache<GeocodeResult>(name: "geocodeCache_v2")
+    private let cacheManager = PersistentCache<GeocodeResult>(name: "geocodeCache_v2", maxSize: 1000)
     private var lastGeocode = Date.distantPast
     private var queueCount = 0 {
         didSet {
