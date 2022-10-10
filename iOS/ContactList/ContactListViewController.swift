@@ -37,11 +37,13 @@ struct ContactListViewControllerState {
             contactLocations = []
             var postalAddresses: [PostalAddress] = []
             newState.contacts.forEach({ contact in
-                contact.postalAddresses.forEach { postalAddress in
-                    if postalAddress.coordinate == coordinate {
-                        postalAddresses.append(postalAddress)
-                        contactLocations.append(ContactLocation(contact: contact, postalAddress: postalAddress))
-                    }
+                // Be sure to only select the first matching address in the case of duplicates
+                let matchingAddress = contact.postalAddresses.first { postalAddress in
+                    return postalAddress.coordinate == coordinate
+                }
+                if let matchingAddress = matchingAddress {
+                    postalAddresses.append(matchingAddress)
+                    contactLocations.append(ContactLocation(contact: contact, postalAddress: matchingAddress))
                 }
             })
             clusterTitle = postalAddresses.sameLocationSharedDescription

@@ -223,10 +223,16 @@ class ContactRepository: ObservableObject {
     public func deletePostalAddress(_ postalAddressToDelete: PostalAddress, forContact contact: Contact) -> Contact {
         assert(Thread.isMainThread)
 
-        let postalAddresses = contact.postalAddresses.filter { postalAddress in
-            return postalAddress.id != postalAddressToDelete.id
+        // Make sure to only delete the first index
+        // (we could have duplicate postal addresses and just want to delete one)
+        let indexToDelete = contact.postalAddresses.firstIndex { postalAddress in
+            return postalAddress.id == postalAddressToDelete.id
         }
-        return updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
+        var newPostalAddresses = contact.postalAddresses
+        if let indexToDelete = indexToDelete {
+            newPostalAddresses.remove(at: indexToDelete)
+        }
+        return updateContactWithPostalAddresses(contact: contact, postalAddresses: newPostalAddresses, saveToSystem: true)
     }
 
     private func updateContactWithPostalAddresses(contact: Contact, postalAddresses: [PostalAddress], saveToSystem: Bool) -> Contact {
