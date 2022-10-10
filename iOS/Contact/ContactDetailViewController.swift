@@ -139,7 +139,11 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 return UISwipeActionsConfiguration(actions: [
                     UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
                         self.onConfirmDeleteAddress(postalAddress, didDelete: onCompletion)
-                    })
+                    }),
+                    UIContextualAction(style: .normal, title: "Edit", handler: { (action, view, onCompletion) in
+                        app.store.dispatch(ContactLocationSelectedForEdit(location: self.contactLocation))
+                        onCompletion(true)
+                    }),
                 ])
             } else {
                 return nil
