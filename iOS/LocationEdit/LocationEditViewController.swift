@@ -163,13 +163,14 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
     }
 
     private func updateAddress(postalAddress: PostalAddress) {
+        var newContact: Contact
         if let oldPostalAddress = contactLocation.postalAddress {
-            app.contactRepository.updatePostalAddress(contact: contactLocation.contact, old: oldPostalAddress, new: postalAddress)
+            newContact = app.contactRepository.updatePostalAddress(contact: contactLocation.contact, old: oldPostalAddress, new: postalAddress)
         } else {
-            app.contactRepository.addPostalAddress(contact: contactLocation.contact, postalAddress: postalAddress)
+            newContact = app.contactRepository.addPostalAddress(contact: contactLocation.contact, postalAddress: postalAddress)
         }
         let newContactLocation = ContactLocation(
-            contact: contactLocation.contact,
+            contact: newContact,
             postalAddress: postalAddress
         )
         app.store.dispatch(ContactLocationEdited(location: newContactLocation))

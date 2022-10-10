@@ -182,7 +182,7 @@ class ContactRepository: ObservableObject {
 
     // Editing
 
-    public func addPostalAddress(contact: Contact, postalAddress: PostalAddress) {
+    public func addPostalAddress(contact: Contact, postalAddress: PostalAddress) -> Contact {
         assert(Thread.isMainThread)
 
         // Cache the geocoded result for this address, if exists
@@ -193,10 +193,10 @@ class ContactRepository: ObservableObject {
 
         // Update our local and system stores
         let postalAddresses = contact.postalAddresses + [postalAddress]
-        updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
+        return updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
     }
 
-    public func updatePostalAddress(contact: Contact, old: PostalAddress, new: PostalAddress) {
+    public func updatePostalAddress(contact: Contact, old: PostalAddress, new: PostalAddress) -> Contact {
         assert(Thread.isMainThread)
 
         // Cache the geocoded result for this address, if exists
@@ -207,7 +207,7 @@ class ContactRepository: ObservableObject {
 
         // Update our local and system stores
         let postalAddresses = updatePostalAddressesWithAddress(postalAddresses: contact.postalAddresses, old: old, new: new)
-        updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
+        return updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
     }
 
     private func updatePostalAddressesWithAddress(postalAddresses: [PostalAddress], old: PostalAddress, new: PostalAddress) -> [PostalAddress] {
@@ -220,16 +220,16 @@ class ContactRepository: ObservableObject {
         return newPostalAdresses
     }
 
-    public func deletePostalAddress(_ postalAddressToDelete: PostalAddress, forContact contact: Contact) {
+    public func deletePostalAddress(_ postalAddressToDelete: PostalAddress, forContact contact: Contact) -> Contact {
         assert(Thread.isMainThread)
 
         let postalAddresses = contact.postalAddresses.filter { postalAddress in
             return postalAddress.id != postalAddressToDelete.id
         }
-        updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
+        return updateContactWithPostalAddresses(contact: contact, postalAddresses: postalAddresses, saveToSystem: true)
     }
 
-    private func updateContactWithPostalAddresses(contact: Contact, postalAddresses: [PostalAddress], saveToSystem: Bool) {
+    private func updateContactWithPostalAddresses(contact: Contact, postalAddresses: [PostalAddress], saveToSystem: Bool) -> Contact {
         print("Updating contact postal addresses")
 
         var newContact = contact
@@ -248,6 +248,8 @@ class ContactRepository: ObservableObject {
             req.update(mutableContact)
             try! store.execute(req)
         }
+
+        return newContact
     }
 
     public func updateContactPhoto(contact: Contact, imageData: Data) {
@@ -294,7 +296,7 @@ class ContactRepository: ObservableObject {
                 newPostalAddress.coordinate = result.coordinate
                 let newContact = self.getContact(contact.id) // contact could be out of date
                 let postalAddresses = self.updatePostalAddressesWithAddress(postalAddresses: newContact.postalAddresses, old: postalAddress, new: newPostalAddress)
-                self.updateContactWithPostalAddresses(contact: newContact, postalAddresses: postalAddresses, saveToSystem: false)
+                _ = self.updateContactWithPostalAddresses(contact: newContact, postalAddresses: postalAddresses, saveToSystem: false)
             }
         }
     }

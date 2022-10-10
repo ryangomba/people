@@ -144,7 +144,7 @@ class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelega
 
     private func deleteAddress() {
         let contactRepository = app.contactRepository
-        contactRepository.deletePostalAddress(postalAddress, forContact: contact)
+        _ = contactRepository.deletePostalAddress(postalAddress, forContact: contact)
     }
 
 }

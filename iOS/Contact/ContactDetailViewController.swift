@@ -177,7 +177,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         )
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             let contactRepository = app.contactRepository
-            contactRepository.deletePostalAddress(postalAddress, forContact: self.contactLocation.contact)
+            _ = contactRepository.deletePostalAddress(postalAddress, forContact: self.contactLocation.contact)
             didDelete(true)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
