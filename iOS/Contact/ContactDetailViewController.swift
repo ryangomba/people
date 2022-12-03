@@ -21,20 +21,24 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let blurEffect = UIBlurEffect(style: .systemThickMaterial)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = self.view.frame
-        view.insertSubview(blurEffectView, at: 0)
+        var topAnchor = view.topAnchor;
+        if (self.navigationController == nil) {
+            tableView.backgroundColor = .clear
+            let blurEffect = UIBlurEffect(style: .systemThickMaterial)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = self.view.frame
+            view.insertSubview(blurEffectView, at: 0)
 
-        view.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+            view.addSubview(headerView)
+            headerView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ])
+            topAnchor = headerView.bottomAnchor;
+        }
 
-        tableView.backgroundColor = .clear
         tableView.automaticallyAdjustsScrollIndicatorInsets = false
         tableView.dataSource = self
         tableView.delegate = self
@@ -42,7 +46,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -65,6 +69,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     }
 
     private func configureForContactLocation() {
+        navigationItem.title = contactLocation.contact.displayName
         headerView.titleLabel.text = contactLocation.contact.displayName
     }
 

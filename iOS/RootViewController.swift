@@ -22,7 +22,7 @@ struct RootViewControllerState: Equatable {
     }
 }
 
-class RootViewController: UIViewController, StoreSubscriber, UISheetPresentationControllerDelegate {
+class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentationControllerDelegate, UITabBarControllerDelegate {
     private var currentState: RootViewControllerState?
     private let mapVC = MapViewController()
     private let contactListVC = MapContactListViewController()
@@ -30,13 +30,38 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
     private var contactLocationEditVC: LocationEditViewController?
     private var onboardingVC: OnboardingViewController?
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+
+        let listVC = UINavigationController(rootViewController: ContactListViewController())
+        listVC.navigationBar.prefersLargeTitles = true
+        listVC.tabBarItem = UITabBarItem(title: "List", image: .init(systemName: "list.bullet"), tag: 0)
+        mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), tag: 1)
+        self.viewControllers = [listVC, mapVC]
+        self.selectedViewController = mapVC
+        self.tabBar.backgroundColor = .white
+
+        self.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // TODO: this is so, so hacky
+        view.window!.addSubview(self.tabBar)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapVC.willMove(toParent: self)
-        view.addSubview(mapVC.view)
-        addChild(mapVC)
-        mapVC.didMove(toParent: self)
+//        mapVC.willMove(toParent: self)
+//        view.addSubview(mapVC.view)
+//        addChild(mapVC)
+//        mapVC.didMove(toParent: self)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -54,6 +79,17 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
         super.viewWillDisappear(animated)
 
         app.store.unsubscribe(self)
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if (viewController == mapVC) {
+            presentContactsList()
+        } else {
+            contactListVC.view.isHidden = true;
+            contactListVC.dismiss(animated: false) {
+                self.contactListVC.view.isHidden = false;
+            }
+        }
     }
 
     func newState(state: RootViewControllerState) {

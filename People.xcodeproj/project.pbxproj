@@ -41,6 +41,7 @@
 		94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6428AC9E4000F52EC8 /* Colors.swift */; };
 		94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */; };
 		94BA6CC12750B5070026B566 /* ContactAffinityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */; };
+		94D36D24293BE1E900184B3B /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D36D23293BE1E900184B3B /* ContactListViewController.swift */; };
 		94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8510C28F47F67009D12EE /* ArrayExtensions.swift */; };
 		94DE155128BDAAF3002281E5 /* PostalAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */; };
 		94E2829928DB710F0009C27F /* NetworkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829828DB710E0009C27F /* NetworkImageView.swift */; };
@@ -107,6 +108,7 @@
 		94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListHeader.swift; sourceTree = "<group>"; };
 		94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAffinityStore.swift; sourceTree = "<group>"; };
 		94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "People--iOS--Info.plist"; sourceTree = "<group>"; };
+		94D36D23293BE1E900184B3B /* ContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListViewController.swift; sourceTree = "<group>"; };
 		94D8510C28F47F67009D12EE /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		94DE154E28BDAAF3002281E5 /* PeopleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeopleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostalAddressTests.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				94EA8D6028BFE40400D7E68D /* Onboarding */,
 				94945F5A28AC889A00F52EC8 /* Map */,
 				94945F5B28AC889F00F52EC8 /* MapContactList */,
+				94D36D22293BE1D300184B3B /* ContactList */,
 				94945F5C28AC88A500F52EC8 /* Contact */,
 				9433AC2D28AEA38300323AAE /* LocationEdit */,
 				94E2829C28DB71210009C27F /* ImageSearch */,
@@ -276,6 +279,14 @@
 				94E2829728DB70CD0009C27F /* Config-debug.xcconfig */,
 			);
 			path = iOS;
+			sourceTree = "<group>";
+		};
+		94D36D22293BE1D300184B3B /* ContactList */ = {
+			isa = PBXGroup;
+			children = (
+				94D36D23293BE1E900184B3B /* ContactListViewController.swift */,
+			);
+			path = ContactList;
 			sourceTree = "<group>";
 		};
 		94E2829C28DB71210009C27F /* ImageSearch */ = {
@@ -497,6 +508,7 @@
 				94E282A328DB71210009C27F /* ProfilePhotosHeader.swift in Sources */,
 				9433AC3328AEAB6A00323AAE /* LocationSearchResultTableViewCell.swift in Sources */,
 				94945F5E28AC897F00F52EC8 /* RootViewController.swift in Sources */,
+				94D36D24293BE1E900184B3B /* ContactListViewController.swift in Sources */,
 				94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */,
 				94945F4F28AC4EF500F52EC8 /* MapKitExtensions.swift in Sources */,
 				94945F4C28AC31CC00F52EC8 /* MapViewController.swift in Sources */,
