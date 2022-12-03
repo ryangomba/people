@@ -162,7 +162,16 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
         }
     }
 
-    private func updateAddress(postalAddress: PostalAddress) {
+    private func updateAddress(postalAddress rawPostalAddress: PostalAddress) {
+        // If we don't have a street address, save subLocality
+        // as the street address; this plays better with services
+        // like Google Contacts that don't support subLocality.
+        // TODO: move this logic out of the view controller.
+        var postalAddress = rawPostalAddress;
+        if (postalAddress.value.street.isEmpty && !postalAddress.value.subLocality.isEmpty) {
+            postalAddress.value.street = postalAddress.value.subLocality;
+            postalAddress.value.subLocality = "";
+        }
         var newContact: Contact
         if let oldPostalAddress = contactLocation.postalAddress {
             newContact = app.contactRepository.updatePostalAddress(contact: contactLocation.contact, old: oldPostalAddress, new: postalAddress)

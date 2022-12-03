@@ -292,7 +292,13 @@ class ContactRepository: ObservableObject {
         if postalAddress.coordinate != nil {
             return // coordinate already exists, no need to locate
         }
-        if let result = await geocoder.geocodePostalAddress(postalAddress.value) {
+        // Sometimes subLocality is stored as a street
+        var postalAddressToGeocode = postalAddress.value;
+        if (!postalAddressToGeocode.street.starts(with: #"\d+"#)) {
+            postalAddressToGeocode.subLocality = postalAddressToGeocode.street;
+            postalAddressToGeocode.street = "";
+        }
+        if let result = await geocoder.geocodePostalAddress(postalAddressToGeocode) {
             if postalAddress.coordinate == result.coordinate {
                 return // no change to coordinate, ignore
             }
