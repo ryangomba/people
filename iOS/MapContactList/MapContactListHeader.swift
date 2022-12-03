@@ -1,7 +1,7 @@
 import UIKit
 import ReSwift
 
-struct ContactListHeaderState: Equatable {
+struct MapContactListHeaderState: Equatable {
     var isSearching: Bool
     var searchQuery: String
 
@@ -11,8 +11,8 @@ struct ContactListHeaderState: Equatable {
     }
 }
 
-class ContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
-    private var currentState: ContactListHeaderState?
+class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
+    private var currentState: MapContactListHeaderState?
     private let titleLabel = UILabel()
     private let filterButton = UIButton(type: .system)
     private let searchButton = UIButton(type: .system)
@@ -116,7 +116,7 @@ class ContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         ])
 
         app.store.subscribe(self) { subscription in
-            return subscription.select(ContactListHeaderState.init)
+            return subscription.select(MapContactListHeaderState.init)
         }
 
         updateClusterTitle()
@@ -156,7 +156,7 @@ class ContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         }
     }
 
-    func newState(state: ContactListHeaderState) {
+    func newState(state: MapContactListHeaderState) {
         let prevState = currentState
         currentState = state
 

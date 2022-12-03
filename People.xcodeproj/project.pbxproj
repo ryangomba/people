@@ -32,14 +32,14 @@
 		94945F4F28AC4EF500F52EC8 /* MapKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F4E28AC4EF500F52EC8 /* MapKitExtensions.swift */; };
 		94945F5128AC5E9D00F52EC8 /* ContactAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */; };
 		94945F5328AC74CE00F52EC8 /* ContactAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5228AC74CE00F52EC8 /* ContactAnnotationView.swift */; };
-		94945F5528AC791C00F52EC8 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5428AC791C00F52EC8 /* ContactListViewController.swift */; };
+		94945F5528AC791C00F52EC8 /* MapContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */; };
 		94945F5728AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */; };
 		94945F5928AC7EBB00F52EC8 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */; };
 		94945F5E28AC897F00F52EC8 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5D28AC897F00F52EC8 /* RootViewController.swift */; };
 		94945F6028AC8BC200F52EC8 /* ContactDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */; };
 		94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6228AC9AC500F52EC8 /* Layout.swift */; };
 		94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6428AC9E4000F52EC8 /* Colors.swift */; };
-		94945F6728AC9FC400F52EC8 /* ContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* ContactListHeader.swift */; };
+		94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */; };
 		94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8510C28F47F67009D12EE /* ArrayExtensions.swift */; };
 		94DE155128BDAAF3002281E5 /* PostalAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */; };
 		94E2829928DB710F0009C27F /* NetworkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2829828DB710E0009C27F /* NetworkImageView.swift */; };
@@ -98,14 +98,14 @@
 		94945F4E28AC4EF500F52EC8 /* MapKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapKitExtensions.swift; sourceTree = "<group>"; };
 		94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAvatarView.swift; sourceTree = "<group>"; };
 		94945F5228AC74CE00F52EC8 /* ContactAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAnnotationView.swift; sourceTree = "<group>"; };
-		94945F5428AC791C00F52EC8 /* ContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListViewController.swift; sourceTree = "<group>"; };
+		94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListViewController.swift; sourceTree = "<group>"; };
 		94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationControllerExtensions.swift; sourceTree = "<group>"; };
 		94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
 		94945F5D28AC897F00F52EC8 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailViewController.swift; sourceTree = "<group>"; };
 		94945F6228AC9AC500F52EC8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		94945F6428AC9E4000F52EC8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		94945F6628AC9FC400F52EC8 /* ContactListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListHeader.swift; sourceTree = "<group>"; };
+		94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListHeader.swift; sourceTree = "<group>"; };
 		94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "People--iOS--Info.plist"; sourceTree = "<group>"; };
 		94D8510C28F47F67009D12EE /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		94DE154E28BDAAF3002281E5 /* PeopleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeopleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -230,19 +230,19 @@
 			path = Map;
 			sourceTree = "<group>";
 		};
-		94945F5B28AC889F00F52EC8 /* ContactList */ = {
+		94945F5B28AC889F00F52EC8 /* MapContactList */ = {
 			isa = PBXGroup;
 			children = (
-				94945F5428AC791C00F52EC8 /* ContactListViewController.swift */,
-				94945F6628AC9FC400F52EC8 /* ContactListHeader.swift */,
-				94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */,
+				94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */,
+				94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */,
 			);
-			path = ContactList;
+			path = MapContactList;
 			sourceTree = "<group>";
 		};
 		94945F5C28AC88A500F52EC8 /* Contact */ = {
 			isa = PBXGroup;
 			children = (
+				94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */,
 				94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */,
 				9433AC2828AE834400323AAE /* ContactDetailHeader.swift */,
 				9433AC2B28AE877E00323AAE /* ContactLocationTableViewCell.swift */,
@@ -269,7 +269,7 @@
 				9433AC2A28AE874A00323AAE /* Common */,
 				94EA8D6028BFE40400D7E68D /* Onboarding */,
 				94945F5A28AC889A00F52EC8 /* Map */,
-				94945F5B28AC889F00F52EC8 /* ContactList */,
+				94945F5B28AC889F00F52EC8 /* MapContactList */,
 				94945F5C28AC88A500F52EC8 /* Contact */,
 				9433AC2D28AEA38300323AAE /* LocationEdit */,
 				94E2829C28DB71210009C27F /* ImageSearch */,
@@ -471,7 +471,7 @@
 				94EA8D6A28BFFCC100D7E68D /* ContactIngestionViewController.swift in Sources */,
 				9433AC3728B00CCE00323AAE /* PostalAddress.swift in Sources */,
 				94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */,
-				94945F5528AC791C00F52EC8 /* ContactListViewController.swift in Sources */,
+				94945F5528AC791C00F52EC8 /* MapContactListViewController.swift in Sources */,
 				94F5AAC327500ED3009276E7 /* ContactRepository.swift in Sources */,
 				9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */,
 				94E282A728DB713C0009C27F /* GoogleImageSearcher.swift in Sources */,
@@ -504,7 +504,7 @@
 				94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */,
 				94945F4F28AC4EF500F52EC8 /* MapKitExtensions.swift in Sources */,
 				94945F4C28AC31CC00F52EC8 /* MapViewController.swift in Sources */,
-				94945F6728AC9FC400F52EC8 /* ContactListHeader.swift in Sources */,
+				94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */,
 				94945F5928AC7EBB00F52EC8 /* ContactTableViewCell.swift in Sources */,
 				94945F2128AC2AAA00F52EC8 /* AppActions.swift in Sources */,
 			);

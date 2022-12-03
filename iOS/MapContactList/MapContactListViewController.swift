@@ -12,7 +12,7 @@ struct ContactSearchResult {
     let score: Int
 }
 
-struct ContactListViewControllerState {
+struct MapContactListViewControllerState {
     var searchQuery: String?
     var clusterTitle: String?
     var contactLocations: [ContactLocation]
@@ -103,9 +103,9 @@ struct ContactListViewControllerState {
     }
 }
 
-class ContactListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MKLocalSearchCompleterDelegate, StoreSubscriber {
-    private var currentState = ContactListViewControllerState(newState: app.store.state)
-    private let headerView = ContactListHeader()
+class MapContactListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MKLocalSearchCompleterDelegate, StoreSubscriber {
+    private var currentState = MapContactListViewControllerState(newState: app.store.state)
+    private let headerView = MapContactListHeader()
     private let tableView = UITableView()
     private let completer = MKLocalSearchCompleter()
     private let footerView = SimpleFooterView()
@@ -152,7 +152,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         super.viewWillAppear(animated)
 
         app.store.subscribe(self) { subscription in
-            return subscription.select(ContactListViewControllerState.init)
+            return subscription.select(MapContactListViewControllerState.init)
         }
 
         let notificationCenter = NotificationCenter.default
@@ -179,7 +179,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         }
     }
 
-    func newState(state: ContactListViewControllerState) {
+    func newState(state: MapContactListViewControllerState) {
         let prevState = currentState
         currentState = state
 

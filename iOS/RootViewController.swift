@@ -25,7 +25,7 @@ struct RootViewControllerState: Equatable {
 class RootViewController: UIViewController, StoreSubscriber, UISheetPresentationControllerDelegate {
     private var currentState: RootViewControllerState?
     private let mapVC = MapViewController()
-    private let contactListVC = ContactListViewController()
+    private let contactListVC = MapContactListViewController()
     private var contactDetailVC: ContactDetailViewController?
     private var contactLocationEditVC: LocationEditViewController?
     private var onboardingVC: OnboardingViewController?
