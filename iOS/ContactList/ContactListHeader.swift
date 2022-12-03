@@ -143,7 +143,7 @@ class ContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             searchButton.isHidden = true
             dismissButton.isHidden = false
         } else {
-            titleLabel.text = "People"
+            titleLabel.text = "People nearby"
             searchButton.isHidden = false
             dismissButton.isHidden = true
         }
