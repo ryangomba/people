@@ -5,6 +5,7 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
     private let contactLocation: ContactLocation
     private let headerView = LocationEditHeader()
     private let tableView = UITableView()
+    private let footerView = SimpleFooterView()
     private let completer = MKLocalSearchCompleter()
     private var query = "" {
         didSet {
@@ -14,6 +15,7 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
             } else {
                 completer.queryFragment = query
             }
+            updateFooterVisibility();
         }
     }
 
@@ -45,6 +47,8 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
+        tableView.tableFooterView = footerView
+
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(LocationSearchResultTableViewCell.self, forCellReuseIdentifier: LocationSearchResultTableViewCell.reuseIdentifier)
@@ -56,6 +60,8 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+
+        updateFooterVisibility();
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -108,10 +114,12 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
 
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         tableView.reloadData()
+        updateFooterVisibility();
     }
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        // TODO: handle
+        // TODO: show error in UI
+        updateFooterVisibility();
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -183,6 +191,18 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
             postalAddress: postalAddress
         )
         app.store.dispatch(ContactLocationEdited(location: newContactLocation))
+    }
+
+    func updateFooterVisibility() {
+        if (query.isEmpty) {
+            footerView.text = "Search for a specific address,\na neighborhood, or a city."
+            footerView.isHidden = false;
+        } else if (filteredResults.count == 0 && !completer.isSearching) {
+            footerView.text = "No results"
+            footerView.isHidden = false;
+        } else {
+            footerView.isHidden = true;
+        }
     }
 
 }

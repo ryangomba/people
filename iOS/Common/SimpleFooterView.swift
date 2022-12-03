@@ -18,6 +18,9 @@ class SimpleFooterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        label.numberOfLines = -1;
+        label.font = .systemFont(ofSize: FontSize.normal);
+        label.textColor = .secondaryLabel;
         label.textAlignment = .center;
         addSubview(label);
         label.translatesAutoresizingMaskIntoConstraints = false
