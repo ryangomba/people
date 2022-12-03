@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9406FBCE293BBFFA000F96F1 /* SimpleFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406FBCD293BBFFA000F96F1 /* SimpleFooterView.swift */; };
 		94324F2A28BF34B000D9B104 /* LocationAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94324F2928BF34B000D9B104 /* LocationAuthManager.swift */; };
 		9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1B28AD65EB00323AAE /* Contact.swift */; };
 		9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */; };
@@ -73,6 +74,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9406FBCD293BBFFA000F96F1 /* SimpleFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFooterView.swift; sourceTree = "<group>"; };
 		94324F2928BF34B000D9B104 /* LocationAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAuthManager.swift; sourceTree = "<group>"; };
 		9433AC1B28AD65EB00323AAE /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationExtensions.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				9433AC2428ADAD1D00323AAE /* SearchBox.swift */,
 				94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */,
 				94E2829828DB710E0009C27F /* NetworkImageView.swift */,
+				9406FBCD293BBFFA000F96F1 /* SimpleFooterView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -481,6 +484,7 @@
 				94EA8D6E28C0122C00D7E68D /* AppPermissionsView.swift in Sources */,
 				9433AC3928B1FF2300323AAE /* ContactClusterAnnotationView.swift in Sources */,
 				945FB16D28BD9BEC002D3023 /* UITableViewExtensions.swift in Sources */,
+				9406FBCE293BBFFA000F96F1 /* SimpleFooterView.swift in Sources */,
 				94F5AAC627500F28009276E7 /* Geocoder.swift in Sources */,
 				9433AC2528ADAD1D00323AAE /* SearchBox.swift in Sources */,
 				94945F5128AC5E9D00F52EC8 /* ContactAvatarView.swift in Sources */,

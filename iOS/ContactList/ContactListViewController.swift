@@ -13,7 +13,7 @@ struct ContactSearchResult {
 }
 
 struct ContactListViewControllerState {
-    var searchQuery: String
+    var searchQuery: String?
     var clusterTitle: String?
     var contactLocations: [ContactLocation]
     var mapZoomScale: MapZoomScale = .regional
@@ -28,7 +28,9 @@ struct ContactListViewControllerState {
         }
 
         let query = newState.searchQuery
-        searchQuery = query
+        if (newState.isSearching) {
+            searchQuery = query
+        }
 
         let focusedCoordinate = focusedCoordinateForMapRegion(newState.mapRegion)
         let clusterSelected = newState.selection?.fromCluster ?? false
@@ -106,6 +108,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     private let headerView = ContactListHeader()
     private let tableView = UITableView()
     private let completer = MKLocalSearchCompleter()
+    private let footerView = SimpleFooterView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,6 +126,8 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
+        tableView.tableFooterView = footerView;
+
         tableView.backgroundColor = .clear
         tableView.dataSource = self
         tableView.delegate = self
@@ -139,6 +144,8 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         ])
 
         completer.delegate = self
+
+        updateFooter()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -165,7 +172,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
 
     private var filteredLocationResults: [MKLocalSearchCompletion] {
         get {
-            if currentState.searchQuery.isEmpty {
+            if currentState.searchQuery == nil || currentState.searchQuery!.isEmpty {
                 return []
             }
             return completer.results.locatableResults()
@@ -177,7 +184,11 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         currentState = state
 
         if state.searchQuery != prevState.searchQuery {
-            completer.queryFragment = state.searchQuery
+            if let searchQuery = state.searchQuery {
+                completer.queryFragment = searchQuery;
+            } else {
+                completer.queryFragment = ""
+            }
         }
         if state.contactLocations != prevState.contactLocations || state.mapZoomScale != prevState.mapZoomScale {
             tableView.reloadData()
@@ -185,6 +196,19 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         if state.clusterTitle != prevState.clusterTitle {
             headerView.clusterTitle = state.clusterTitle
         }
+
+        updateFooter();
+    }
+
+    func updateFooter() {
+        if (currentState.searchQuery != nil) {
+            footerView.text = "No results";
+        } else {
+            footerView.text = "Nobody nearby";
+        }
+        let hasResults = currentState.contactLocations.count + filteredLocationResults.count > 0;
+        let isSearching = !completer.queryFragment.isEmpty && completer.isSearching;
+        footerView.isHidden = hasResults || isSearching;
     }
 
     @objc
@@ -208,10 +232,11 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
 
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         tableView.reloadSections([0], with: .none)
+        updateFooter();
     }
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        //
+        updateFooter();
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
