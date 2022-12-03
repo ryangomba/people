@@ -292,8 +292,13 @@ class ContactRepository: ObservableObject {
         if postalAddress.coordinate != nil {
             return // coordinate already exists, no need to locate
         }
-        // Sometimes subLocality is stored as a street
         var postalAddressToGeocode = postalAddress.value;
+        // If we have a street without a city, don't attempt to geocode
+        // with street-level precision. We're likely to get incorrect results.
+        if (!postalAddressToGeocode.street.isEmpty && postalAddressToGeocode.city.isEmpty) {
+            postalAddressToGeocode.street = ""
+        }
+        // Sometimes subLocality is stored as a street.
         if (!postalAddressToGeocode.street.starts(with: #"\d+"#)) {
             postalAddressToGeocode.subLocality = postalAddressToGeocode.street;
             postalAddressToGeocode.street = "";
