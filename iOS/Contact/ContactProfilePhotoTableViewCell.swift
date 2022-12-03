@@ -1,7 +1,7 @@
 import UIKit
 
 class ContactProfilePhotoTableViewCell: UITableViewCell {
-    private static let imageViewSize = ContactAvatarView.shadowedSize
+    private static let imageViewSize = PersonAvatarView.shadowedSize
     static let reuseIdentifier = "contactProfilePhotoCell"
     static let preferredHeight: CGFloat = imageViewSize + Padding.normal * 2
     let imageViews: [ProfilePhotoView]

@@ -1,12 +1,12 @@
 import UIKit
 
-class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelegate {
+class PersonLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelegate {
     static func preferredHeightForAddress(postalAddress: PostalAddress) -> CGFloat {
         let numLines = postalAddress.value.formattedMultiLine.split(separator: "\n").count
         return Padding.normal * 2 + 30 + CGFloat(numLines) * 22 // TODO: this is a hacky estimate
     }
 
-    private let contact: Contact
+    private let person: Person
     private let postalAddress: PostalAddress
     public weak var viewController: UIViewController?
     private let addressTypeLabel = UILabel()
@@ -14,8 +14,8 @@ class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelega
     private let editButton = UIButton(type: .system)
     private let longPressRecognizer = UILongPressGestureRecognizer()
 
-    init(contact: Contact, postalAddress: PostalAddress) {
-        self.contact = contact
+    init(person: Person, postalAddress: PostalAddress) {
+        self.person = person
         self.postalAddress = postalAddress
         super.init(style: .default, reuseIdentifier: nil)
 
@@ -80,8 +80,8 @@ class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelega
         fatalError("init(coder:) has not been implemented")
     }
 
-    var contactLocation: ContactLocation {
-        return ContactLocation(contact: contact, postalAddress: postalAddress)
+    var personLocation: PersonLocation {
+        return PersonLocation(person: person, postalAddress: postalAddress)
     }
 
     @objc
@@ -126,7 +126,7 @@ class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelega
     }
 
     private func onEditAddress() {
-        app.store.dispatch(ContactLocationSelectedForEdit(location: contactLocation))
+        app.store.dispatch(MapPersonLocationSelectedForEdit(location: personLocation))
     }
 
     private func onConfirmDeleteAddress() {
@@ -144,7 +144,7 @@ class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelega
 
     private func deleteAddress() {
         let contactRepository = app.contactRepository
-        _ = contactRepository.deletePostalAddress(postalAddress, forContact: contact)
+        _ = contactRepository.deletePostalAddress(postalAddress, forContact: person.contact)
     }
 
 }

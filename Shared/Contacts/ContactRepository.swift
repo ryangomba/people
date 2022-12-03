@@ -10,13 +10,12 @@ enum ContactsAuthStatus: Int {
     case denied = 3
 }
 
-class ContactRepository: ObservableObject {
+class ContactRepository {
     public var authorizationStatus = getAuthorizationStatus()
     private let store = CNContactStore()
-    private let affinityStore = ContactAffinityStore()
     private let geocoder = Geocoder()
-    @Published var contacts: [Contact] = []
-    @Published var searchText = ""
+    var contacts: [Contact] = []
+    var searchText = ""
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(onForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -36,7 +35,9 @@ class ContactRepository: ObservableObject {
     func onContactStoreDidChange(notification: NSNotification) {
         if notification.userInfo?["CNNotificationOriginationExternally"] != nil {
             print("System contacts did change")
-            self.sync()
+            DispatchQueue.main.async {
+                self.sync()
+            }
         }
     }
 
@@ -104,6 +105,8 @@ class ContactRepository: ObservableObject {
                 CNContactOrganizationNameKey,
                 CNContactNicknameKey,
                 CNContactThumbnailImageDataKey,
+                CNContactPhoneNumbersKey,
+                CNContactEmailAddressesKey,
                 CNContactPostalAddressesKey
             ] as [CNKeyDescriptor]
             let request = CNContactFetchRequest(keysToFetch: keysToFetch)
@@ -133,6 +136,10 @@ class ContactRepository: ObservableObject {
                 companyName: deviceContact.organizationName,
                 nickname: deviceContact.nickname,
                 thumbnailImageData: deviceContact.thumbnailImageData,
+                primaryPhoneNumber: deviceContact.phoneNumbers.count > 0 ? deviceContact.phoneNumbers.first!.value.stringValue : nil, // TODO: best?
+                emailAddresses: deviceContact.emailAddresses.map({ emailAddress in
+                    emailAddress.value.lowercased
+                }),
                 postalAddresses: deviceContact.postalAddresses.map({ postalAddress in
                     let value = PostalAddressValue(
                         street: postalAddress.value.street,
@@ -148,8 +155,7 @@ class ContactRepository: ObservableObject {
                         value: value,
                         coordinate: coordinate
                     )
-                }),
-                affinity: affinityStore.get(deviceContact.identifier)
+                })
             )
         })
     }
@@ -337,25 +343,6 @@ class ContactRepository: ObservableObject {
         let mutableContact = contact.mutableCopy() as! CNMutableContact
         req.delete(mutableContact)
         try! store.execute(req)
-    }
-
-    // Affinities
-
-    public func updateContactAffinity(contact: Contact, affinity: ContactAffinity) {
-        updateContactAffinities(contactIDs: [contact.id], affinity: affinity)
-    }
-
-    public func updateContactAffinities(contactIDs: Set<String>, affinity: ContactAffinity) {
-        var newContacts: [Contact] = []
-        for contactID in contactIDs {
-            let contact = getContact(contactID)
-            var newContact = contact
-            newContact.affinity = affinity
-            affinityStore.update(contact.id, affinity: affinity)
-            newContacts.append(newContact)
-        }
-        print("Updated contact affinities")
-        updateContacts(newContacts)
     }
 
     // Spotlight

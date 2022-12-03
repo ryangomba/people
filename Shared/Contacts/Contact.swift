@@ -5,11 +5,6 @@ import MapKit
 
 struct Contact: Identifiable, Equatable, Comparable {
     static func < (lhs: Contact, rhs: Contact) -> Bool {
-        let a1 = lhs.affinity;
-        let a2 = rhs.affinity;
-        if (a1 != a2) {
-            return a1.rawValue < a2.rawValue
-        }
         if (!lhs.nickname.isEmpty && rhs.nickname.isEmpty) {
             return true // nicknamed contacts are probably closer friends?
         }
@@ -21,8 +16,15 @@ struct Contact: Identifiable, Equatable, Comparable {
     var companyName: String
     var nickname: String
     var thumbnailImageData: Data?
+    var primaryPhoneNumber: String?
+    var emailAddresses: [String]
+    var aliasEmail: String {
+        // TODO: might not exist
+        return emailAddresses.first { emailAddress in
+            emailAddress.hasPrefix("c") && emailAddress.hasSuffix("@ryangomba.com")
+        }!
+    }
     var postalAddresses: [PostalAddress]
-    var affinity: ContactAffinity
     var displayName: String {
         if !nickname.isEmpty {
             return nickname
@@ -55,62 +57,8 @@ struct Contact: Identifiable, Equatable, Comparable {
         }
         return initials
     }
-    var searchString: String {
-        var components: [String] = []
-        if !nickname.isEmpty {
-            components.append(nickname)
-        }
-        if !givenName.isEmpty {
-            components.append(givenName)
-        }
-        if !familyName.isEmpty {
-            components.append(familyName)
-        }
-        return components.joined(separator: " ").lowercased()
-    }
     var homeAddresses: [PostalAddress] {
         return postalAddresses.excludingWork().removingDuplicateIDs()
-    }
-}
-
-struct ContactLocation: Identifiable, Equatable {
-    let contact: Contact
-    let postalAddress: PostalAddress?
-    var id: String {
-        get {
-            var id = contact.id + "-"
-            if let postalAddress = postalAddress {
-                id += postalAddress.id
-            } else {
-                id += "null"
-            }
-            return id
-        }
-    }
-}
-
-struct ContactLocationResult {
-    let contactLocation: ContactLocation
-    let distance: CLLocationDistance
-}
-
-extension Contact {
-    func nearestHomeLocation(to target: CLLocationCoordinate2D) -> ContactLocationResult {
-        var nearestPostalAddress: PostalAddress?
-        var nearestDistance: CLLocationDistance = .infinity
-        homeAddresses.forEach { postalAddress in
-            if let coordinate = postalAddress.coordinate {
-                let distance = CLLocation.distance(from: coordinate, to: target)
-                if distance < nearestDistance {
-                    nearestPostalAddress = postalAddress
-                    nearestDistance = distance
-                }
-            }
-        }
-        return ContactLocationResult(
-            contactLocation: ContactLocation(contact: self, postalAddress: nearestPostalAddress),
-            distance: nearestDistance
-        )
     }
 }
 

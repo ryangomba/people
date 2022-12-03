@@ -3,12 +3,12 @@ import ReSwift
 
 struct ContactClusterAnnotationViewState: Equatable {
     var isSelected: Bool
-    var selectedContactLocation: ContactLocation?
+    var selectedPersonLocation: PersonLocation?
 
     init(coordinate: CLLocationCoordinate2D, newState: AppState) {
-        isSelected = newState.selection?.coordinate == coordinate
+        isSelected = newState.mapSelection?.coordinate == coordinate
         if isSelected {
-            selectedContactLocation = newState.selection?.contactLocation
+            selectedPersonLocation = newState.mapSelection?.personLocation
         }
     }
 }
@@ -16,12 +16,12 @@ struct ContactClusterAnnotationViewState: Equatable {
 final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
     public static let reuseIdentifier = "contactCluster"
     private var currentState: ContactClusterAnnotationViewState?
-    private let avatarView = ContactAvatarView(shadowed: true)
+    private let avatarView = PersonAvatarView(shadowed: true)
 
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
-        frame = CGRect(x: 0, y: 0, width: ContactAvatarView.shadowedSize, height: ContactAvatarView.shadowedSize)
+        frame = CGRect(x: 0, y: 0, width: PersonAvatarView.shadowedSize, height: PersonAvatarView.shadowedSize)
 
         let tap = UITapGestureRecognizer()
         tap.addTarget(self, action: #selector(onAvatarViewTapped))
@@ -32,8 +32,8 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
         NSLayoutConstraint.activate([
             avatarView.centerXAnchor.constraint(equalTo: centerXAnchor),
             avatarView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarView.widthAnchor.constraint(equalToConstant: ContactAvatarView.shadowedSize),
-            avatarView.heightAnchor.constraint(equalToConstant: ContactAvatarView.shadowedSize),
+            avatarView.widthAnchor.constraint(equalToConstant: PersonAvatarView.shadowedSize),
+            avatarView.heightAnchor.constraint(equalToConstant: PersonAvatarView.shadowedSize),
         ])
     }
 
@@ -75,7 +75,7 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
                 fatalError("Expected contact annotations as members")
             }
             return memberAnnotations.sorted {
-                $0.contactLocation.contact < $1.contactLocation.contact
+                $0.personLocation.person < $1.personLocation.person
             }
         }
         return []
@@ -97,12 +97,12 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
 
     private func updateSelection(animated: Bool) {
         let isSelected = currentState?.isSelected ?? false
-        let selectedContactLocation = currentState?.selectedContactLocation
+        let selectedPersonLocation = currentState?.selectedPersonLocation
 
-        if let selectedContactLocation = selectedContactLocation {
-            avatarView.contacts = [selectedContactLocation.contact]
+        if let selectedPersonLocation = selectedPersonLocation {
+            avatarView.persons = [selectedPersonLocation.person]
         } else {
-            avatarView.contacts = contactAnnotations.map({ $0.contactLocation.contact })
+            avatarView.persons = contactAnnotations.map({ $0.personLocation.person })
         }
 
         func applyChanges() {
@@ -125,7 +125,7 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
         if let annotation = annotation as? MKClusterAnnotation {
             app.store.dispatch(MapAnnotationSelected(
                 coordinate: fixedAnnotationCoordinate(annotation),
-                contactLocation: nil,
+                personLocation: nil,
                 isCluster: true
             ))
         }

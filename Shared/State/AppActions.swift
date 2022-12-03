@@ -8,16 +8,34 @@ struct LocationAccessChanged: Action {
     let status: LocationAuthStatus
 }
 
+struct CalendarAccessChanged: Action {
+    let status: CalendarAuthStatus
+}
+
 struct ContactsAccessChanged: Action {
     let status: ContactsAuthStatus
+}
+
+struct NotificationsAccessChanged: Action {
+    let status: NotificationsAuthStatus
 }
 
 struct ContactsChanged: Action {
     let newContacts: [Contact]
 }
 
+struct CalendarChanged: Action {
+    let newCalendarEvents: [CalendarEvent]
+}
+
 struct GeocoderQueueCountChanged: Action {
     let newCount: Int
+}
+
+// List
+
+struct ListSearchQueryChanged: Action {
+    let searchQuery: String
 }
 
 // Map
@@ -36,48 +54,55 @@ struct FocusRegionalLocation: Action {
 
 struct MapAnnotationSelected: Action {
     let coordinate: CLLocationCoordinate2D
-    let contactLocation: ContactLocation?
+    let personLocation: PersonLocation?
     let isCluster: Bool
 }
 
-// Contacts list
+// Map contacts list
 
-struct ContactListDetentChanged: Action {
+struct MapContactListDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 
-struct ContactAffinityThresholdChanged: Action {
-    let selectedAffinities: [ContactAffinity]
+struct MapAffinityThresholdChanged: Action {
+    let selectedAffinities: [Affinity]
 }
 
-struct StartSearching: Action {}
-struct StopSearching: Action {}
-struct SearchQueryChanged: Action {
+struct MapStartSearching: Action {}
+struct MapStopSearching: Action {}
+struct MapSearchQueryChanged: Action {
     let searchQuery: String
 }
 
-struct ContactLocationSelected: Action {
-    let location: ContactLocation
+struct MapPersonLocationSelected: Action {
+    let location: PersonLocation
 }
 
-struct ContactDetailsDismissed: Action {}
+struct MapContactDetailsDismissed: Action {}
 
-struct LocationDetailsDismissed: Action {}
+struct MapLocationDetailsDismissed: Action {}
 
-// Selected contact
+// Map selected contact
 
-struct ContactLocationSelectedForEdit: Action {
-    let location: ContactLocation?
+struct MapPersonLocationSelectedForEdit: Action {
+    let location: PersonLocation?
 }
 
-struct ContactDetailsDetentChanged: Action {
+struct MapContactDetailsDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 
-struct ContactLocationEdited: Action {
-    let location: ContactLocation
+struct PersonLocationEdited: Action {
+    let location: PersonLocation
 }
 
 struct ContactPhotoChanged: Action {
     let contact: Contact
+}
+
+// Affinity
+
+struct PersonAffinityChanged: Action {
+    let person: Person
+    let affinity: Affinity
 }

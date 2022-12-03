@@ -3,46 +3,78 @@ import CoreLocation
 import ReSwift
 
 struct RootViewControllerState: Equatable {
-    var contactsAccessGranted: Bool
-    var locationAccessGranted: Bool
+    var accessGranted: Bool
     var geocoderQueueCount: Int
-    var contentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
-    var contentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
-    var selectedContact: ContactSelection?
-    var selectedContactLocationForEdit: ContactLocation?
+    var mapContentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
+    var mapContentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
+    var mapSelectedContact: MapContactSelection?
+    var mapSelectedPersonLocationForEdit: PersonLocation?
 
     init(newState: AppState) {
-        contactsAccessGranted = newState.contactsAuthStatus == .authorized
-        locationAccessGranted = newState.locationAuthStatus == .authorized
+        accessGranted = (
+            newState.contactsAuthStatus == .authorized &&
+            newState.calendarAuthStatus == .authorized &&
+            newState.locationAuthStatus == .authorized &&
+            newState.notificationsAuthStatus == .authorized
+        )
         geocoderQueueCount = newState.geocoderQueueCount
-        contentListDetentIdentifer = newState.contactListDetentIdentifier
-        contentDetailsDetentIdentifer = newState.contactDetailsDetentIdentifier
-        selectedContact = newState.selection
-        selectedContactLocationForEdit = newState.contactLocationForEdit
+        mapContentListDetentIdentifer = newState.mapContactListDetentIdentifier
+        mapContentDetailsDetentIdentifer = newState.mapContactDetailsDetentIdentifier
+        mapSelectedContact = newState.mapSelection
+        mapSelectedPersonLocationForEdit = newState.mapPersonLocationForEdit
     }
 }
 
-class RootViewController: UIViewController, StoreSubscriber, UISheetPresentationControllerDelegate {
+class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentationControllerDelegate, UITabBarControllerDelegate {
     private var currentState: RootViewControllerState?
     private let mapVC = MapViewController()
     private let contactListVC = MapContactListViewController()
     private var contactDetailVC: ContactDetailViewController?
-    private var contactLocationEditVC: LocationEditViewController?
+    private var personLocationEditVC: LocationEditViewController?
     private var onboardingVC: OnboardingViewController?
+
+    init() {
+        super.init(nibName: nil, bundle: nil)
+
+        let actionVC = UINavigationController(rootViewController: ActionViewController())
+        actionVC.tabBarItem = UITabBarItem(title: "Act", image: .init(systemName: "bolt"), selectedImage: .init(systemName: "bolt.fill"))
+        actionVC.navigationBar.prefersLargeTitles = true
+
+        let listVC = UINavigationController(rootViewController: ContactListViewController())
+        listVC.navigationBar.prefersLargeTitles = true
+        listVC.tabBarItem = UITabBarItem(title: "List", image: .init(systemName: "list.bullet"), selectedImage: .init(systemName: "list.bullet"))
+
+        mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), selectedImage: .init(systemName: "map.fill"))
+
+        self.viewControllers = [actionVC, listVC, mapVC]
+        self.selectedViewController = actionVC
+        self.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // TODO: this is so, so hacky
+        view.window!.addSubview(self.tabBar)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapVC.willMove(toParent: self)
-        view.addSubview(mapVC.view)
-        addChild(mapVC)
-        mapVC.didMove(toParent: self)
+//        mapVC.willMove(toParent: self)
+//        view.addSubview(mapVC.view)
+//        addChild(mapVC)
+//        mapVC.didMove(toParent: self)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        presentContactsList()
+//        presentContactsList()
         presentOrDismissOnboarding()
 
         app.store.subscribe(self) { subscription in
@@ -56,32 +88,43 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
         app.store.unsubscribe(self)
     }
 
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if (viewController == mapVC) {
+            presentContactsList()
+        } else {
+            contactListVC.view.isHidden = true;
+            contactListVC.dismiss(animated: false) {
+                self.contactListVC.view.isHidden = false;
+            }
+        }
+    }
+
     func newState(state: RootViewControllerState) {
         let prevState = currentState
         currentState = state
 
-        if state.contentListDetentIdentifer != prevState?.contentListDetentIdentifer {
+        if state.mapContentListDetentIdentifer != prevState?.mapContentListDetentIdentifer {
             contactListVC.sheetPresentationController?.animateChanges {
-                contactListVC.sheetPresentationController?.selectedDetentIdentifier = state.contentListDetentIdentifer
+                contactListVC.sheetPresentationController?.selectedDetentIdentifier = state.mapContentListDetentIdentifer
             }
         }
-        if state.contentDetailsDetentIdentifer != prevState?.contentDetailsDetentIdentifer {
+        if state.mapContentDetailsDetentIdentifer != prevState?.mapContentDetailsDetentIdentifer {
             contactDetailVC?.sheetPresentationController?.animateChanges {
-                contactDetailVC?.sheetPresentationController?.selectedDetentIdentifier = state.contentDetailsDetentIdentifer
+                contactDetailVC?.sheetPresentationController?.selectedDetentIdentifier = state.mapContentDetailsDetentIdentifer
             }
         }
-        if state.selectedContact != prevState?.selectedContact {
-            if let selectedContactLocation = state.selectedContact?.contactLocation {
-                presentContactDetails(selectedContactLocation)
+        if state.mapSelectedContact != prevState?.mapSelectedContact {
+            if let mapSelectedPersonLocation = state.mapSelectedContact?.personLocation {
+                presentContactDetails(mapSelectedPersonLocation)
             } else {
                 dismissContactDetails()
             }
         }
-        if state.selectedContactLocationForEdit != prevState?.selectedContactLocationForEdit {
-            if let location = state.selectedContactLocationForEdit {
-                presentContactLocationForEdit(contactLocation: location)
+        if state.mapSelectedPersonLocationForEdit != prevState?.mapSelectedPersonLocationForEdit {
+            if let location = state.mapSelectedPersonLocationForEdit {
+                presentPersonLocationForEdit(personLocation: location)
             } else {
-                dismissContactLocationForEdit()
+                dismissPersonLocationForEdit()
             }
         }
         presentOrDismissOnboarding()
@@ -89,16 +132,20 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
 
     func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
         if sheetPresentationController == contactListVC.sheetPresentationController {
-            app.store.dispatch(ContactListDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
+            app.store.dispatch(MapContactListDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
         } else if sheetPresentationController == contactDetailVC?.sheetPresentationController {
-            app.store.dispatch(ContactDetailsDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
+            app.store.dispatch(MapContactDetailsDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
         }
     }
 
     private func presentOrDismissOnboarding() {
         var needsOnboarding = false
         if let currentState = currentState {
-            needsOnboarding = !currentState.contactsAccessGranted || !currentState.locationAccessGranted || currentState.geocoderQueueCount > 3 || (currentState.geocoderQueueCount > 0 && onboardingVC != nil)
+            needsOnboarding = (
+                !currentState.accessGranted ||
+                currentState.geocoderQueueCount > 3 ||
+                (currentState.geocoderQueueCount > 0 && onboardingVC != nil)
+            )
         }
         if needsOnboarding {
             presentOnboarding()
@@ -113,7 +160,7 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
         }
 
         let onboardingVC = OnboardingViewController()
-        onboardingVC.modalPresentationStyle = .fullScreen
+        onboardingVC.modalPresentationStyle = .overFullScreen
         self.onboardingVC = onboardingVC
 
         let keyWindow = UIApplication.shared.connectedScenes
@@ -140,10 +187,11 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
     }
 
     private func presentContactsList() {
+//        contactListVC.view.tag = 99 // TODO: make constant
         contactListVC.isModalInPresentation = true // prevent dismissal
         if let sheet = contactListVC.sheetPresentationController {
             sheet.detents = [.collapsed, .small, .large()]
-            sheet.selectedDetentIdentifier = app.store.state.contactListDetentIdentifier
+            sheet.selectedDetentIdentifier = app.store.state.mapContactListDetentIdentifier
             sheet.largestUndimmedDetentIdentifier = .small
             sheet.prefersGrabberVisible = true
             sheet.delegate = self
@@ -151,12 +199,12 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
         mapVC.present(contactListVC, animated: false)
     }
 
-    private func presentContactDetails(_ contactLocation: ContactLocation) {
+    private func presentContactDetails(_ personLocation: PersonLocation) {
         if let contactDetailVC = contactDetailVC {
-            contactDetailVC.contactLocation = contactLocation
+            contactDetailVC.personLocation = personLocation
             return // already presented
         }
-        let contactDetailVC = ContactDetailViewController(contactLocation: contactLocation)
+        let contactDetailVC = ContactDetailViewController(personLocation: personLocation)
         contactDetailVC.isModalInPresentation = true // prevent dismissal
         if let sheet = contactDetailVC.sheetPresentationController {
             sheet.detents = [.collapsed, .normal, .large()]
@@ -174,26 +222,26 @@ class RootViewController: UIViewController, StoreSubscriber, UISheetPresentation
         contactDetailVC = nil
     }
 
-    private func presentContactLocationForEdit(contactLocation: ContactLocation) {
-        if contactLocationEditVC != nil {
+    private func presentPersonLocationForEdit(personLocation: PersonLocation) {
+        if personLocationEditVC != nil {
             return // already presented
         }
         guard let contactDetailVC = contactDetailVC else {
             fatalError("No contact details presented; cannot edit location")
         }
-        let contactLocationEditVC = LocationEditViewController(contactLocation: contactLocation)
-        contactLocationEditVC.isModalInPresentation = true // prevent dismissal
-        if let sheet = contactLocationEditVC.sheetPresentationController {
+        let personLocationEditVC = LocationEditViewController(personLocation: personLocation)
+        personLocationEditVC.isModalInPresentation = true // prevent dismissal
+        if let sheet = personLocationEditVC.sheetPresentationController {
             sheet.detents = [.large()]
             sheet.delegate = self
         }
-        contactDetailVC.present(contactLocationEditVC, animated: true)
-        self.contactLocationEditVC = contactLocationEditVC
+        contactDetailVC.present(personLocationEditVC, animated: true)
+        self.personLocationEditVC = personLocationEditVC
     }
 
-    private func dismissContactLocationForEdit() {
-        contactLocationEditVC?.dismiss(animated: true)
-        contactLocationEditVC = nil
+    private func dismissPersonLocationForEdit() {
+        personLocationEditVC?.dismiss(animated: true)
+        personLocationEditVC = nil
     }
 
 }

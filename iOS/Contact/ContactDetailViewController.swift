@@ -2,15 +2,15 @@ import UIKit
 import ReSwift
 
 private enum Section: Int {
-    case affinity, locations, photos, count
+    case affinity, locations, calendarEvents, photos, count
 }
 
 class ContactDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private let headerView = ContactDetailHeader()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
 
-    init(contactLocation: ContactLocation) {
-        self.contactLocation = contactLocation
+    init(personLocation: PersonLocation) {
+        self.personLocation = personLocation
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -21,51 +21,78 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let blurEffect = UIBlurEffect(style: .systemThickMaterial)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = self.view.frame
-        view.insertSubview(blurEffectView, at: 0)
+        var topAnchor = view.topAnchor;
+        if (self.navigationController == nil) {
+            tableView.backgroundColor = .clear
+            let blurEffect = UIBlurEffect(style: .systemThickMaterial)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = self.view.frame
+            view.insertSubview(blurEffectView, at: 0)
 
-        view.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+            view.addSubview(headerView)
+            headerView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ])
+            topAnchor = headerView.bottomAnchor;
+        }
 
-        tableView.backgroundColor = .clear
         tableView.automaticallyAdjustsScrollIndicatorInsets = false
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ContactProfilePhotoTableViewCell.self, forCellReuseIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier)
+        tableView.register(CalendarEventTableViewCell.self, forCellReuseIdentifier: CalendarEventTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
-        configureForContactLocation()
+        configureForPersonLocation()
     }
 
-    var contactLocation: ContactLocation {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if (navigationController != nil) {
+            let headerView = UIView(frame: .init(x: 0, y: 0, width: 0, height: Padding.large))
+            tableView.tableHeaderView = headerView
+        }
+    }
+
+    var personLocation: PersonLocation {
         didSet {
-            configureForContactLocation()
+            configureForPersonLocation()
             tableView.reloadData()
         }
     }
 
+    // Convenience
+    var person: Person {
+        get {
+            return personLocation.person
+        }
+    }
+    var contact: Contact {
+        get {
+            return personLocation.person.contact
+        }
+    }
     var homeAddresses: [PostalAddress] {
         get {
-            return contactLocation.contact.homeAddresses
+            return personLocation.person.contact.homeAddresses
         }
     }
 
-    private func configureForContactLocation() {
-        headerView.titleLabel.text = contactLocation.contact.displayName
+    private func configureForPersonLocation() {
+        let title = contact.displayName
+        navigationItem.title = title
+        headerView.titleLabel.text = title
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -80,6 +107,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             return nil
         case Section.photos.rawValue:
             return "Suggested photos"
+        case Section.calendarEvents.rawValue:
+            return "Events"
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -93,6 +122,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             return homeAddresses.count + 1 // for add location cell
         case Section.photos.rawValue:
             return 1
+        case Section.calendarEvents.rawValue:
+            return person.calendarEvents.count
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -105,11 +136,13 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         case Section.locations.rawValue:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
-                return ContactLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
+                return PersonLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
             }
             return Sizing.defaultListItemHeight
         case Section.photos.rawValue:
             return ContactProfilePhotoTableViewCell.preferredHeight
+        case Section.calendarEvents.rawValue:
+            return CalendarEventTableViewCell.preferredHeight
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -118,7 +151,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case Section.affinity.rawValue:
-            let affinityInfo = contactLocation.contact.affinity.info
+            let affinityInfo = person.affinity.info
             let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
             var config = cell.defaultContentConfiguration()
             config.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: Padding.normal, bottom: 0, trailing: Padding.normal)
@@ -126,11 +159,11 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             config.imageProperties.tintColor = .label
             config.text = "\(affinityInfo.title) friend"
             config.image = .init(systemName: affinityInfo.selectedIconName)
-            func setAffinity(_ affinity: ContactAffinity) {
-                app.contactRepository.updateContactAffinity(contact: contactLocation.contact, affinity: affinity)
+            func setAffinity(_ affinity: Affinity) {
+                app.store.dispatch(PersonAffinityChanged(person: person, affinity: affinity))
             }
-            let affinityMenu = UIMenu(children: ContactAffinity.all().map({ affinityInfo in
-                let selected = affinityInfo.affinity == contactLocation.contact.affinity
+            let affinityMenu = UIMenu(children: Affinity.all().map({ affinityInfo in
+                let selected = affinityInfo.affinity == person.affinity
                 return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
                     setAffinity(affinityInfo.affinity)
                 })
@@ -148,7 +181,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         case Section.locations.rawValue:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
-                let cell = ContactLocationTableViewCell(contact: contactLocation.contact, postalAddress: postalAddress)
+                let cell = PersonLocationTableViewCell(person: person, postalAddress: postalAddress)
                 cell.viewController = self
                 return cell
             } else {
@@ -162,7 +195,11 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             }
         case Section.photos.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier, for: indexPath) as! ContactProfilePhotoTableViewCell
-            cell.contact = contactLocation.contact
+            cell.contact = contact
+            return cell
+        case Section.calendarEvents.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CalendarEventTableViewCell.reuseIdentifier, for: indexPath) as! CalendarEventTableViewCell
+            cell.calendarEvent = person.calendarEvents[indexPath.row]
             return cell
         default:
             fatalError("Invalid section: \(indexPath.section)")
@@ -179,7 +216,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                         self.onConfirmDeleteAddress(postalAddress, didDelete: onCompletion)
                     }),
                     UIContextualAction(style: .normal, title: "Edit", handler: { (action, view, onCompletion) in
-                        app.store.dispatch(ContactLocationSelectedForEdit(location: self.contactLocation))
+                        app.store.dispatch(MapPersonLocationSelectedForEdit(location: self.personLocation))
                         onCompletion(true)
                     }),
                 ])
@@ -200,15 +237,17 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         case Section.locations.rawValue:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
-                let contactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: postalAddress)
-                app.store.dispatch(ContactLocationSelected(location: contactLocation))
+                let personLocation = PersonLocation(person: person, postalAddress: postalAddress)
+                app.store.dispatch(MapPersonLocationSelected(location: personLocation))
             } else {
-                let newContactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: nil)
-                app.store.dispatch(ContactLocationSelectedForEdit(location: newContactLocation))
+                let newPersonLocation = PersonLocation(person: person, postalAddress: nil)
+                app.store.dispatch(MapPersonLocationSelectedForEdit(location: newPersonLocation))
             }
         case Section.photos.rawValue:
-            let vc = ProfilePhotosViewController(contact: contactLocation.contact)
+            let vc = ProfilePhotosViewController(contact: contact)
             present(vc, animated: true)
+        case Section.calendarEvents.rawValue:
+            return // noop
         default:
             return // noop
         }
@@ -222,7 +261,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         )
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             let contactRepository = app.contactRepository
-            _ = contactRepository.deletePostalAddress(postalAddress, forContact: self.contactLocation.contact)
+            _ = contactRepository.deletePostalAddress(postalAddress, forContact: self.contact)
             didDelete(true)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
