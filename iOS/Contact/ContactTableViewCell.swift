@@ -7,6 +7,7 @@ class ContactTableViewCell: UITableViewCell {
     private let avatarView = ContactAvatarView()
     private let nameLabel = UILabel()
     private let addressLabel = UILabel()
+    private let affinityImageView = UIImageView()
 
     var locationScale: MapZoomScale = .regional {
         didSet {
@@ -18,10 +19,13 @@ class ContactTableViewCell: UITableViewCell {
         didSet {
             if let contactLocation = contactLocation {
                 avatarView.contacts = [contactLocation.contact]
+                nameLabel.text = contactLocation.contact.displayName
+                affinityImageView.image = .init(systemName: contactLocation.contact.info.affinity.info.selectedIconName)
             } else {
                 avatarView.contacts = []
+                nameLabel.text = ""
+                affinityImageView.image = nil
             }
-            nameLabel.text = contactLocation?.contact.displayName ?? ""
             updateAddressLabel()
         }
     }
@@ -54,13 +58,21 @@ class ContactTableViewCell: UITableViewCell {
             avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
 
+        affinityImageView.tintColor = .label
+        contentView.addSubview(affinityImageView)
+        affinityImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            affinityImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.normal),
+            affinityImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+        ])
+
         nameLabel.font = .systemFont(ofSize: FontSize.normal, weight: .semibold)
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.tight),
             nameLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: Padding.tight),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.normal),
+            nameLabel.trailingAnchor.constraint(equalTo: affinityImageView.trailingAnchor, constant: -Padding.normal),
         ])
 
         addressLabel.textColor = .gray

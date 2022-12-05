@@ -65,7 +65,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -73,6 +73,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         case 0:
             return nil
         case 1:
+            return nil
+        case 2:
             return "Suggested photos"
         default:
             fatalError("Invalid section: \(section)")
@@ -82,8 +84,10 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return homeAddresses.count + 1 // for add location cell
+            return 1;
         case 1:
+            return homeAddresses.count + 1 // for add location cell
+        case 2:
             return 1
         default:
             fatalError("Invalid section: \(section)")
@@ -93,12 +97,14 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
+            return Sizing.defaultListItemHeight
+        case 1:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
                 return ContactLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
             }
             return Sizing.defaultListItemHeight
-        case 1:
+        case 2:
             return ContactProfilePhotoTableViewCell.preferredHeight
         default:
             fatalError("Invalid section: \(indexPath.section)")
@@ -108,6 +114,34 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
+            let affinityInfo = contactLocation.contact.info.affinity.info
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+            var config = cell.defaultContentConfiguration()
+            config.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: Padding.normal, bottom: 0, trailing: Padding.normal)
+            config.textProperties.color = .label
+            config.imageProperties.tintColor = .label
+            config.text = "\(affinityInfo.title) friend"
+            config.image = .init(systemName: affinityInfo.selectedIconName)
+            func setAffinity(_ affinity: ContactAffinity) {
+                app.contactRepository.updateContactAffinity(contact: contactLocation.contact, affinity: affinity)
+            }
+            let affinityMenu = UIMenu(children: ContactAffinity.all().map({ affinityInfo in
+                let selected = affinityInfo.affinity == contactLocation.contact.info.affinity
+                return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
+                    setAffinity(affinityInfo.affinity)
+                })
+            }))
+            let changeButton = UIButton()
+            changeButton.menu = affinityMenu
+            changeButton.showsMenuAsPrimaryAction = true
+            changeButton.setTitle("Change", for: .normal)
+            changeButton.titleLabel?.font = .systemFont(ofSize: FontSize.normal)
+            changeButton.setTitleColor(.tintColor, for: .normal)
+            changeButton.sizeToFit()
+            cell.contentConfiguration = config
+            cell.accessoryView = changeButton
+            return cell
+        case 1:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
                 let cell = ContactLocationTableViewCell(contact: contactLocation.contact, postalAddress: postalAddress)
@@ -122,7 +156,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 cell.contentConfiguration = config
                 return cell
             }
-        case 1:
+        case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier, for: indexPath) as! ContactProfilePhotoTableViewCell
             cell.contact = contactLocation.contact
             return cell
@@ -133,7 +167,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         switch indexPath.section {
-        case 0:
+        case 1:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
                 return UISwipeActionsConfiguration(actions: [
@@ -157,6 +191,9 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case 0:
+            // TODO
+            return
+        case 1:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
                 let contactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: postalAddress)
@@ -165,7 +202,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 let newContactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: nil)
                 app.store.dispatch(ContactLocationSelectedForEdit(location: newContactLocation))
             }
-        case 1:
+        case 2:
             let vc = ProfilePhotosViewController(contact: contactLocation.contact)
             present(vc, animated: true)
         default:

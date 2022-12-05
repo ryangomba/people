@@ -2,10 +2,12 @@ import UIKit
 import ReSwift
 
 struct MapContactListHeaderState: Equatable {
+    var affinityThreshold: ContactAffinity
     var isSearching: Bool
     var searchQuery: String
 
     init(newState: AppState) {
+        affinityThreshold = newState.affinityThreshold
         isSearching = newState.isSearching
         searchQuery = newState.searchQuery
     }
@@ -34,15 +36,15 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             titleLabel.heightAnchor.constraint(equalToConstant: Sizing.titleBarHeight),
         ])
 
+        filterButton.showsMenuAsPrimaryAction = true
         filterButton.setImage(.init(systemName: "chevron.up.circle"), for: .normal)
         filterButton.sizeToFit()
         addSubview(filterButton)
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             filterButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            filterButton.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: Padding.tight),
+            filterButton.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: Padding.superTight),
         ])
-        filterButton.isHidden = true // TODO: enable
 
         let searchAction = UIAction() { _ in
             app.store.dispatch(StartSearching())
@@ -143,10 +145,25 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             searchButton.isHidden = true
             dismissButton.isHidden = false
         } else {
-            titleLabel.text = "People nearby"
+            switch (currentState?.affinityThreshold) {
+            case .best, .close, .loose:
+                let title = currentState!.affinityThreshold.info.title
+                titleLabel.text = "\(title) friends nearby"
+            default:
+                titleLabel.text = "Everyone nearby"
+            }
             searchButton.isHidden = false
             dismissButton.isHidden = true
         }
+
+        // HACK move
+        let affinityMeny = UIMenu(title: "Filter to", children: ContactAffinity.all().map({ affinityInfo in
+            let selected = affinityInfo.affinity == currentState?.affinityThreshold
+            return UIAction(title: affinityInfo.affinity == .undefined ? "Everyone" : affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
+                app.store.dispatch(ContactAffinityThresholdChanged(affinity: affinityInfo.affinity))
+            })
+        }))
+        filterButton.menu = affinityMeny
     }
 
     override var intrinsicContentSize: CGSize {
@@ -161,9 +178,13 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         currentState = state
 
         titleLabel.isHidden = state.isSearching
+        filterButton.isHidden = state.isSearching
         searchButton.isHidden = state.isSearching
         searchBox.isHidden = !state.isSearching
         cancelButton.isHidden = !state.isSearching
+        if state.affinityThreshold != prevState?.affinityThreshold {
+            updateClusterTitle()
+        }
         if state.isSearching != prevState?.isSearching {
             if state.isSearching {
                 searchBox.focus()

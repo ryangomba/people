@@ -8,7 +8,16 @@ struct MapViewControllerState: Equatable {
 
     init(newState: AppState) {
         region = newState.mapRegion
-        newState.contacts.forEach { contact in
+        newState.contacts.filter({ contact in
+            if (contact.info.affinity.rawValue <= newState.affinityThreshold.rawValue) {
+                return true
+            }
+            if (contact.id == newState.selection?.contactLocation?.contact.id) {
+                // Show selected friend on map even if it doesn’t match affinity
+                return true
+            }
+            return false
+        }).forEach { contact in
             contact.homeAddresses.forEach { postalAddress in
                 if postalAddress.coordinate != nil {
                     locatedContacts.append(ContactLocation(contact: contact, postalAddress: postalAddress))
