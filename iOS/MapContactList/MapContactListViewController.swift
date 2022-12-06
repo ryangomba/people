@@ -91,7 +91,7 @@ struct MapContactListViewControllerState {
                 adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
             }
             contactLocations = newState.contacts.filter({ contact in
-                contact.affinity.rawValue <= newState.affinityThreshold.rawValue
+                newState.selectedAffinities.contains(contact.affinity)
             }).map({ contact in
                 return contact.nearestHomeLocation(to: focusedCoordinate)
             }).filter({ result in

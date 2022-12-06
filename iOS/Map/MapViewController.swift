@@ -9,7 +9,7 @@ struct MapViewControllerState: Equatable {
     init(newState: AppState) {
         region = newState.mapRegion
         newState.contacts.filter({ contact in
-            if (contact.affinity.rawValue <= newState.affinityThreshold.rawValue) {
+            if (newState.selectedAffinities.contains(contact.affinity)) {
                 return true
             }
             if (contact.id == newState.selection?.contactLocation?.contact.id) {

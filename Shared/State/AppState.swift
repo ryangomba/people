@@ -21,7 +21,7 @@ struct AppState {
     var contactListDetentIdentifier: UISheetPresentationController.Detent.Identifier = .small
     var isSearching = false
     var searchQuery = ""
-    var affinityThreshold = ContactAffinity.undefined
+    var selectedAffinities: [ContactAffinity] = ContactAffinity.allCases
     var contactDetailsDetentIdentifier: UISheetPresentationController.Detent.Identifier = .normal
     var contactLocationForEdit: ContactLocation?
 }

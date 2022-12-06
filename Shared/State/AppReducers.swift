@@ -118,7 +118,7 @@ func appReducer(action: Action, state: AppState?) -> AppState {
         state.isSearching = false
 
     case let action as ContactAffinityThresholdChanged:
-        state.affinityThreshold = action.affinity
+        state.selectedAffinities = action.selectedAffinities
 
     case let action as ContactDetailsDetentChanged:
         state.contactDetailsDetentIdentifier = action.detentIdentifier

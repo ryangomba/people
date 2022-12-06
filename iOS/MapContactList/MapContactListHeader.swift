@@ -2,12 +2,12 @@ import UIKit
 import ReSwift
 
 struct MapContactListHeaderState: Equatable {
-    var affinityThreshold: ContactAffinity
+    var selectedAffinities: [ContactAffinity]
     var isSearching: Bool
     var searchQuery: String
 
     init(newState: AppState) {
-        affinityThreshold = newState.affinityThreshold
+        selectedAffinities = newState.selectedAffinities
         isSearching = newState.isSearching
         searchQuery = newState.searchQuery
     }
@@ -134,17 +134,40 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             searchButton.isHidden = true
             dismissButton.isHidden = false
         } else {
-            var categoryName: String
+            var categoryName: String = ""
             var categorySuffix: String? = nil
-            switch (currentState?.affinityThreshold) {
-            case .best, .close, .loose:
-                let title = currentState!.affinityThreshold.info.title
-                categoryName = "\(title)"
-                categorySuffix = "friends"
-            default:
+            if (currentState?.selectedAffinities == ContactAffinity.allCases) {
                 categoryName = "Everyone"
+            } else if (currentState?.selectedAffinities.count == 1) {
+                categoryName = currentState!.selectedAffinities[0].info.title
+                categorySuffix = "friends"
+            } else if (currentState?.selectedAffinities.count == 0) {
+                categoryName = "Empty search"
+            } else {
+                if let selectedAffinities = currentState?.selectedAffinities {
+                    let sortedAffinities = selectedAffinities.sorted(by: { lhs, rhs in
+                        lhs.rawValue > rhs.rawValue
+                    })
+                    var isDescending = true;
+                    let firstMinAffinity = sortedAffinities.first!
+                    var minAffinity = firstMinAffinity
+                    sortedAffinities.forEach { affinity in
+                        if (affinity.rawValue < minAffinity.rawValue - 1) {
+                            isDescending = false
+                        }
+                        minAffinity = affinity
+                    }
+                    if (isDescending) {
+                        categoryName = "\(firstMinAffinity.info.title) & closer"
+                    } else {
+                        categoryName = "Selected"
+//                        categoryName = selectedAffinities.map({ affinity in
+//                            affinity.info.title
+//                        }).joined(separator: " & ")
+                    }
+                }
+                categorySuffix = "friends"
             }
-
             let initialRange = NSRange(location: 0, length: categoryName.count)
             let attributedText = NSMutableAttributedString(string: categoryName)
             attributedText.setAttributes([
@@ -173,9 +196,17 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
 
             // HACK move
             let affinityMeny = UIMenu(title: "Filter to", children: ContactAffinity.all().map({ affinityInfo in
-                let selected = affinityInfo.affinity == currentState?.affinityThreshold
-                return UIAction(title: affinityInfo.affinity == .undefined ? "Everyone" : "\(affinityInfo.title) friends", image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
-                    app.store.dispatch(ContactAffinityThresholdChanged(affinity: affinityInfo.affinity))
+                let selected = currentState?.selectedAffinities.contains(affinityInfo.affinity) ?? false
+                return UIAction(title: "\(affinityInfo.title) friends", image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), attributes: .keepsMenuPresented, state: selected ? .on : .off, handler: { (_) in
+                    var newAffinities = self.currentState?.selectedAffinities ?? []
+                    if (newAffinities.contains(affinityInfo.affinity)) {
+                        if (newAffinities.count > 1) {
+                            newAffinities.removeAll { affinity in affinity == affinityInfo.affinity }
+                        }
+                    } else {
+                        newAffinities.append(affinityInfo.affinity)
+                    }
+                    app.store.dispatch(ContactAffinityThresholdChanged(selectedAffinities: newAffinities))
                 })
             }))
             titleButton.menu = affinityMeny
@@ -201,7 +232,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         searchButton.isHidden = state.isSearching
         searchBox.isHidden = !state.isSearching
         cancelButton.isHidden = !state.isSearching
-        if state.affinityThreshold != prevState?.affinityThreshold {
+        if state.selectedAffinities != prevState?.selectedAffinities {
             updateClusterTitle()
         }
         if state.isSearching != prevState?.isSearching {

@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-enum ContactAffinity: Int, Codable {
+enum ContactAffinity: Int, Codable, CaseIterable {
     case best = 1
     case close = 2
     case loose = 3

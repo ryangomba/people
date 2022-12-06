@@ -47,7 +47,7 @@ struct ContactListDetentChanged: Action {
 }
 
 struct ContactAffinityThresholdChanged: Action {
-    let affinity: ContactAffinity
+    let selectedAffinities: [ContactAffinity]
 }
 
 struct StartSearching: Action {}
