@@ -5,6 +5,11 @@ import MapKit
 
 struct Contact: Identifiable, Equatable, Comparable {
     static func < (lhs: Contact, rhs: Contact) -> Bool {
+        let a1 = lhs.affinity;
+        let a2 = rhs.affinity;
+        if (a1 != a2) {
+            return a1.rawValue < a2.rawValue
+        }
         if (!lhs.nickname.isEmpty && rhs.nickname.isEmpty) {
             return true // nicknamed contacts are probably closer friends?
         }
@@ -17,6 +22,7 @@ struct Contact: Identifiable, Equatable, Comparable {
     var nickname: String
     var thumbnailImageData: Data?
     var postalAddresses: [PostalAddress]
+    var affinity: ContactAffinity
     var displayName: String {
         if !nickname.isEmpty {
             return nickname

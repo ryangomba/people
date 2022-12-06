@@ -13,6 +13,7 @@ enum ContactsAuthStatus: Int {
 class ContactRepository: ObservableObject {
     public var authorizationStatus = getAuthorizationStatus()
     private let store = CNContactStore()
+    private let affinityStore = ContactAffinityStore()
     private let geocoder = Geocoder()
     @Published var contacts: [Contact] = []
     @Published var searchText = ""
@@ -147,7 +148,8 @@ class ContactRepository: ObservableObject {
                         value: value,
                         coordinate: coordinate
                     )
-                })
+                }),
+                affinity: affinityStore.get(deviceContact.identifier)
             )
         })
     }
@@ -335,6 +337,25 @@ class ContactRepository: ObservableObject {
         let mutableContact = contact.mutableCopy() as! CNMutableContact
         req.delete(mutableContact)
         try! store.execute(req)
+    }
+
+    // Affinities
+
+    public func updateContactAffinity(contact: Contact, affinity: ContactAffinity) {
+        updateContactAffinities(contactIDs: [contact.id], affinity: affinity)
+    }
+
+    public func updateContactAffinities(contactIDs: Set<String>, affinity: ContactAffinity) {
+        var newContacts: [Contact] = []
+        for contactID in contactIDs {
+            let contact = getContact(contactID)
+            var newContact = contact
+            newContact.affinity = affinity
+            affinityStore.update(contact.id, affinity: affinity)
+            newContacts.append(newContact)
+        }
+        print("Updated contact affinities")
+        updateContacts(newContacts)
     }
 
     // Spotlight

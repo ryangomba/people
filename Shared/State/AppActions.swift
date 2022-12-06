@@ -46,6 +46,10 @@ struct ContactListDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 
+struct ContactAffinityThresholdChanged: Action {
+    let affinity: ContactAffinity
+}
+
 struct StartSearching: Action {}
 struct StopSearching: Action {}
 struct SearchQueryChanged: Action {

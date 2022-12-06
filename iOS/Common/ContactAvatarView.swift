@@ -9,14 +9,29 @@ class ContactAvatarView: UIView {
 
     private let shadowed: Bool
     private let imageView = UIImageView()
+    private let affinityImageView = UIImageView()
 
     var contacts: [Contact] = [] {
         didSet {
             if contacts.isEmpty {
                 imageView.image = nil
+                affinityImageView.image = nil
             } else if contacts != oldValue {
                 imageView.image = drawImage()
+                if (contacts.count == 1) {
+                    let contact = contacts.first!
+                    if let iconName = contact.affinity.info.smallIconName {
+                        affinityImageView.image = .init(systemName: iconName)
+                        affinityImageView.backgroundColor = .white
+                        affinityImageView.tintColor = contact.affinity.info.iconTintColor
+                    } else {
+                        affinityImageView.image = nil
+                    }
+                } else {
+                    affinityImageView.image = nil
+                }
             }
+            affinityImageView.isHidden = affinityImageView.image == nil
         }
     }
 
@@ -32,6 +47,18 @@ class ContactAvatarView: UIView {
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+
+        if (!shadowed) {
+            affinityImageView.layer.cornerRadius = 8
+            addSubview(affinityImageView)
+            affinityImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                affinityImageView.widthAnchor.constraint(equalToConstant: 16),
+                affinityImageView.heightAnchor.constraint(equalToConstant: 16),
+                affinityImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: shadowed ? -1 : 2),
+                affinityImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: shadowed ? -1 : 2),
+            ])
+        }
     }
 
     required init?(coder: NSCoder) {
