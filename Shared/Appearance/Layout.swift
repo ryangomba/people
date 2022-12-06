@@ -6,7 +6,8 @@ struct Sizing {
     }
     static let tapTarget: CGFloat = 44
     static let cornerRadius: CGFloat = 10
-    static let titleBarHeight: CGFloat = 36
+    static let searchBarHeight: CGFloat = 36
+    static let titleBarHeight: CGFloat = 40
     static let defaultListItemHeight: CGFloat = 64
 }
         

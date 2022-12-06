@@ -39,7 +39,7 @@ class LocationEditHeader: UIView {
             searchBox.centerYAnchor.constraint(equalTo: centerYAnchor),
             searchBox.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.tight),
             searchBox.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
-            searchBox.heightAnchor.constraint(equalToConstant: Sizing.titleBarHeight),
+            searchBox.heightAnchor.constraint(equalToConstant: Sizing.searchBarHeight),
         ])
 
         let hairlineView = UIView()
@@ -60,7 +60,7 @@ class LocationEditHeader: UIView {
 
     override var intrinsicContentSize: CGSize {
         get {
-            let height = Sizing.titleBarHeight + Padding.tight * 2;
+            let height = Sizing.searchBarHeight + Padding.tight * 2;
             return CGSize(width: UIView.noIntrinsicMetric, height: height)
         }
     }

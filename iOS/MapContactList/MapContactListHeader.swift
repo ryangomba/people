@@ -15,8 +15,7 @@ struct MapContactListHeaderState: Equatable {
 
 class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
     private var currentState: MapContactListHeaderState?
-    private let titleLabel = UILabel()
-    private let filterButton = UIButton(type: .system)
+    private let titleButton = UIButton()
     private let searchButton = UIButton(type: .system)
     private let cancelButton = UIButton(type: .system)
     private let dismissButton = UIButton(type: .system)
@@ -27,23 +26,13 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
 
         setContentHuggingPriority(.defaultHigh, for: .vertical)
 
-        titleLabel.font = .systemFont(ofSize: FontSize.bigTitle, weight: .bold)
-        addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleButton.titleLabel?.font = .systemFont(ofSize: FontSize.bigTitle, weight: .bold)
+        addSubview(titleButton)
+        titleButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: Padding.normal),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.normal),
-            titleLabel.heightAnchor.constraint(equalToConstant: Sizing.titleBarHeight),
-        ])
-
-        filterButton.showsMenuAsPrimaryAction = true
-        filterButton.setImage(.init(systemName: "chevron.up.circle"), for: .normal)
-        filterButton.sizeToFit()
-        addSubview(filterButton)
-        filterButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            filterButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            filterButton.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: Padding.superTight),
+            titleButton.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 2),
+            titleButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.normal),
+            titleButton.heightAnchor.constraint(equalToConstant: Sizing.titleBarHeight),
         ])
 
         let searchAction = UIAction() { _ in
@@ -55,7 +44,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         addSubview(searchButton)
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            searchButton.centerYAnchor.constraint(equalTo: titleButton.centerYAnchor),
             searchButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             searchButton.widthAnchor.constraint(equalToConstant: searchButton.frame.width + Padding.normal * 2),
             searchButton.heightAnchor.constraint(equalToConstant: searchButton.frame.height + Padding.normal * 2),
@@ -70,7 +59,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         addSubview(cancelButton)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cancelButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            cancelButton.centerYAnchor.constraint(equalTo: titleButton.centerYAnchor),
             cancelButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             cancelButton.widthAnchor.constraint(equalToConstant: cancelButton.frame.width + Padding.normal * 2),
             cancelButton.heightAnchor.constraint(equalToConstant: cancelButton.frame.height + Padding.normal * 2),
@@ -100,7 +89,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         addSubview(dismissButton)
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            dismissButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            dismissButton.centerYAnchor.constraint(equalTo: titleButton.centerYAnchor),
             dismissButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             dismissButton.widthAnchor.constraint(equalToConstant: dismissButton.frame.width + Padding.normal * 2),
             dismissButton.heightAnchor.constraint(equalToConstant: dismissButton.frame.height + Padding.normal * 2),
@@ -141,29 +130,60 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
 
     private func updateClusterTitle() {
         if let clusterTitle = clusterTitle {
-            titleLabel.text = clusterTitle
+            titleButton.setTitle(clusterTitle, for: .normal)
             searchButton.isHidden = true
             dismissButton.isHidden = false
         } else {
+            var categoryName: String
+            var categorySuffix: String? = nil
             switch (currentState?.affinityThreshold) {
             case .best, .close, .loose:
                 let title = currentState!.affinityThreshold.info.title
-                titleLabel.text = "\(title) friends nearby"
+                categoryName = "\(title)"
+                categorySuffix = "friends"
             default:
-                titleLabel.text = "Everyone nearby"
+                categoryName = "Everyone"
             }
+
+            let initialRange = NSRange(location: 0, length: categoryName.count)
+            let attributedText = NSMutableAttributedString(string: categoryName)
+            attributedText.setAttributes([
+                .foregroundColor: UIColor.tintColor,
+                .underlineColor: UIColor.tintColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ], range: initialRange)
+
+            let highlightedAttributedText = NSMutableAttributedString(attributedString: attributedText)
+            highlightedAttributedText.setAttributes([
+                .foregroundColor: UIColor.gray,
+                .underlineColor: UIColor.gray,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ], range: .init(location: 0, length: attributedText.length))
+
+            var extraString = ""
+            if let categorySuffix = categorySuffix {
+                extraString += " \(categorySuffix)"
+            }
+            extraString += " nearby"
+            attributedText.append(NSAttributedString(string: extraString))
+            highlightedAttributedText.append(NSAttributedString(string: extraString))
+
+            titleButton.setAttributedTitle(attributedText, for: .normal)
+            titleButton.setAttributedTitle(highlightedAttributedText, for: .highlighted)
+
+            // HACK move
+            let affinityMeny = UIMenu(title: "Filter to", children: ContactAffinity.all().map({ affinityInfo in
+                let selected = affinityInfo.affinity == currentState?.affinityThreshold
+                return UIAction(title: affinityInfo.affinity == .undefined ? "Everyone" : "\(affinityInfo.title) friends", image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
+                    app.store.dispatch(ContactAffinityThresholdChanged(affinity: affinityInfo.affinity))
+                })
+            }))
+            titleButton.menu = affinityMeny
+            titleButton.showsMenuAsPrimaryAction = true
+
             searchButton.isHidden = false
             dismissButton.isHidden = true
         }
-
-        // HACK move
-        let affinityMeny = UIMenu(title: "Filter to", children: ContactAffinity.all().map({ affinityInfo in
-            let selected = affinityInfo.affinity == currentState?.affinityThreshold
-            return UIAction(title: affinityInfo.affinity == .undefined ? "Everyone" : affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
-                app.store.dispatch(ContactAffinityThresholdChanged(affinity: affinityInfo.affinity))
-            })
-        }))
-        filterButton.menu = affinityMeny
     }
 
     override var intrinsicContentSize: CGSize {
@@ -177,8 +197,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         let prevState = currentState
         currentState = state
 
-        titleLabel.isHidden = state.isSearching
-        filterButton.isHidden = state.isSearching
+        titleButton.isHidden = state.isSearching
         searchButton.isHidden = state.isSearching
         searchBox.isHidden = !state.isSearching
         cancelButton.isHidden = !state.isSearching

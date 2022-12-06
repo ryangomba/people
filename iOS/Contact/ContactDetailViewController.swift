@@ -191,7 +191,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case 0:
-            // TODO
+            // TODO: change affinity
             return
         case 1:
             if indexPath.row < homeAddresses.count {
