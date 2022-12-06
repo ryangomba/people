@@ -18,6 +18,7 @@ enum ContactAffinity: Int, Codable {
             title
         }
     }
+
     static func all() -> [AffinityInfo] {
         return [
             .init(
@@ -54,6 +55,7 @@ enum ContactAffinity: Int, Codable {
             )
         ]
     }
+
     var info: AffinityInfo {
         return Self.all().first { info in info.affinity == self }!
     }

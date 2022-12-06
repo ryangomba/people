@@ -345,7 +345,7 @@ class ContactRepository: ObservableObject {
         updateContactAffinities(contactIDs: [contact.id], affinity: affinity)
     }
 
-    private func updateContactAffinities(contactIDs: Set<String>, affinity: ContactAffinity) {
+    public func updateContactAffinities(contactIDs: Set<String>, affinity: ContactAffinity) {
         var newContacts: [Contact] = []
         for contactID in contactIDs {
             let contact = getContact(contactID)
