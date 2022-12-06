@@ -136,7 +136,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         } else {
             var categoryName: String = ""
             var categorySuffix: String? = nil
-            if (currentState?.selectedAffinities == ContactAffinity.allCases) {
+            if (currentState?.selectedAffinities.count == ContactAffinity.allCases.count) {
                 categoryName = "Everyone"
             } else if (currentState?.selectedAffinities.count == 1) {
                 categoryName = currentState!.selectedAffinities[0].info.title
