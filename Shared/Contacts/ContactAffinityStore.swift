@@ -20,19 +20,42 @@ enum ContactAffinity: Int, Codable {
     }
     static func all() -> [AffinityInfo] {
         return [
-            AffinityInfo(title: "Best", affinity: .best, iconName: "heart", selectedIconName: "heart.fill", smallIconName: "heart.circle.fill", iconTintColor: .red),
-            AffinityInfo(title: "Close", affinity: .close, iconName: "star", selectedIconName: "star.fill", smallIconName: "star.circle.fill", iconTintColor: .blue),
-            AffinityInfo(title: "Loose", affinity: .loose, iconName: "circle", selectedIconName: "circle.fill", smallIconName: "record.circle.fill", iconTintColor: .gray),
-            AffinityInfo(title: "Distant", affinity: .undefined, iconName: "infinity", selectedIconName: "infinity", smallIconName: nil, iconTintColor: .black)
+            .init(
+                title: "Best",
+                affinity: .best,
+                iconName: "heart",
+                selectedIconName: "heart.fill",
+                smallIconName: "heart.circle.fill",
+                iconTintColor: .red
+            ),
+            .init(
+                title: "Close",
+                affinity: .close,
+                iconName: "star",
+                selectedIconName: "star.fill",
+                smallIconName: "star.circle.fill",
+                iconTintColor: .blue
+            ),
+            .init(
+                title: "Loose",
+                affinity: .loose,
+                iconName: "circle",
+                selectedIconName: "circle.fill",
+                smallIconName: "record.circle.fill",
+                iconTintColor: .gray
+            ),
+            .init(
+                title: "Distant",
+                affinity: .undefined,
+                iconName: "infinity",
+                selectedIconName: "infinity",
+                smallIconName: nil,
+                iconTintColor: .black
+            )
         ]
     }
     var info: AffinityInfo {
         return Self.all().first { info in info.affinity == self }!
-    }
-    var name: String {
-        return ContactAffinity.all().first { i in
-            i.affinity == self
-        }!.title
     }
 }
 
