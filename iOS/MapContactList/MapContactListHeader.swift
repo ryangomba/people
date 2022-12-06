@@ -26,7 +26,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
 
         setContentHuggingPriority(.defaultHigh, for: .vertical)
 
-        titleButton.titleLabel?.font = .systemFont(ofSize: FontSize.bigTitle, weight: .bold)
+        titleButton.titleLabel?.font = .systemFont(ofSize: FontSize.title, weight: .bold)
         addSubview(titleButton)
         titleButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

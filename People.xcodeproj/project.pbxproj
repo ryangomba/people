@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9406FBCE293BBFFA000F96F1 /* SimpleFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406FBCD293BBFFA000F96F1 /* SimpleFooterView.swift */; };
+		941DA38C293FEE4F002779A4 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA38B293FEE4F002779A4 /* ActionViewController.swift */; };
+		941DA38F293FEF86002779A4 /* CalendarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA38E293FEF86002779A4 /* CalendarEvent.swift */; };
+		941DA391293FEFC4002779A4 /* CalendarRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA390293FEFC4002779A4 /* CalendarRepository.swift */; };
 		94324F2A28BF34B000D9B104 /* LocationAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94324F2928BF34B000D9B104 /* LocationAuthManager.swift */; };
 		9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1B28AD65EB00323AAE /* Contact.swift */; };
 		9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */; };
@@ -75,6 +78,9 @@
 
 /* Begin PBXFileReference section */
 		9406FBCD293BBFFA000F96F1 /* SimpleFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFooterView.swift; sourceTree = "<group>"; };
+		941DA38B293FEE4F002779A4 /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
+		941DA38E293FEF86002779A4 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
+		941DA390293FEFC4002779A4 /* CalendarRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarRepository.swift; sourceTree = "<group>"; };
 		94324F2928BF34B000D9B104 /* LocationAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAuthManager.swift; sourceTree = "<group>"; };
 		9433AC1B28AD65EB00323AAE /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationExtensions.swift; sourceTree = "<group>"; };
@@ -152,6 +158,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		941DA38A293FEE46002779A4 /* Action */ = {
+			isa = PBXGroup;
+			children = (
+				941DA38B293FEE4F002779A4 /* ActionViewController.swift */,
+			);
+			path = Action;
+			sourceTree = "<group>";
+		};
+		941DA38D293FEF76002779A4 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				941DA38E293FEF86002779A4 /* CalendarEvent.swift */,
+				941DA390293FEFC4002779A4 /* CalendarRepository.swift */,
+			);
+			path = Calendar;
+			sourceTree = "<group>";
+		};
 		9433AC2A28AE874A00323AAE /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +292,7 @@
 				94945F5D28AC897F00F52EC8 /* RootViewController.swift */,
 				9433AC2A28AE874A00323AAE /* Common */,
 				94EA8D6028BFE40400D7E68D /* Onboarding */,
+				941DA38A293FEE46002779A4 /* Action */,
 				94945F5A28AC889A00F52EC8 /* Map */,
 				94945F5B28AC889F00F52EC8 /* MapContactList */,
 				94D36D22293BE1D300184B3B /* ContactList */,
@@ -333,6 +357,7 @@
 			children = (
 				94945F4428AC2FBC00F52EC8 /* State */,
 				94945F4528AC2FD900F52EC8 /* Contacts */,
+				941DA38D293FEF76002779A4 /* Calendar */,
 				94945F4D28AC4EE700F52EC8 /* Extensions */,
 				94945F4828AC304600F52EC8 /* Geocoding */,
 				94945F6128AC9AB500F52EC8 /* Appearance */,
@@ -474,6 +499,7 @@
 				94E2829928DB710F0009C27F /* NetworkImageView.swift in Sources */,
 				9433AC2C28AE877E00323AAE /* ContactLocationTableViewCell.swift in Sources */,
 				9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */,
+				941DA38F293FEF86002779A4 /* CalendarEvent.swift in Sources */,
 				9433AC2F28AEA39D00323AAE /* LocationEditViewController.swift in Sources */,
 				94EA8D6A28BFFCC100D7E68D /* ContactIngestionViewController.swift in Sources */,
 				9433AC3728B00CCE00323AAE /* PostalAddress.swift in Sources */,
@@ -482,6 +508,8 @@
 				94F5AAC327500ED3009276E7 /* ContactRepository.swift in Sources */,
 				9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */,
 				94E282A728DB713C0009C27F /* GoogleImageSearcher.swift in Sources */,
+				941DA38C293FEE4F002779A4 /* ActionViewController.swift in Sources */,
+				941DA391293FEFC4002779A4 /* CalendarRepository.swift in Sources */,
 				94E282A128DB71210009C27F /* ProfilePhotoCollectionViewCell.swift in Sources */,
 				94945F5728AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift in Sources */,
 				9433AC2228AD8C7900323AAE /* MapLayout.swift in Sources */,
@@ -697,6 +725,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS/People--iOS--Info.plist";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Allow access to your calendar so you know when to reach out to friends";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Allow access to your Contacts so you can see them on a map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to your location to automatically center the map";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -732,6 +761,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS/People--iOS--Info.plist";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Allow access to your calendar so you know when to reach out to friends";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Allow access to your Contacts so you can see them on a map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to your location to automatically center the map";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

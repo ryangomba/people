@@ -11,6 +11,8 @@ struct ContactSelection: Equatable {
 struct AppState {
     var locationAuthStatus: LocationAuthStatus
     var contactsAuthStatus: ContactsAuthStatus
+    var calendarAuthStatus: CalendarAuthStatus
+
     var contacts: [Contact] = []
     var geocoderQueueCount: Int = 0
     var mapRegion = MKCoordinateRegion(

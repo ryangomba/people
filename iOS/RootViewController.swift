@@ -33,14 +33,18 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     init() {
         super.init(nibName: nil, bundle: nil)
 
+        let actionVC = UINavigationController(rootViewController: ActionViewController())
+        actionVC.tabBarItem = UITabBarItem(title: "Act", image: .init(systemName: "bolt"), selectedImage: .init(systemName: "bolt.fill"))
+
         let listVC = UINavigationController(rootViewController: ContactListViewController())
         listVC.navigationBar.prefersLargeTitles = true
-        listVC.tabBarItem = UITabBarItem(title: "List", image: .init(systemName: "list.bullet"), tag: 0)
-        mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), tag: 1)
-        self.viewControllers = [listVC, mapVC]
-        self.selectedViewController = mapVC
-        self.tabBar.backgroundColor = .white
+        listVC.tabBarItem = UITabBarItem(title: "List", image: .init(systemName: "list.bullet"), selectedImage: .init(systemName: "list.bullet"))
 
+        mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), selectedImage: .init(systemName: "map.fill"))
+
+        self.tabBar.backgroundColor = .white
+        self.viewControllers = [actionVC, listVC, mapVC]
+        self.selectedViewController = actionVC
         self.delegate = self
     }
 
