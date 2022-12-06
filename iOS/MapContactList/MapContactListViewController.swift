@@ -2,6 +2,10 @@ import UIKit
 import MapKit
 import ReSwift
 
+private enum Section: Int {
+    case searchResults, contactLocations, count
+}
+
 enum MapZoomScale: Int {
     case local = 1
     case regional = 2
@@ -248,14 +252,14 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return Section.count.rawValue
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
+        case Section.searchResults.rawValue:
             return min(filteredLocationResults.count, 1)
-        case 1:
+        case Section.contactLocations.rawValue:
             return currentState.contactLocations.count
         default:
             fatalError("Invalid section: \(section)")
@@ -264,9 +268,9 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 0:
+        case Section.searchResults.rawValue:
             return LocationSearchResultTableViewCell.preferredHeight
-        case 1:
+        case Section.contactLocations.rawValue:
             return ContactTableViewCell.preferredHeight
         default:
             fatalError("Invalid section: \(indexPath.section)")
@@ -275,13 +279,13 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
-        case 0:
+        case Section.searchResults.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: LocationSearchResultTableViewCell.reuseIdentifier, for: indexPath) as! LocationSearchResultTableViewCell
             let result = filteredLocationResults[indexPath.row]
             cell.title = result.title
             cell.subtitle = result.subtitle
             return cell
-        case 1:
+        case Section.contactLocations.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.reuseIdentifier, for: indexPath) as! ContactTableViewCell
             cell.contactLocation = currentState.contactLocations[indexPath.row]
             cell.locationScale = currentState.mapZoomScale
@@ -293,9 +297,9 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         switch indexPath.section {
-        case 0:
+        case Section.searchResults.rawValue:
             return nil
-        case 1:
+        case Section.contactLocations.rawValue:
             let contactLocation = currentState.contactLocations[indexPath.row]
             return UISwipeActionsConfiguration(actions: [
                 UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
@@ -309,7 +313,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
-        case 0:
+        case Section.searchResults.rawValue:
             let result = filteredLocationResults[indexPath.row]
             let searchRequest = MKLocalSearch.Request(completion: result)
             let search = MKLocalSearch(request: searchRequest)
@@ -326,7 +330,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
                 }
             }
             break
-        case 1:
+        case Section.contactLocations.rawValue:
             let contactLocation = currentState.contactLocations[indexPath.row]
             app.store.dispatch(ContactLocationSelected(location: contactLocation))
             tableView.scrollToTop(animated: false)

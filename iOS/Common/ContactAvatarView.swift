@@ -49,6 +49,7 @@ class ContactAvatarView: UIView {
         ])
 
         if (!shadowed) {
+            // HACK: make the option to show the affinity a top-level property
             affinityImageView.layer.cornerRadius = 8
             addSubview(affinityImageView)
             affinityImageView.translatesAutoresizingMaskIntoConstraints = false
