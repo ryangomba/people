@@ -23,7 +23,7 @@ class ContactAvatarView: UIView {
                     if let iconName = contact.info.affinity.info.smallIconName {
                         affinityImageView.image = .init(systemName: iconName)
                         affinityImageView.backgroundColor = .white
-                        affinityImageView.tintColor = .black // contact.info.affinity.info.iconTintColor
+                        affinityImageView.tintColor = contact.info.affinity.info.iconTintColor
                     } else {
                         affinityImageView.image = nil
                     }
@@ -48,15 +48,17 @@ class ContactAvatarView: UIView {
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        affinityImageView.layer.cornerRadius = 8
-        addSubview(affinityImageView)
-        affinityImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            affinityImageView.widthAnchor.constraint(equalToConstant: 16),
-            affinityImageView.heightAnchor.constraint(equalToConstant: 16),
-            affinityImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: shadowed ? -1 : 2),
-            affinityImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: shadowed ? -1 : 2),
-        ])
+        if (!shadowed) {
+            affinityImageView.layer.cornerRadius = 8
+            addSubview(affinityImageView)
+            affinityImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                affinityImageView.widthAnchor.constraint(equalToConstant: 16),
+                affinityImageView.heightAnchor.constraint(equalToConstant: 16),
+                affinityImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: shadowed ? -1 : 2),
+                affinityImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: shadowed ? -1 : 2),
+            ])
+        }
     }
 
     required init?(coder: NSCoder) {

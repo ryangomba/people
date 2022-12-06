@@ -21,8 +21,8 @@ enum ContactAffinity: Int, Codable {
     static func all() -> [AffinityInfo] {
         return [
             AffinityInfo(title: "Best", affinity: .best, iconName: "heart", selectedIconName: "heart.fill", smallIconName: "heart.circle.fill", iconTintColor: .red),
-            AffinityInfo(title: "Close", affinity: .close, iconName: "star", selectedIconName: "star.fill", smallIconName: "star.circle.fill", iconTintColor: .orange),
-            AffinityInfo(title: "Loose", affinity: .loose, iconName: "circle", selectedIconName: "circle.fill", smallIconName: "record.circle.fill", iconTintColor: .blue),
+            AffinityInfo(title: "Close", affinity: .close, iconName: "star", selectedIconName: "star.fill", smallIconName: "star.circle.fill", iconTintColor: .blue),
+            AffinityInfo(title: "Loose", affinity: .loose, iconName: "circle", selectedIconName: "circle.fill", smallIconName: "record.circle.fill", iconTintColor: .gray),
             AffinityInfo(title: "Distant", affinity: .undefined, iconName: "infinity", selectedIconName: "infinity", smallIconName: nil, iconTintColor: .black)
         ]
     }
