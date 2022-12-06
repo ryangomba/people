@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 enum ContactAffinity: Int, Codable {
     case best = 1
@@ -11,16 +12,18 @@ enum ContactAffinity: Int, Codable {
         var affinity: ContactAffinity
         var iconName: String
         var selectedIconName: String
+        var smallIconName: String?
+        var iconTintColor: UIColor
         var id: String {
             title
         }
     }
     static func all() -> [AffinityInfo] {
         return [
-            AffinityInfo(title: "Best", affinity: .best, iconName: "heart", selectedIconName: "heart.fill"),
-            AffinityInfo(title: "Close", affinity: .close, iconName: "star", selectedIconName: "star.fill"),
-            AffinityInfo(title: "Loose", affinity: .loose, iconName: "circle", selectedIconName: "circle.fill"),
-            AffinityInfo(title: "Distant", affinity: .undefined, iconName: "infinity", selectedIconName: "infinity")
+            AffinityInfo(title: "Best", affinity: .best, iconName: "heart", selectedIconName: "heart.fill", smallIconName: "heart.circle.fill", iconTintColor: .red),
+            AffinityInfo(title: "Close", affinity: .close, iconName: "star", selectedIconName: "star.fill", smallIconName: "star.circle.fill", iconTintColor: .orange),
+            AffinityInfo(title: "Loose", affinity: .loose, iconName: "circle", selectedIconName: "circle.fill", smallIconName: "record.circle.fill", iconTintColor: .blue),
+            AffinityInfo(title: "Distant", affinity: .undefined, iconName: "infinity", selectedIconName: "infinity", smallIconName: nil, iconTintColor: .black)
         ]
     }
     var info: AffinityInfo {

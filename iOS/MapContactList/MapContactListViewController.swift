@@ -12,10 +12,32 @@ struct ContactSearchResult {
     let score: Int
 }
 
+struct ContactLocationGroup: Equatable {
+    let affinity: ContactAffinity
+    var contactLocations: [ContactLocation]
+}
+
+extension [ContactLocation] {
+    func groupByAffinity() -> [ContactLocationGroup] {
+        var byAffinity: [ContactAffinity: ContactLocationGroup] = [:];
+        self.forEach { contactLocation in
+            let affinity = contactLocation.contact.info.affinity
+            if byAffinity[affinity] != nil {
+                byAffinity[affinity]!.contactLocations.append(contactLocation)
+            } else {
+                byAffinity[affinity] = ContactLocationGroup(affinity: affinity, contactLocations: [contactLocation])
+            }
+        }
+        return byAffinity.values.sorted { lhs, rhs in
+            lhs.affinity.rawValue < rhs.affinity.rawValue
+        }
+    }
+}
+
 struct MapContactListViewControllerState {
     var searchQuery: String?
     var clusterTitle: String?
-    var contactLocations: [ContactLocation]
+    var contactLocationGroups: [ContactLocationGroup]
     var mapZoomScale: MapZoomScale = .regional
 
     init(newState: AppState) {
@@ -36,7 +58,7 @@ struct MapContactListViewControllerState {
         let clusterSelected = newState.selection?.fromCluster ?? false
         if clusterSelected {
             let coordinate = newState.selection!.coordinate
-            contactLocations = []
+            var contactLocations: [ContactLocation] = []
             var postalAddresses: [PostalAddress] = []
             newState.contacts.forEach({ contact in
                 // Be sure to only select the first matching address in the case of duplicates
@@ -47,10 +69,11 @@ struct MapContactListViewControllerState {
                     }
                 }
             })
+            contactLocationGroups = [ContactLocationGroup(affinity: .undefined, contactLocations: contactLocations)]
             clusterTitle = postalAddresses.sameLocationSharedDescription
         } else if newState.isSearching {
             let query = query.lowercased()
-            contactLocations = newState.contacts.map { contact in
+            contactLocationGroups = newState.contacts.map { contact in
                 let searchString = contact.searchString
                 var score = 0
                 if query.isEmpty {
@@ -80,13 +103,13 @@ struct MapContactListViewControllerState {
                 return searchResult.contact.nearestHomeLocation(to: focusedCoordinate)
             }).map({ result in
                 return result.contactLocation
-            })
+            }).groupByAffinity()
         } else {
             var adjustedRegion = newState.mapRegion
             if adjustedRegion.span.longitudeDelta == 0 {
                 adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
             }
-            contactLocations = newState.contacts.filter({ contact in
+            contactLocationGroups = newState.contacts.filter({ contact in
                 contact.info.affinity.rawValue <= newState.affinityThreshold.rawValue
             }).map({ contact in
                 return contact.nearestHomeLocation(to: focusedCoordinate)
@@ -106,7 +129,7 @@ struct MapContactListViewControllerState {
                 return r1.distance < r2.distance
             }).map({ result in
                 return result.contactLocation
-            })
+            }).groupByAffinity()
         }
     }
 }
@@ -137,6 +160,8 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         tableView.tableFooterView = footerView;
 
         tableView.backgroundColor = .clear
+        tableView.sectionHeaderTopPadding = 2
+        tableView.separatorInset = .zero
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(LocationSearchResultTableViewCell.self, forCellReuseIdentifier: LocationSearchResultTableViewCell.reuseIdentifier)
@@ -198,7 +223,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
                 completer.queryFragment = ""
             }
         }
-        if state.contactLocations != prevState.contactLocations || state.mapZoomScale != prevState.mapZoomScale {
+        if state.contactLocationGroups != prevState.contactLocationGroups || state.mapZoomScale != prevState.mapZoomScale {
             tableView.reloadData()
         }
         if state.clusterTitle != prevState.clusterTitle {
@@ -214,7 +239,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         } else {
             footerView.text = "Nobody nearby";
         }
-        let hasResults = currentState.contactLocations.count + filteredLocationResults.count > 0;
+        let hasResults = currentState.contactLocationGroups.count + filteredLocationResults.count > 0;
         let isSearching = !completer.queryFragment.isEmpty && completer.isSearching;
         footerView.isHidden = hasResults || isSearching;
     }
@@ -248,17 +273,15 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return currentState.contactLocationGroups.count + 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
             return min(filteredLocationResults.count, 1)
-        case 1:
-            return currentState.contactLocations.count
         default:
-            fatalError("Invalid section: \(section)")
+            return currentState.contactLocationGroups[section - 1].contactLocations.count
         }
     }
 
@@ -266,10 +289,17 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         switch indexPath.section {
         case 0:
             return LocationSearchResultTableViewCell.preferredHeight
-        case 1:
-            return ContactTableViewCell.preferredHeight
         default:
-            fatalError("Invalid section: \(indexPath.section)")
+            return ContactTableViewCell.preferredHeight
+        }
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return nil
+        default:
+            return currentState.contactLocationGroups[section - 1].affinity.info.title
         }
     }
 
@@ -281,13 +311,11 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
             cell.title = result.title
             cell.subtitle = result.subtitle
             return cell
-        case 1:
+        default:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.reuseIdentifier, for: indexPath) as! ContactTableViewCell
-            cell.contactLocation = currentState.contactLocations[indexPath.row]
+            cell.contactLocation = currentState.contactLocationGroups[indexPath.section - 1].contactLocations[indexPath.row]
             cell.locationScale = currentState.mapZoomScale
             return cell
-        default:
-            fatalError("Invalid section: \(indexPath.section)")
         }
     }
 
@@ -295,15 +323,13 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         switch indexPath.section {
         case 0:
             return nil
-        case 1:
-            let contactLocation = currentState.contactLocations[indexPath.row]
+        default:
+            let contactLocation = currentState.contactLocationGroups[indexPath.section - 1].contactLocations[indexPath.row]
             return UISwipeActionsConfiguration(actions: [
                 UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
                     self.onConfirmDeleteContact(contactLocation.contact, didDelete: onCompletion)
                 })
             ])
-        default:
-            fatalError("Invalid section: \(indexPath.section)")
         }
     }
 
@@ -326,12 +352,10 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
                 }
             }
             break
-        case 1:
-            let contactLocation = currentState.contactLocations[indexPath.row]
+        default:
+            let contactLocation = currentState.contactLocationGroups[indexPath.section - 1].contactLocations[indexPath.row]
             app.store.dispatch(ContactLocationSelected(location: contactLocation))
             tableView.scrollToTop(animated: false)
-        default:
-            fatalError("Invalid section: \(indexPath.section)")
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
