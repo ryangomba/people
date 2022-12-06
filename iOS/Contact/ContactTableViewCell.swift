@@ -20,7 +20,7 @@ class ContactTableViewCell: UITableViewCell {
             if let contactLocation = contactLocation {
                 avatarView.contacts = [contactLocation.contact]
                 nameLabel.text = contactLocation.contact.displayName
-                let affinity = contactLocation.contact.info.affinity
+                let affinity = contactLocation.contact.affinity
                 func setAffinity(_ affinity: ContactAffinity) {
                     app.contactRepository.updateContactAffinity(contact: contactLocation.contact, affinity: affinity)
                 }

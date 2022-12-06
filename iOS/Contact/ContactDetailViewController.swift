@@ -114,7 +114,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let affinityInfo = contactLocation.contact.info.affinity.info
+            let affinityInfo = contactLocation.contact.affinity.info
             let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
             var config = cell.defaultContentConfiguration()
             config.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: Padding.normal, bottom: 0, trailing: Padding.normal)
@@ -126,7 +126,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 app.contactRepository.updateContactAffinity(contact: contactLocation.contact, affinity: affinity)
             }
             let affinityMenu = UIMenu(children: ContactAffinity.all().map({ affinityInfo in
-                let selected = affinityInfo.affinity == contactLocation.contact.info.affinity
+                let selected = affinityInfo.affinity == contactLocation.contact.affinity
                 return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
                     setAffinity(affinityInfo.affinity)
                 })

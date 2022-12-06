@@ -36,13 +36,13 @@ enum ContactAffinity: Int, Codable {
     }
 }
 
-struct ContactInfo: Codable, Equatable {
+private struct ContactInfo: Codable, Equatable {
     var affinity: ContactAffinity
 }
 
-typealias ContactInfoData = [String: ContactInfo]
+private typealias ContactInfoData = [String: ContactInfo]
 
-class ContactInfoStore {
+class ContactAffinityStore {
     private var data: ContactInfoData = [:]
 
     init() {
@@ -68,12 +68,22 @@ class ContactInfoStore {
         try! data.write(to: cacheURL)
     }
 
-    func get(_ key: String) -> ContactInfo {
+    private func getInfo(_ key: String) -> ContactInfo {
         return data[key] ?? ContactInfo(affinity: .undefined)
     }
 
-    func update(_ key: String, info: ContactInfo) {
+    public func get(_ key: String) -> ContactAffinity {
+        return getInfo(key).affinity
+    }
+
+    private func updateInfo(_ key: String, info: ContactInfo) {
         data[key] = info
         save()
+    }
+
+    public func update(_ key: String, affinity: ContactAffinity) {
+        var info = getInfo(key)
+        info.affinity = affinity
+        updateInfo(key, info: info)
     }
 }

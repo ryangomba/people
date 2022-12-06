@@ -13,7 +13,7 @@ enum ContactsAuthStatus: Int {
 class ContactRepository: ObservableObject {
     public var authorizationStatus = getAuthorizationStatus()
     private let store = CNContactStore()
-    private let infoStore = ContactInfoStore()
+    private let affinityStore = ContactAffinityStore()
     private let geocoder = Geocoder()
     @Published var contacts: [Contact] = []
     @Published var searchText = ""
@@ -149,7 +149,7 @@ class ContactRepository: ObservableObject {
                         coordinate: coordinate
                     )
                 }),
-                info: infoStore.get(deviceContact.identifier)
+                affinity: affinityStore.get(deviceContact.identifier)
             )
         })
     }
@@ -349,11 +349,9 @@ class ContactRepository: ObservableObject {
         var newContacts: [Contact] = []
         for contactID in contactIDs {
             let contact = getContact(contactID)
-            var newInfo = contact.info
-            newInfo.affinity = affinity
             var newContact = contact
-            newContact.info = newInfo
-            infoStore.update(contact.id, info: newInfo)
+            newContact.affinity = affinity
+            affinityStore.update(contact.id, affinity: affinity)
             newContacts.append(newContact)
         }
         print("Updated contact affinities")
