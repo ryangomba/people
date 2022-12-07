@@ -2,15 +2,22 @@ import UIKit
 import ReSwift
 
 private enum Section: Int {
-    case affinity, locations, photos, count
+    case affinity, locations, calendarEvents, photos, count
 }
 
 class ContactDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private let headerView = ContactDetailHeader()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    private let calendarEvents: [CalendarEvent]
 
     init(contactLocation: ContactLocation) {
         self.contactLocation = contactLocation
+        // TODO: listen for changes
+        self.calendarEvents = app.store.state.calendarEvents.filter({ calendarEvent in
+            calendarEvent.attendeeEmails.contains { emailAddress in
+                contactLocation.contact.emailAddresses.contains(emailAddress)
+            }
+        })
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -43,6 +50,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ContactProfilePhotoTableViewCell.self, forCellReuseIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier)
+        tableView.register(CalendarEventTableViewCell.self, forCellReuseIdentifier: CalendarEventTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -85,6 +93,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             return nil
         case Section.photos.rawValue:
             return "Suggested photos"
+        case Section.calendarEvents.rawValue:
+            return "Events"
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -98,6 +108,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             return homeAddresses.count + 1 // for add location cell
         case Section.photos.rawValue:
             return 1
+        case Section.calendarEvents.rawValue:
+            return calendarEvents.count
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -115,6 +127,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             return Sizing.defaultListItemHeight
         case Section.photos.rawValue:
             return ContactProfilePhotoTableViewCell.preferredHeight
+        case Section.calendarEvents.rawValue:
+            return CalendarEventTableViewCell.preferredHeight
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -169,6 +183,10 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier, for: indexPath) as! ContactProfilePhotoTableViewCell
             cell.contact = contactLocation.contact
             return cell
+        case Section.calendarEvents.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CalendarEventTableViewCell.reuseIdentifier, for: indexPath) as! CalendarEventTableViewCell
+            cell.calendarEvent = calendarEvents[indexPath.row]
+            return cell
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -214,6 +232,8 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         case Section.photos.rawValue:
             let vc = ProfilePhotosViewController(contact: contactLocation.contact)
             present(vc, animated: true)
+        case Section.calendarEvents.rawValue:
+            return // noop
         default:
             return // noop
         }

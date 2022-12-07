@@ -14,6 +14,7 @@ struct AppState {
     var calendarAuthStatus: CalendarAuthStatus
 
     var contacts: [Contact] = []
+    var calendarEvents: [CalendarEvent] = []
     var geocoderQueueCount: Int = 0
     var mapRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(),

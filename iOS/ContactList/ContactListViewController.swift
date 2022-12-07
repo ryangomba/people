@@ -126,7 +126,6 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
             let contact = currentState.contacts[indexPath.row];
             let contactLocation = ContactLocation(contact: contact, postalAddress: nil) // TODO: different type of cell?
             cell.contactLocation = contactLocation
-//            cell.locationScale = currentState.mapZoomScale
             return cell
         default:
             fatalError("Invalid section: \(indexPath.section)")

@@ -288,7 +288,12 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         case Section.contactLocations.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.reuseIdentifier, for: indexPath) as! ContactTableViewCell
             cell.contactLocation = currentState.contactLocations[indexPath.row]
-            cell.locationScale = currentState.mapZoomScale
+            switch currentState.mapZoomScale {
+            case .local:
+                cell.subtitleType = .addressLocal
+            default:
+                cell.subtitleType = .addressRegional
+            }
             return cell
         default:
             fatalError("Invalid section: \(indexPath.section)")

@@ -8,12 +8,20 @@ struct LocationAccessChanged: Action {
     let status: LocationAuthStatus
 }
 
+struct CalendarAccessChanged: Action {
+    let status: CalendarAuthStatus
+}
+
 struct ContactsAccessChanged: Action {
     let status: ContactsAuthStatus
 }
 
 struct ContactsChanged: Action {
     let newContacts: [Contact]
+}
+
+struct CalendarChanged: Action {
+    let newCalendarEvents: [CalendarEvent]
 }
 
 struct GeocoderQueueCountChanged: Action {

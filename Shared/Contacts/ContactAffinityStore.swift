@@ -5,11 +5,13 @@ enum ContactAffinity: Int, Codable, CaseIterable {
     case best = 1
     case close = 2
     case loose = 3
+    case keep = 4
     case undefined = 10
 
     struct AffinityInfo: Identifiable {
         var title: String
         var affinity: ContactAffinity
+        var days: Int
         var iconName: String
         var selectedIconName: String
         var smallIconName: String?
@@ -24,6 +26,7 @@ enum ContactAffinity: Int, Codable, CaseIterable {
             .init(
                 title: "Best",
                 affinity: .best,
+                days: 7,
                 iconName: "heart",
                 selectedIconName: "heart.fill",
                 smallIconName: "heart.circle.fill",
@@ -32,6 +35,7 @@ enum ContactAffinity: Int, Codable, CaseIterable {
             .init(
                 title: "Close",
                 affinity: .close,
+                days: 30,
                 iconName: "star",
                 selectedIconName: "star.fill",
                 smallIconName: "star.circle.fill",
@@ -40,14 +44,25 @@ enum ContactAffinity: Int, Codable, CaseIterable {
             .init(
                 title: "Loose",
                 affinity: .loose,
+                days: 90,
                 iconName: "circle",
                 selectedIconName: "circle.fill",
                 smallIconName: "record.circle.fill",
                 iconTintColor: .gray
             ),
             .init(
+                title: "Keep",
+                affinity: .keep,
+                days: 180,
+                iconName: "hand.wave",
+                selectedIconName: "hand.wave.fill",
+                smallIconName: "figure.wave.circle.fill",
+                iconTintColor: .darkGray
+            ),
+            .init(
                 title: "Distant",
                 affinity: .undefined,
+                days: 1000000,
                 iconName: "infinity",
                 selectedIconName: "infinity",
                 smallIconName: nil,

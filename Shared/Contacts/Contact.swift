@@ -21,6 +21,8 @@ struct Contact: Identifiable, Equatable, Comparable {
     var companyName: String
     var nickname: String
     var thumbnailImageData: Data?
+    var primaryPhoneNumber: String?
+    var emailAddresses: [String]
     var postalAddresses: [PostalAddress]
     var affinity: ContactAffinity
     var displayName: String {

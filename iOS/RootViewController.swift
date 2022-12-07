@@ -3,8 +3,7 @@ import CoreLocation
 import ReSwift
 
 struct RootViewControllerState: Equatable {
-    var contactsAccessGranted: Bool
-    var locationAccessGranted: Bool
+    var accessGranted: Bool
     var geocoderQueueCount: Int
     var contentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
     var contentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
@@ -12,8 +11,11 @@ struct RootViewControllerState: Equatable {
     var selectedContactLocationForEdit: ContactLocation?
 
     init(newState: AppState) {
-        contactsAccessGranted = newState.contactsAuthStatus == .authorized
-        locationAccessGranted = newState.locationAuthStatus == .authorized
+        accessGranted = (
+            newState.contactsAuthStatus == .authorized &&
+            newState.calendarAuthStatus == .authorized &&
+            newState.locationAuthStatus == .authorized
+        )
         geocoderQueueCount = newState.geocoderQueueCount
         contentListDetentIdentifer = newState.contactListDetentIdentifier
         contentDetailsDetentIdentifer = newState.contactDetailsDetentIdentifier
@@ -35,6 +37,7 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
 
         let actionVC = UINavigationController(rootViewController: ActionViewController())
         actionVC.tabBarItem = UITabBarItem(title: "Act", image: .init(systemName: "bolt"), selectedImage: .init(systemName: "bolt.fill"))
+        actionVC.navigationBar.prefersLargeTitles = true
 
         let listVC = UINavigationController(rootViewController: ContactListViewController())
         listVC.navigationBar.prefersLargeTitles = true
@@ -42,7 +45,6 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
 
         mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), selectedImage: .init(systemName: "map.fill"))
 
-        self.tabBar.backgroundColor = .white
         self.viewControllers = [actionVC, listVC, mapVC]
         self.selectedViewController = actionVC
         self.delegate = self
@@ -71,7 +73,7 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        presentContactsList()
+//        presentContactsList()
         presentOrDismissOnboarding()
 
         app.store.subscribe(self) { subscription in
@@ -138,7 +140,11 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     private func presentOrDismissOnboarding() {
         var needsOnboarding = false
         if let currentState = currentState {
-            needsOnboarding = !currentState.contactsAccessGranted || !currentState.locationAccessGranted || currentState.geocoderQueueCount > 3 || (currentState.geocoderQueueCount > 0 && onboardingVC != nil)
+            needsOnboarding = (
+                !currentState.accessGranted ||
+                currentState.geocoderQueueCount > 3 ||
+                (currentState.geocoderQueueCount > 0 && onboardingVC != nil)
+            )
         }
         if needsOnboarding {
             presentOnboarding()

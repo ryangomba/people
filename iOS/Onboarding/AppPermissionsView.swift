@@ -5,6 +5,12 @@ class AppPermissionsView: UIView {
     private var button = UIButton(type: .system)
     private let currentButtonAction: UIAction? = nil
 
+    var completed = false {
+        didSet {
+            button.isEnabled = !completed
+        }
+    }
+
     public func configure(text: String, buttonTitle: String, buttonAction: UIAction) {
         let attrString = NSMutableAttributedString(string: text)
         let paragraphStyle = NSMutableParagraphStyle()
@@ -16,9 +22,9 @@ class AppPermissionsView: UIView {
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: topAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.large),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Padding.large),
-            label.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Padding.superLarge * 2)
         ])
 
         var buttonConfig = UIButton.Configuration.borderedProminent()
@@ -33,7 +39,7 @@ class AppPermissionsView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             button.centerXAnchor.constraint(equalTo: centerXAnchor),
-            button.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Padding.superLarge)
+            button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: Padding.large)
         ])
     }
 

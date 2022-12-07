@@ -104,6 +104,8 @@ class ContactRepository: ObservableObject {
                 CNContactOrganizationNameKey,
                 CNContactNicknameKey,
                 CNContactThumbnailImageDataKey,
+                CNContactPhoneNumbersKey,
+                CNContactEmailAddressesKey,
                 CNContactPostalAddressesKey
             ] as [CNKeyDescriptor]
             let request = CNContactFetchRequest(keysToFetch: keysToFetch)
@@ -133,6 +135,10 @@ class ContactRepository: ObservableObject {
                 companyName: deviceContact.organizationName,
                 nickname: deviceContact.nickname,
                 thumbnailImageData: deviceContact.thumbnailImageData,
+                primaryPhoneNumber: deviceContact.phoneNumbers.count > 0 ? deviceContact.phoneNumbers.first!.value.stringValue : nil, // TODO: best?
+                emailAddresses: deviceContact.emailAddresses.map({ emailAddress in
+                    emailAddress.value.lowercased
+                }),
                 postalAddresses: deviceContact.postalAddresses.map({ postalAddress in
                     let value = PostalAddressValue(
                         street: postalAddress.value.street,

@@ -25,6 +25,9 @@ func appReducer(action: Action, state: AppState?) -> AppState {
     case let action as ContactsAccessChanged:
         state.contactsAuthStatus = action.status
 
+    case let action as CalendarAccessChanged:
+        state.calendarAuthStatus = action.status
+
     case let action as ContactsChanged:
         state.contacts = action.newContacts
         // Make sure we update the selected contact
@@ -38,6 +41,9 @@ func appReducer(action: Action, state: AppState?) -> AppState {
                 )
             }
         }
+
+    case let action as CalendarChanged:
+        state.calendarEvents = action.newCalendarEvents
 
     case let action as GeocoderQueueCountChanged:
         state.geocoderQueueCount = action.newCount

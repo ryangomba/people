@@ -1,4 +1,5 @@
-import Foundation
+import UIKit
+import EventKit
 
 enum CalendarAuthStatus: Int {
     case notDetermined = 1
@@ -8,65 +9,63 @@ enum CalendarAuthStatus: Int {
 
 class CalendarRepository: ObservableObject {
     public var authorizationStatus = getAuthorizationStatus()
-//    private let store = CNContactStore()
+    private let store = EKEventStore()
     @Published var calendarEvents: [CalendarEvent] = []
 
     init() {
-//        NotificationCenter.default.addObserver(self, selector: #selector(onForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(onContactStoreDidChange), name: .CNContactStoreDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onEventStoreDidChange), name: .EKEventStoreChanged, object: nil)
     }
 
     deinit {
-//        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     @objc
     func onForeground() {
         updateAuthorizationStatus()
+        sync() // TODO: temp?
     }
 
-//    @objc
-//    func onCalendarStoreDidChange(notification: NSNotification) {
-//        if notification.userInfo?["CNNotificationOriginationExternally"] != nil {
-//            print("System contacts did change")
-//            self.sync()
-//        }
-//    }
+    @objc
+    func onEventStoreDidChange(notification: NSNotification) {
+        print("System calendar did change")
+        self.sync()
+    }
 
     private static func getAuthorizationStatus() -> CalendarAuthStatus {
-//        switch CNContactStore.authorizationStatus(for: .contacts) {
-//        case .authorized:
-//            return .authorized
-//        case .denied, .restricted:
-//            return .denied
-//        case .notDetermined:
-//            return .notDetermined
-//        default:
-//            // Assume authorized if we don't recognize the status
-//            return .authorized
-//        }
-        return .notDetermined
+        switch EKEventStore.authorizationStatus(for: .event) {
+        case .authorized:
+            return .authorized
+        case .denied, .restricted:
+            return .denied
+        case .notDetermined:
+            return .notDetermined
+        default:
+            // Assume authorized if we don't recognize the status
+            return .authorized
+        }
     }
 
     private func updateAuthorizationStatus() {
-//        let newAuthorizationStatus = Self.getAuthorizationStatus()
-//        if newAuthorizationStatus != authorizationStatus {
-//            authorizationStatus = newAuthorizationStatus
-//            app.store.dispatch(ContactsAccessChanged(status: newAuthorizationStatus))
-//            if newAuthorizationStatus == .authorized {
-//                sync()
-//            }
-//        }
+        let newAuthorizationStatus = Self.getAuthorizationStatus()
+        if newAuthorizationStatus != authorizationStatus {
+            authorizationStatus = newAuthorizationStatus
+            app.store.dispatch(CalendarAccessChanged(status: newAuthorizationStatus))
+            if newAuthorizationStatus == .authorized {
+                sync()
+            }
+        }
     }
 
     public func requestAuthorization() {
         assert(Thread.isMainThread)
 
-//        store.requestAccess(for: .contacts) { ok, error in
-//            DispatchQueue.main.async {
-//                self.updateAuthorizationStatus()
-//            }
-//        }
+        store.requestAccess(to: .event) { ok, error in
+            DispatchQueue.main.async {
+                self.updateAuthorizationStatus()
+            }
+        }
     }
 
     public func sync() {
@@ -86,83 +85,60 @@ class CalendarRepository: ObservableObject {
     // Fetching from system calendar
 
     private func fetchSystemCalendarEvents() async -> [CalendarEvent] {
-//        var deviceContacts: [CNContact] = []
-//        do {
-//            let keysToFetch = [
-//                CNContactGivenNameKey,
-//                CNContactFamilyNameKey,
-//                CNContactOrganizationNameKey,
-//                CNContactNicknameKey,
-//                CNContactThumbnailImageDataKey,
-//                CNContactPostalAddressesKey
-//            ] as [CNKeyDescriptor]
-//            let request = CNContactFetchRequest(keysToFetch: keysToFetch)
-//            try store.enumerateContacts(with: request) {
-//                (contact, stop) in
-//                deviceContacts.append(contact)
-//            }
-//        } catch {
-//            print("Failed to fetch contact, error: \(error)")
-//        }
-//        let regex = try! NSRegularExpression(pattern: "\\_\\$\\!\\<(.+)\\>\\!\\$\\_", options: [])
-//        func cleanedLabel(_ label: String?) -> String? {
-//            if let label = label {
-//                if (!label.isEmpty) {
-//                    return regex.stringByReplacingMatches(in: label, options: [], range: NSRange(label.startIndex..<label.endIndex, in: label), withTemplate: "$1")
-//                }
-//            }
-//            return label
-//        }
-//        return deviceContacts.enumerated().filter({ (_, deviceContact) in
-//            return !(deviceContact.givenName + deviceContact.familyName).isEmpty
-//        }).map({ (index, deviceContact) in
-//            return Contact(
-//                id: deviceContact.identifier,
-//                givenName: deviceContact.givenName,
-//                familyName: deviceContact.familyName,
-//                companyName: deviceContact.organizationName,
-//                nickname: deviceContact.nickname,
-//                thumbnailImageData: deviceContact.thumbnailImageData,
-//                postalAddresses: deviceContact.postalAddresses.map({ postalAddress in
-//                    let value = PostalAddressValue(
-//                        street: postalAddress.value.street,
-//                        subLocality: postalAddress.value.subLocality,
-//                        city: postalAddress.value.city,
-//                        state: postalAddress.value.state,
-//                        postalCode: postalAddress.value.postalCode,
-//                        country: postalAddress.value.country
-//                    )
-//                    let coordinate = geocoder.getCachedGeocodedPostalAddress(value)?.coordinate
-//                    return PostalAddress(
-//                        label: cleanedLabel(postalAddress.label),
-//                        value: value,
-//                        coordinate: coordinate
-//                    )
-//                }),
-//                affinity: affinityStore.get(deviceContact.identifier)
-//            )
-//        })
-        return []
+        store.refreshSourcesIfNecessary()
+        var calendarEvents: [CalendarEvent] = []
+        let calendars = store.calendars(for: .event)
+        let start = Date().addingTimeInterval(-60 * 60 * 24 * 365) // Look back 1 year
+        let end = Date().addingTimeInterval(60 * 60 * 24 * 365) // Look forward 1 year
+        for calendar in calendars {
+            // This checking will remove Birthdays and Hollidays callendars
+            guard calendar.allowsContentModifications else {
+                continue
+            }
+            if calendar.title != "Personal" {
+                continue
+            }
+            let predicate = store.predicateForEvents(withStart: start, end: end, calendars: [calendar])
+            let events = store.events(matching: predicate)
+            for event in events {
+                if !(event.organizer?.isCurrentUser ?? false) {
+                    continue
+                }
+                if !event.hasAttendees {
+                    continue
+                }
+                // TODO: what a hack!
+                if event.title == "Family chat" {
+                    continue
+                }
+                var attendeeEmails: [String] = []
+                event.attendees?.forEach({ participant in
+                    if !participant.isCurrentUser && participant.participantStatus != .declined {
+                        if let email = participant.email {
+                            attendeeEmails.append(email.lowercased())
+                        }
+                    }
+                })
+                calendarEvents.append(CalendarEvent(
+                    id: event.eventIdentifier,
+                    title: event.title,
+                    startDate: event.startDate,
+                    endDate: event.endDate,
+                    isAllDay: event.isAllDay,
+                    attendeeEmails: attendeeEmails
+                ))
+            }
+        }
+        return calendarEvents
     }
 
-//    private func updateCalendarEvents(_ newCalendarEvents: [CalendarEvent]) {
-//        setContacts(contacts.map { contact in
-//            if let newContact = newContacts.first(where: { c in
-//                c.id == contact.id
-//            }) {
-//                return newContact
-//            }
-//            return contact
-//        })
-//    }
-
     private func setCalendarEvents(_ newCalendarEvents: [CalendarEvent]) {
-//        let sortedContacts = newContacts.sorted()
-//        if contacts == sortedContacts {
-//            return
-//        }
-//        contacts = sortedContacts
-//        app.store.dispatch(ContactsChanged(newContacts: contacts))
+        let sortedCalendarEvents = newCalendarEvents.sorted()
+        if calendarEvents == sortedCalendarEvents {
+            return
+        }
+        calendarEvents = sortedCalendarEvents
+        app.store.dispatch(CalendarChanged(newCalendarEvents: sortedCalendarEvents))
     }
 
     // Fetching
@@ -173,4 +149,25 @@ class CalendarRepository: ObservableObject {
         return calendarEvents.first { c in c.id == id }!
     }
 
+}
+
+extension EKParticipant {
+    var email: String? {
+        // Try to get email from inner property
+        if self.responds(to: Selector(("emailAddress"))), let email = value(forKey: "emailAddress") as? String {
+            return email
+        }
+        // Getting email from URL
+        let urlString = self.url.absoluteString
+        if urlString.hasPrefix("mailto:") {
+            return String(urlString.split(separator: "mailto:")[1])
+        }
+        // Getting info from description
+        let emailComponents = description.split(separator: "email = ")
+        if emailComponents.count > 1 {
+            let email = emailComponents[1].split(separator: ";")[0]
+            return String(email)
+        }
+        return nil
+    }
 }

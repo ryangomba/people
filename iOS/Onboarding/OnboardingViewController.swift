@@ -2,12 +2,14 @@ import UIKit
 import ReSwift
 
 struct OnboardingViewControllerState: Equatable {
-    var contactsAccessGranted: Bool
-    var locationAccessGranted: Bool
+    var accessGranted: Bool
 
     init(newState: AppState) {
-        contactsAccessGranted = newState.contactsAuthStatus == .authorized
-        locationAccessGranted = newState.locationAuthStatus == .authorized
+        accessGranted = (
+            newState.contactsAuthStatus == .authorized &&
+            newState.calendarAuthStatus == .authorized &&
+            newState.locationAuthStatus == .authorized
+        )
     }
 }
 
@@ -49,11 +51,11 @@ class OnboardingViewController: UINavigationController, StoreSubscriber {
 
     private func updateViewControllers() {
         var vcs: [UIViewController] = []
-        if !(currentState.locationAccessGranted && currentState.contactsAccessGranted) || didShowPermissions {
+        if !currentState.accessGranted || didShowPermissions {
             didShowPermissions = true
             vcs.append(permissionVC)
         }
-        if currentState.contactsAccessGranted && currentState.locationAccessGranted {
+        if currentState.accessGranted {
             vcs.append(contactIngestionVC)
         }
         setViewControllers(vcs, animated: true)

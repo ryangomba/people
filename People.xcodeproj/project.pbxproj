@@ -11,6 +11,7 @@
 		941DA38C293FEE4F002779A4 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA38B293FEE4F002779A4 /* ActionViewController.swift */; };
 		941DA38F293FEF86002779A4 /* CalendarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA38E293FEF86002779A4 /* CalendarEvent.swift */; };
 		941DA391293FEFC4002779A4 /* CalendarRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA390293FEFC4002779A4 /* CalendarRepository.swift */; };
+		941DA39429402270002779A4 /* CalendarEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */; };
 		94324F2A28BF34B000D9B104 /* LocationAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94324F2928BF34B000D9B104 /* LocationAuthManager.swift */; };
 		9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1B28AD65EB00323AAE /* Contact.swift */; };
 		9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */; };
@@ -81,6 +82,7 @@
 		941DA38B293FEE4F002779A4 /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
 		941DA38E293FEF86002779A4 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
 		941DA390293FEFC4002779A4 /* CalendarRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarRepository.swift; sourceTree = "<group>"; };
+		941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventTableViewCell.swift; sourceTree = "<group>"; };
 		94324F2928BF34B000D9B104 /* LocationAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAuthManager.swift; sourceTree = "<group>"; };
 		9433AC1B28AD65EB00323AAE /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationExtensions.swift; sourceTree = "<group>"; };
@@ -171,6 +173,14 @@
 			children = (
 				941DA38E293FEF86002779A4 /* CalendarEvent.swift */,
 				941DA390293FEFC4002779A4 /* CalendarRepository.swift */,
+			);
+			path = Calendar;
+			sourceTree = "<group>";
+		};
+		941DA39229402258002779A4 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -297,6 +307,7 @@
 				94945F5B28AC889F00F52EC8 /* MapContactList */,
 				94D36D22293BE1D300184B3B /* ContactList */,
 				94945F5C28AC88A500F52EC8 /* Contact */,
+				941DA39229402258002779A4 /* Calendar */,
 				9433AC2D28AEA38300323AAE /* LocationEdit */,
 				94E2829C28DB71210009C27F /* ImageSearch */,
 				94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */,
@@ -491,6 +502,7 @@
 			files = (
 				94945F5328AC74CE00F52EC8 /* ContactAnnotationView.swift in Sources */,
 				945FB16B28BD9A93002D3023 /* UIViewControllerExtensions.swift in Sources */,
+				941DA39429402270002779A4 /* CalendarEventTableViewCell.swift in Sources */,
 				94324F2A28BF34B000D9B104 /* LocationAuthManager.swift in Sources */,
 				94EA8D6428BFEE5200D7E68D /* App.swift in Sources */,
 				9433AC4028B99E7D00323AAE /* ContactAnnotation.swift in Sources */,
