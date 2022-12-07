@@ -52,8 +52,7 @@
 		94E282A728DB713C0009C27F /* GoogleImageSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E282A628DB713C0009C27F /* GoogleImageSearcher.swift */; };
 		94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6128BFE41400D7E68D /* OnboardingViewController.swift */; };
 		94EA8D6428BFEE5200D7E68D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6328BFEE5200D7E68D /* App.swift */; };
-		94EA8D6628BFFC5100D7E68D /* ContactsPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6528BFFC5100D7E68D /* ContactsPermissionsViewController.swift */; };
-		94EA8D6828BFFCAA00D7E68D /* LocationPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6728BFFCAA00D7E68D /* LocationPermissionsViewController.swift */; };
+		94EA8D6628BFFC5100D7E68D /* PermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6528BFFC5100D7E68D /* PermissionsViewController.swift */; };
 		94EA8D6A28BFFCC100D7E68D /* ContactIngestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6928BFFCC100D7E68D /* ContactIngestionViewController.swift */; };
 		94EA8D6C28C00A5700D7E68D /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6B28C00A5700D7E68D /* UIApplicationExtensions.swift */; };
 		94EA8D6E28C0122C00D7E68D /* AppPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EA8D6D28C0122C00D7E68D /* AppPermissionsView.swift */; };
@@ -121,8 +120,7 @@
 		94E282A628DB713C0009C27F /* GoogleImageSearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleImageSearcher.swift; sourceTree = "<group>"; };
 		94EA8D6128BFE41400D7E68D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		94EA8D6328BFEE5200D7E68D /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		94EA8D6528BFFC5100D7E68D /* ContactsPermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsPermissionsViewController.swift; sourceTree = "<group>"; };
-		94EA8D6728BFFCAA00D7E68D /* LocationPermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionsViewController.swift; sourceTree = "<group>"; };
+		94EA8D6528BFFC5100D7E68D /* PermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsViewController.swift; sourceTree = "<group>"; };
 		94EA8D6928BFFCC100D7E68D /* ContactIngestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactIngestionViewController.swift; sourceTree = "<group>"; };
 		94EA8D6B28C00A5700D7E68D /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		94EA8D6D28C0122C00D7E68D /* AppPermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPermissionsView.swift; sourceTree = "<group>"; };
@@ -303,8 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				94EA8D6128BFE41400D7E68D /* OnboardingViewController.swift */,
-				94EA8D6528BFFC5100D7E68D /* ContactsPermissionsViewController.swift */,
-				94EA8D6728BFFCAA00D7E68D /* LocationPermissionsViewController.swift */,
+				94EA8D6528BFFC5100D7E68D /* PermissionsViewController.swift */,
 				94EA8D6D28C0122C00D7E68D /* AppPermissionsView.swift */,
 				94EA8D6928BFFCC100D7E68D /* ContactIngestionViewController.swift */,
 			);
@@ -462,7 +459,7 @@
 				94EA8D6428BFEE5200D7E68D /* App.swift in Sources */,
 				9433AC4028B99E7D00323AAE /* ContactAnnotation.swift in Sources */,
 				9433AC2928AE834400323AAE /* ContactDetailHeader.swift in Sources */,
-				94EA8D6628BFFC5100D7E68D /* ContactsPermissionsViewController.swift in Sources */,
+				94EA8D6628BFFC5100D7E68D /* PermissionsViewController.swift in Sources */,
 				94E2829928DB710F0009C27F /* NetworkImageView.swift in Sources */,
 				9433AC2C28AE877E00323AAE /* ContactLocationTableViewCell.swift in Sources */,
 				9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */,
@@ -492,7 +489,6 @@
 				94945F2728AC2B3500F52EC8 /* AppReducers.swift in Sources */,
 				94EA8D6C28C00A5700D7E68D /* UIApplicationExtensions.swift in Sources */,
 				94F5AAC927501A7A009276E7 /* PersistentCache.swift in Sources */,
-				94EA8D6828BFFCAA00D7E68D /* LocationPermissionsViewController.swift in Sources */,
 				94945F1E28AC2A8A00F52EC8 /* AppState.swift in Sources */,
 				94E282A228DB71210009C27F /* ProfilePhotoView.swift in Sources */,
 				94945F6028AC8BC200F52EC8 /* ContactDetailViewController.swift in Sources */,

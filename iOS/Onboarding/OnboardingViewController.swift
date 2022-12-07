@@ -14,16 +14,14 @@ struct OnboardingViewControllerState: Equatable {
 class OnboardingViewController: UINavigationController, StoreSubscriber {
     private var currentState = OnboardingViewControllerState(newState: app.store.state)
 
-    private let contactsPermissionVC = ContactsPermissionsViewController()
-    private let locationPermissionVC = LocationPermissionsViewController()
+    private let permissionVC = PermissionsViewController()
     private let contactIngestionVC = ContactIngestionViewController()
-    private var didShowContactPermissions = false
-    private var didShowLocationPermissions = false
+    private var didShowPermissions = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationPermissionVC.navigationItem.hidesBackButton = true
+        permissionVC.navigationItem.hidesBackButton = true
         contactIngestionVC.navigationItem.hidesBackButton = true
 
         updateViewControllers()
@@ -51,13 +49,9 @@ class OnboardingViewController: UINavigationController, StoreSubscriber {
 
     private func updateViewControllers() {
         var vcs: [UIViewController] = []
-        if didShowContactPermissions || !currentState.contactsAccessGranted {
-            didShowContactPermissions = true
-            vcs.append(contactsPermissionVC)
-        }
-        if didShowLocationPermissions || (!currentState.locationAccessGranted && currentState.contactsAccessGranted) {
-            didShowLocationPermissions = true
-            vcs.append(locationPermissionVC)
+        if !(currentState.locationAccessGranted && currentState.contactsAccessGranted) || didShowPermissions {
+            didShowPermissions = true
+            vcs.append(permissionVC)
         }
         if currentState.contactsAccessGranted && currentState.locationAccessGranted {
             vcs.append(contactIngestionVC)
