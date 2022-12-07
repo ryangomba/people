@@ -82,10 +82,20 @@ class ActionViewController: UITableViewController, StoreSubscriber {
     }
 
     func newState(state: ActionViewControllerState) {
-//        let prevState = currentState
+        let prevState = currentState
         currentState = state
 
         tableView.reloadData()
+
+        // TODO: move
+        if currentState.contacts.count != prevState.contacts.count {
+            let nc = UNUserNotificationCenter.current()
+            nc.requestAuthorization(options: .badge) { ok, error in
+                if ok {
+                    nc.setBadgeCount(self.currentState.contacts.count)
+                }
+            }
+        }
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {

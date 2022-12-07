@@ -7,10 +7,10 @@ enum CalendarAuthStatus: Int {
     case denied = 3
 }
 
-class CalendarRepository: ObservableObject {
+class CalendarRepository {
     public var authorizationStatus = getAuthorizationStatus()
     private let store = EKEventStore()
-    @Published var calendarEvents: [CalendarEvent] = []
+    var calendarEvents: [CalendarEvent] = []
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(onForeground), name: UIApplication.willEnterForegroundNotification, object: nil)

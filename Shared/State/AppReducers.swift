@@ -28,6 +28,9 @@ func appReducer(action: Action, state: AppState?) -> AppState {
     case let action as CalendarAccessChanged:
         state.calendarAuthStatus = action.status
 
+    case let action as NotificationsAccessChanged:
+        state.notificationsAuthStatus = action.status
+
     case let action as ContactsChanged:
         state.contacts = action.newContacts
         // Make sure we update the selected contact

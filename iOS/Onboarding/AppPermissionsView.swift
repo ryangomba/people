@@ -39,7 +39,7 @@ class AppPermissionsView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             button.centerXAnchor.constraint(equalTo: centerXAnchor),
-            button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: Padding.large)
+            button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: Padding.normal)
         ])
     }
 

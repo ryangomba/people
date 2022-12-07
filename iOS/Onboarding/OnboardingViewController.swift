@@ -8,7 +8,8 @@ struct OnboardingViewControllerState: Equatable {
         accessGranted = (
             newState.contactsAuthStatus == .authorized &&
             newState.calendarAuthStatus == .authorized &&
-            newState.locationAuthStatus == .authorized
+            newState.locationAuthStatus == .authorized &&
+            newState.notificationsAuthStatus == .authorized
         )
     }
 }

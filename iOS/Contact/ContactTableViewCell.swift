@@ -126,7 +126,13 @@ class ContactTableViewCell: UITableViewCell {
             avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
 
-        actionButton.setImage(.init(systemName: "ellipsis.circle"), for: .normal)
+//        Other possibilities:
+//        arrow.up.forward.app
+//        ellipsis.rectangle
+//        chevron.up.square
+//        arrow.up.right.square
+//        ellipsis.circle
+        actionButton.setImage(.init(systemName: "arrow.up.right.square"), for: .normal)
         actionButton.showsMenuAsPrimaryAction = true
         actionButton.sizeToFit()
         contentView.addSubview(actionButton)

@@ -16,6 +16,10 @@ struct ContactsAccessChanged: Action {
     let status: ContactsAuthStatus
 }
 
+struct NotificationsAccessChanged: Action {
+    let status: NotificationsAuthStatus
+}
+
 struct ContactsChanged: Action {
     let newContacts: [Contact]
 }

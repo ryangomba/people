@@ -5,6 +5,7 @@ class App {
     let locationAuthManager = LocationAuthManager()
     let contactRepository = ContactRepository()
     let calendarRepository = CalendarRepository()
+    let notificationsManager = NotificationsManager()
 
     let store: Store<AppState>
 
@@ -14,7 +15,8 @@ class App {
             state: AppState(
                 locationAuthStatus: locationAuthManager.authorizationStatus,
                 contactsAuthStatus: contactRepository.authorizationStatus,
-                calendarAuthStatus: calendarRepository.authorizationStatus
+                calendarAuthStatus: calendarRepository.authorizationStatus,
+                notificationsAuthStatus: notificationsManager.authorizationStatus
             )
         )
         locationAuthManager.listenForChanges()

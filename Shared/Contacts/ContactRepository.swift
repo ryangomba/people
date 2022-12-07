@@ -10,13 +10,13 @@ enum ContactsAuthStatus: Int {
     case denied = 3
 }
 
-class ContactRepository: ObservableObject {
+class ContactRepository {
     public var authorizationStatus = getAuthorizationStatus()
     private let store = CNContactStore()
     private let affinityStore = ContactAffinityStore()
     private let geocoder = Geocoder()
-    @Published var contacts: [Contact] = []
-    @Published var searchText = ""
+    var contacts: [Contact] = []
+    var searchText = ""
 
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(onForeground), name: UIApplication.willEnterForegroundNotification, object: nil)

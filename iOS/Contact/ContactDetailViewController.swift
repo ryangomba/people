@@ -67,6 +67,15 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
         configureForContactLocation()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if (navigationController != nil) {
+            let headerView = UIView(frame: .init(x: 0, y: 0, width: 0, height: Padding.large))
+            tableView.tableHeaderView = headerView
+        }
+    }
+
     var contactLocation: ContactLocation {
         didSet {
             configureForContactLocation()

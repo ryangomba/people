@@ -30,10 +30,10 @@ extension [Contact] {
         }.filter({ searchResult in
             return searchResult.score > 0
         }).sorted(by: { r1, r2 in
-            if r1.score > r2.score {
-                return true
+            if r1.score != r2.score {
+                return r1.score > r2.score
             }
-            return r1.contact.displayName < r2.contact.displayName // TODO: sort by best natural match
+            return r1.contact < r2.contact
         }).map({ result in
             return result.contact
         })

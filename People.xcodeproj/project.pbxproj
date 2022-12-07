@@ -28,6 +28,7 @@
 		9433AC3728B00CCE00323AAE /* PostalAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC3628B00CCE00323AAE /* PostalAddress.swift */; };
 		9433AC3928B1FF2300323AAE /* ContactClusterAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC3828B1FF2300323AAE /* ContactClusterAnnotationView.swift */; };
 		9433AC4028B99E7D00323AAE /* ContactAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC3F28B99E7D00323AAE /* ContactAnnotation.swift */; };
+		943DE22D29411ECE00CDAE8F /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943DE22C29411ECE00CDAE8F /* NotificationsManager.swift */; };
 		945FB16B28BD9A93002D3023 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945FB16A28BD9A93002D3023 /* UIViewControllerExtensions.swift */; };
 		945FB16D28BD9BEC002D3023 /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945FB16C28BD9BEC002D3023 /* UITableViewExtensions.swift */; };
 		94945F1C28AC2A7000F52EC8 /* ReSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 94945F1B28AC2A7000F52EC8 /* ReSwift */; };
@@ -102,6 +103,7 @@
 		9433AC3628B00CCE00323AAE /* PostalAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostalAddress.swift; sourceTree = "<group>"; };
 		9433AC3828B1FF2300323AAE /* ContactClusterAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactClusterAnnotationView.swift; sourceTree = "<group>"; };
 		9433AC3F28B99E7D00323AAE /* ContactAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAnnotation.swift; sourceTree = "<group>"; };
+		943DE22C29411ECE00CDAE8F /* NotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
 		945FB16A28BD9A93002D3023 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		945FB16C28BD9BEC002D3023 /* UITableViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExtensions.swift; sourceTree = "<group>"; };
 		94945F1D28AC2A8A00F52EC8 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -210,6 +212,14 @@
 				9433AC3228AEAB6A00323AAE /* LocationSearchResultTableViewCell.swift */,
 			);
 			path = LocationEdit;
+			sourceTree = "<group>";
+		};
+		943DE22B29411EBF00CDAE8F /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				943DE22C29411ECE00CDAE8F /* NotificationsManager.swift */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		94945F4428AC2FBC00F52EC8 /* State */ = {
@@ -379,6 +389,7 @@
 				94945F4528AC2FD900F52EC8 /* Contacts */,
 				941DA38D293FEF76002779A4 /* Calendar */,
 				94945F4D28AC4EE700F52EC8 /* Extensions */,
+				943DE22B29411EBF00CDAE8F /* Notifications */,
 				94945F4828AC304600F52EC8 /* Geocoding */,
 				94945F6128AC9AB500F52EC8 /* Appearance */,
 				94E282A528DB713C0009C27F /* ImageSearch */,
@@ -546,6 +557,7 @@
 				94F5AAC627500F28009276E7 /* Geocoder.swift in Sources */,
 				9433AC2528ADAD1D00323AAE /* SearchBox.swift in Sources */,
 				94BA6CC12750B5070026B566 /* ContactAffinityStore.swift in Sources */,
+				943DE22D29411ECE00CDAE8F /* NotificationsManager.swift in Sources */,
 				94945F5128AC5E9D00F52EC8 /* ContactAvatarView.swift in Sources */,
 				94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */,
 				94945F2728AC2B3500F52EC8 /* AppReducers.swift in Sources */,

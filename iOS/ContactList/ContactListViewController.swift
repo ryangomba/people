@@ -74,6 +74,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         currentState = state
 
         if state.contacts != prevState.contacts {
+            tableView.scrollToTop(animated: false)
             tableView.reloadData()
             updateFooter();
         }
