@@ -126,7 +126,7 @@ class ContactLocationTableViewCell: UITableViewCell, UIEditMenuInteractionDelega
     }
 
     private func onEditAddress() {
-        app.store.dispatch(ContactLocationSelectedForEdit(location: contactLocation))
+        app.store.dispatch(MapContactLocationSelectedForEdit(location: contactLocation))
     }
 
     private func onConfirmDeleteAddress() {

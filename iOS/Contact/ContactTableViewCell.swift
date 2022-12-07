@@ -93,7 +93,7 @@ class ContactTableViewCell: UITableViewCell {
                     }
                 }
                 if let lastEvent = lastEvent {
-                    subtitleLabel.text = lastEvent.endDate.daysSinceString()
+                    subtitleLabel.text = lastEvent.endDate.formatRelative()
                 } else {
                     subtitleLabel.text = "No event"
                 }
@@ -161,37 +161,4 @@ class ContactTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-}
-
-// TODO: move
-extension Calendar {
-    func numberOfDaysBetween(_ from: Date, and to: Date) -> Int {
-        let fromDate = startOfDay(for: from) // <1>
-        let toDate = startOfDay(for: to) // <2>
-        let numberOfDays = dateComponents([.day], from: fromDate, to: toDate) // <3>
-        return numberOfDays.day!
-    }
-}
-extension Date {
-    func daysSinceString() -> String {
-        let days = Calendar.current.numberOfDaysBetween(self, and: Date())
-        if days == -1 {
-            return "yesterday"
-        } else if days == 0 {
-            return "today"
-        } else if days == 1 {
-            return "tomorrow"
-        } else if days < 30 {
-            return "\(days) days ago"
-        } else if days < 0 {
-            return "in \(days) days"
-        } else {
-            let months = days / 30
-            if months == 1 {
-                return "a month ago"
-            } else { 
-                return "\(days / 30) months ago"
-            }
-        }
-    }
 }

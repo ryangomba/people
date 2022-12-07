@@ -5,11 +5,11 @@ struct ContactListViewControllerState {
     var contacts: [Contact]
 
     init(newState: AppState) {
-        contacts = newState.contacts
+        contacts = newState.contacts.search(query: newState.listSearchQuery)
     }
 }
 
-class ContactListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, StoreSubscriber {
+class ContactListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, StoreSubscriber, UISearchResultsUpdating {
     private var currentState = ContactListViewControllerState(newState: app.store.state)
     private let tableView = UITableView()
     private let footerView = SimpleFooterView()
@@ -20,6 +20,13 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         view.backgroundColor = .customBackground
 
         navigationItem.title = "People"
+
+        let search = UISearchController(searchResultsController: nil)
+        search.searchResultsUpdater = self
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchBar.placeholder = "Search"
+        navigationItem.searchController = search
+        navigationItem.hidesSearchBarWhenScrolling = false
 
         tableView.tableFooterView = footerView;
 
@@ -76,6 +83,11 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         footerView.text = "No results";
         let hasResults = currentState.contacts.count > 0;
         footerView.isHidden = hasResults;
+    }
+
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        app.store.dispatch(ListSearchQueryChanged(searchQuery: text))
     }
 
     @objc

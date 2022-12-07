@@ -12,7 +12,7 @@ class CalendarEventTableViewCell: UITableViewCell {
         didSet {
             if let calendarEvent = calendarEvent {
                 titleLabel.text = calendarEvent.title
-                subtitleLabel.text = calendarEvent.startDate.formatted()
+                subtitleLabel.text = calendarEvent.startDate.formatRelative().capitalizedSentence
                 avatarView.contacts = app.store.state.contacts.filter({ contact in
                     contact.emailAddresses.contains { emailAddress in
                         calendarEvent.attendeeEmails.contains(emailAddress)
@@ -44,7 +44,7 @@ class CalendarEventTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Padding.tight),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.normal),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.normal),
+            titleLabel.trailingAnchor.constraint(equalTo: avatarView.leadingAnchor, constant: -Padding.tight),
         ])
 
         subtitleLabel.textColor = .gray

@@ -5,10 +5,10 @@ import ReSwift
 struct RootViewControllerState: Equatable {
     var accessGranted: Bool
     var geocoderQueueCount: Int
-    var contentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
-    var contentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
-    var selectedContact: ContactSelection?
-    var selectedContactLocationForEdit: ContactLocation?
+    var mapContentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
+    var mapContentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
+    var mapSelectedContact: MapContactSelection?
+    var mapSelectedContactLocationForEdit: ContactLocation?
 
     init(newState: AppState) {
         accessGranted = (
@@ -17,10 +17,10 @@ struct RootViewControllerState: Equatable {
             newState.locationAuthStatus == .authorized
         )
         geocoderQueueCount = newState.geocoderQueueCount
-        contentListDetentIdentifer = newState.contactListDetentIdentifier
-        contentDetailsDetentIdentifer = newState.contactDetailsDetentIdentifier
-        selectedContact = newState.selection
-        selectedContactLocationForEdit = newState.contactLocationForEdit
+        mapContentListDetentIdentifer = newState.mapContactListDetentIdentifier
+        mapContentDetailsDetentIdentifer = newState.mapContactDetailsDetentIdentifier
+        mapSelectedContact = newState.mapSelection
+        mapSelectedContactLocationForEdit = newState.mapContactLocationForEdit
     }
 }
 
@@ -102,25 +102,25 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
         let prevState = currentState
         currentState = state
 
-        if state.contentListDetentIdentifer != prevState?.contentListDetentIdentifer {
+        if state.mapContentListDetentIdentifer != prevState?.mapContentListDetentIdentifer {
             contactListVC.sheetPresentationController?.animateChanges {
-                contactListVC.sheetPresentationController?.selectedDetentIdentifier = state.contentListDetentIdentifer
+                contactListVC.sheetPresentationController?.selectedDetentIdentifier = state.mapContentListDetentIdentifer
             }
         }
-        if state.contentDetailsDetentIdentifer != prevState?.contentDetailsDetentIdentifer {
+        if state.mapContentDetailsDetentIdentifer != prevState?.mapContentDetailsDetentIdentifer {
             contactDetailVC?.sheetPresentationController?.animateChanges {
-                contactDetailVC?.sheetPresentationController?.selectedDetentIdentifier = state.contentDetailsDetentIdentifer
+                contactDetailVC?.sheetPresentationController?.selectedDetentIdentifier = state.mapContentDetailsDetentIdentifer
             }
         }
-        if state.selectedContact != prevState?.selectedContact {
-            if let selectedContactLocation = state.selectedContact?.contactLocation {
-                presentContactDetails(selectedContactLocation)
+        if state.mapSelectedContact != prevState?.mapSelectedContact {
+            if let mapSelectedContactLocation = state.mapSelectedContact?.contactLocation {
+                presentContactDetails(mapSelectedContactLocation)
             } else {
                 dismissContactDetails()
             }
         }
-        if state.selectedContactLocationForEdit != prevState?.selectedContactLocationForEdit {
-            if let location = state.selectedContactLocationForEdit {
+        if state.mapSelectedContactLocationForEdit != prevState?.mapSelectedContactLocationForEdit {
+            if let location = state.mapSelectedContactLocationForEdit {
                 presentContactLocationForEdit(contactLocation: location)
             } else {
                 dismissContactLocationForEdit()
@@ -131,9 +131,9 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
 
     func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
         if sheetPresentationController == contactListVC.sheetPresentationController {
-            app.store.dispatch(ContactListDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
+            app.store.dispatch(MapContactListDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
         } else if sheetPresentationController == contactDetailVC?.sheetPresentationController {
-            app.store.dispatch(ContactDetailsDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
+            app.store.dispatch(MapContactDetailsDetentChanged(detentIdentifier: sheetPresentationController.selectedDetentIdentifier!))
         }
     }
 
@@ -159,7 +159,7 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
         }
 
         let onboardingVC = OnboardingViewController()
-        onboardingVC.modalPresentationStyle = .fullScreen
+        onboardingVC.modalPresentationStyle = .overFullScreen
         self.onboardingVC = onboardingVC
 
         let keyWindow = UIApplication.shared.connectedScenes
@@ -186,10 +186,11 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     }
 
     private func presentContactsList() {
+//        contactListVC.view.tag = 99 // TODO: make constant
         contactListVC.isModalInPresentation = true // prevent dismissal
         if let sheet = contactListVC.sheetPresentationController {
             sheet.detents = [.collapsed, .small, .large()]
-            sheet.selectedDetentIdentifier = app.store.state.contactListDetentIdentifier
+            sheet.selectedDetentIdentifier = app.store.state.mapContactListDetentIdentifier
             sheet.largestUndimmedDetentIdentifier = .small
             sheet.prefersGrabberVisible = true
             sheet.delegate = self

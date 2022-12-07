@@ -12,6 +12,9 @@
 		941DA38F293FEF86002779A4 /* CalendarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA38E293FEF86002779A4 /* CalendarEvent.swift */; };
 		941DA391293FEFC4002779A4 /* CalendarRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA390293FEFC4002779A4 /* CalendarRepository.swift */; };
 		941DA39429402270002779A4 /* CalendarEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */; };
+		941DA39629411009002779A4 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA39529411009002779A4 /* DateExtensions.swift */; };
+		941DA398294111A5002779A4 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA397294111A5002779A4 /* StringExtensions.swift */; };
+		941DA39A2941167C002779A4 /* ContactSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA3992941167C002779A4 /* ContactSearch.swift */; };
 		94324F2A28BF34B000D9B104 /* LocationAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94324F2928BF34B000D9B104 /* LocationAuthManager.swift */; };
 		9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1B28AD65EB00323AAE /* Contact.swift */; };
 		9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */; };
@@ -83,6 +86,9 @@
 		941DA38E293FEF86002779A4 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
 		941DA390293FEFC4002779A4 /* CalendarRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarRepository.swift; sourceTree = "<group>"; };
 		941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventTableViewCell.swift; sourceTree = "<group>"; };
+		941DA39529411009002779A4 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		941DA397294111A5002779A4 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		941DA3992941167C002779A4 /* ContactSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSearch.swift; sourceTree = "<group>"; };
 		94324F2928BF34B000D9B104 /* LocationAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAuthManager.swift; sourceTree = "<group>"; };
 		9433AC1B28AD65EB00323AAE /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationExtensions.swift; sourceTree = "<group>"; };
@@ -221,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				9433AC1B28AD65EB00323AAE /* Contact.swift */,
+				941DA3992941167C002779A4 /* ContactSearch.swift */,
 				9433AC3628B00CCE00323AAE /* PostalAddress.swift */,
 				94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */,
 				94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */,
@@ -249,6 +256,8 @@
 				94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */,
 				94EA8D6B28C00A5700D7E68D /* UIApplicationExtensions.swift */,
 				94D8510C28F47F67009D12EE /* ArrayExtensions.swift */,
+				941DA39529411009002779A4 /* DateExtensions.swift */,
+				941DA397294111A5002779A4 /* StringExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -518,9 +527,11 @@
 				94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */,
 				94945F5528AC791C00F52EC8 /* MapContactListViewController.swift in Sources */,
 				94F5AAC327500ED3009276E7 /* ContactRepository.swift in Sources */,
+				941DA398294111A5002779A4 /* StringExtensions.swift in Sources */,
 				9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */,
 				94E282A728DB713C0009C27F /* GoogleImageSearcher.swift in Sources */,
 				941DA38C293FEE4F002779A4 /* ActionViewController.swift in Sources */,
+				941DA39629411009002779A4 /* DateExtensions.swift in Sources */,
 				941DA391293FEFC4002779A4 /* CalendarRepository.swift in Sources */,
 				94E282A128DB71210009C27F /* ProfilePhotoCollectionViewCell.swift in Sources */,
 				94945F5728AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift in Sources */,
@@ -552,6 +563,7 @@
 				94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */,
 				94945F4F28AC4EF500F52EC8 /* MapKitExtensions.swift in Sources */,
 				94945F4C28AC31CC00F52EC8 /* MapViewController.swift in Sources */,
+				941DA39A2941167C002779A4 /* ContactSearch.swift in Sources */,
 				94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */,
 				94945F5928AC7EBB00F52EC8 /* ContactTableViewCell.swift in Sources */,
 				94945F2128AC2AAA00F52EC8 /* AppActions.swift in Sources */,

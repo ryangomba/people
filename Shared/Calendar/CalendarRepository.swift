@@ -30,7 +30,9 @@ class CalendarRepository: ObservableObject {
     @objc
     func onEventStoreDidChange(notification: NSNotification) {
         print("System calendar did change")
-        self.sync()
+        DispatchQueue.main.async {
+            self.sync()
+        }
     }
 
     private static func getAuthorizationStatus() -> CalendarAuthStatus {

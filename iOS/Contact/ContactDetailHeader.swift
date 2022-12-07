@@ -18,7 +18,7 @@ class ContactDetailHeader: UIView {
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: Padding.normal),
         ])
 
-        let dismissAction = UIAction { _ in app.store.dispatch(ContactDetailsDismissed()) }
+        let dismissAction = UIAction { _ in app.store.dispatch(MapContactDetailsDismissed()) }
         dismissButton.addAction(dismissAction, for: .touchUpInside)
         dismissButton.setImage(.init(systemName: "xmark.circle.fill"), for: .normal)
         dismissButton.tintColor = .gray

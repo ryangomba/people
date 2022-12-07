@@ -18,7 +18,7 @@ class LocationEditHeader: UIView {
 
         setContentHuggingPriority(.defaultHigh, for: .vertical)
 
-        let dismissAction = UIAction { _ in app.store.dispatch(ContactLocationSelectedForEdit(location: nil)) }
+        let dismissAction = UIAction { _ in app.store.dispatch(MapContactLocationSelectedForEdit(location: nil)) }
         cancelButton.addAction(dismissAction, for: .touchUpInside)
         cancelButton.setTitle("Cancel", for: .normal)
         cancelButton.sizeToFit()

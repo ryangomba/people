@@ -28,6 +28,12 @@ struct GeocoderQueueCountChanged: Action {
     let newCount: Int
 }
 
+// List
+
+struct ListSearchQueryChanged: Action {
+    let searchQuery: String
+}
+
 // Map
 
 struct MapRegionChanged: Action {
@@ -48,37 +54,37 @@ struct MapAnnotationSelected: Action {
     let isCluster: Bool
 }
 
-// Contacts list
+// Map contacts list
 
-struct ContactListDetentChanged: Action {
+struct MapContactListDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 
-struct ContactAffinityThresholdChanged: Action {
+struct MapContactAffinityThresholdChanged: Action {
     let selectedAffinities: [ContactAffinity]
 }
 
-struct StartSearching: Action {}
-struct StopSearching: Action {}
-struct SearchQueryChanged: Action {
+struct MapStartSearching: Action {}
+struct MapStopSearching: Action {}
+struct MapSearchQueryChanged: Action {
     let searchQuery: String
 }
 
-struct ContactLocationSelected: Action {
+struct MapContactLocationSelected: Action {
     let location: ContactLocation
 }
 
-struct ContactDetailsDismissed: Action {}
+struct MapContactDetailsDismissed: Action {}
 
-struct LocationDetailsDismissed: Action {}
+struct MapLocationDetailsDismissed: Action {}
 
-// Selected contact
+// Map selected contact
 
-struct ContactLocationSelectedForEdit: Action {
+struct MapContactLocationSelectedForEdit: Action {
     let location: ContactLocation?
 }
 
-struct ContactDetailsDetentChanged: Action {
+struct MapContactDetailsDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 

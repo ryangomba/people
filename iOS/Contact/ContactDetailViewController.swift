@@ -12,11 +12,15 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
     init(contactLocation: ContactLocation) {
         self.contactLocation = contactLocation
-        // TODO: listen for changes
+        // TODO: listen for changes, move logic, de-dupe
+        let days = contactLocation.contact.affinity.info.days
         self.calendarEvents = app.store.state.calendarEvents.filter({ calendarEvent in
             calendarEvent.attendeeEmails.contains { emailAddress in
                 contactLocation.contact.emailAddresses.contains(emailAddress)
             }
+        }).filter({ calendarEvent in
+            // Look ahead the same number of days
+            calendarEvent.startDate < Date().addingTimeInterval(60 * 60 * 24 * TimeInterval(days))
         })
         super.init(nibName: nil, bundle: nil)
     }
@@ -202,7 +206,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                         self.onConfirmDeleteAddress(postalAddress, didDelete: onCompletion)
                     }),
                     UIContextualAction(style: .normal, title: "Edit", handler: { (action, view, onCompletion) in
-                        app.store.dispatch(ContactLocationSelectedForEdit(location: self.contactLocation))
+                        app.store.dispatch(MapContactLocationSelectedForEdit(location: self.contactLocation))
                         onCompletion(true)
                     }),
                 ])
@@ -224,10 +228,10 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
                 let contactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: postalAddress)
-                app.store.dispatch(ContactLocationSelected(location: contactLocation))
+                app.store.dispatch(MapContactLocationSelected(location: contactLocation))
             } else {
                 let newContactLocation = ContactLocation(contact: contactLocation.contact, postalAddress: nil)
-                app.store.dispatch(ContactLocationSelectedForEdit(location: newContactLocation))
+                app.store.dispatch(MapContactLocationSelectedForEdit(location: newContactLocation))
             }
         case Section.photos.rawValue:
             let vc = ProfilePhotosViewController(contact: contactLocation.contact)

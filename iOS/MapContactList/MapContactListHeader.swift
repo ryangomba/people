@@ -7,9 +7,9 @@ struct MapContactListHeaderState: Equatable {
     var searchQuery: String
 
     init(newState: AppState) {
-        selectedAffinities = newState.selectedAffinities
-        isSearching = newState.isSearching
-        searchQuery = newState.searchQuery
+        selectedAffinities = newState.mapSelectedAffinities
+        isSearching = newState.mapIsSearching
+        searchQuery = newState.mapSearchQuery
     }
 }
 
@@ -36,7 +36,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         ])
 
         let searchAction = UIAction() { _ in
-            app.store.dispatch(StartSearching())
+            app.store.dispatch(MapStartSearching())
         }
         searchButton.addAction(searchAction, for: .touchUpInside)
         searchButton.setImage(.init(systemName: "magnifyingglass"), for: .normal)
@@ -51,7 +51,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         ])
 
         let cancelSearchAction = UIAction() { _ in
-            app.store.dispatch(StopSearching())
+            app.store.dispatch(MapStopSearching())
         }
         cancelButton.addAction(cancelSearchAction, for: .touchUpInside)
         cancelButton.setTitle("Cancel", for: .normal)
@@ -68,7 +68,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         searchBox.textField.placeholder = "Search for a person or place"
         let editingChangedAction = UIAction() { action in
             let searchQuery = self.searchBox.textField.text ?? ""
-            app.store.dispatch(SearchQueryChanged(searchQuery: searchQuery))
+            app.store.dispatch(MapSearchQueryChanged(searchQuery: searchQuery))
         }
         searchBox.textField.addAction(editingChangedAction, for: .editingChanged)
         searchBox.textField.delegate = self
@@ -81,7 +81,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             searchBox.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
         ])
 
-        let dismissAction = UIAction { _ in app.store.dispatch(LocationDetailsDismissed()) }
+        let dismissAction = UIAction { _ in app.store.dispatch(MapLocationDetailsDismissed()) }
         dismissButton.addAction(dismissAction, for: .touchUpInside)
         dismissButton.setImage(.init(systemName: "xmark.circle.fill"), for: .normal)
         dismissButton.tintColor = .gray
@@ -130,7 +130,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
 
     private func updateClusterTitle() {
         if let clusterTitle = clusterTitle {
-            titleButton.setTitle(clusterTitle, for: .normal)
+            titleButton.setAttributedTitle(NSAttributedString(string: clusterTitle), for: .normal)
             searchButton.isHidden = true
             dismissButton.isHidden = false
         } else {
@@ -206,7 +206,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
                     } else {
                         newAffinities.append(affinityInfo.affinity)
                     }
-                    app.store.dispatch(ContactAffinityThresholdChanged(selectedAffinities: newAffinities))
+                    app.store.dispatch(MapContactAffinityThresholdChanged(selectedAffinities: newAffinities))
                 })
             }))
             titleButton.menu = affinityMeny
@@ -253,14 +253,14 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         let isSearching = currentState?.isSearching ?? false
         if !isSearching { // only send if this changes the state
-            app.store.dispatch(StartSearching())
+            app.store.dispatch(MapStartSearching())
         }
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         let isSearching = currentState?.isSearching ?? false
         if isSearching { // only send if this changes the state
-            app.store.dispatch(StopSearching())
+            app.store.dispatch(MapStopSearching())
         }
     }
 

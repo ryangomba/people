@@ -36,7 +36,9 @@ class ContactRepository: ObservableObject {
     func onContactStoreDidChange(notification: NSNotification) {
         if notification.userInfo?["CNNotificationOriginationExternally"] != nil {
             print("System contacts did change")
-            self.sync()
+            DispatchQueue.main.async {
+                self.sync()
+            }
         }
     }
 

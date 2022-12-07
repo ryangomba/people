@@ -27,7 +27,7 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
         let permissionViewHeight: CGFloat = 180
 
         contactsPermissionsView.configure(
-            text: "Please allow access to your Contacts so you can see them on a map",
+            text: "Allow access to your Contacts\nso you can see them on a map",
             buttonTitle: "Allow access to Contacts",
             buttonAction: UIAction() { _ in
                 if self.currentState?.contactsAuthStatus == .notDetermined {
@@ -46,28 +46,8 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
             contactsPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        calendarPermissionsView.configure(
-            text: "Please allow access to your calendar so you know when to reach out to friends",
-            buttonTitle: "Allow access to Calendar",
-            buttonAction: UIAction() { _ in
-                if self.currentState?.calendarAuthStatus == .notDetermined {
-                    app.calendarRepository.requestAuthorization()
-                } else {
-                    UIApplication.openAppSettings()
-                }
-            }
-        )
-        view.addSubview(calendarPermissionsView)
-        calendarPermissionsView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            calendarPermissionsView.topAnchor.constraint(equalTo: contactsPermissionsView.bottomAnchor),
-            calendarPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
-            calendarPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            calendarPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-
         locationPermissionsView.configure(
-            text: "Please allow access to your location to automatically center the map",
+            text: "Allow access to your location\nto automatically center the map",
             buttonTitle: "Allow access to location",
             buttonAction: UIAction() { _ in
                 if self.currentState?.locationAuthStatus == .notDetermined {
@@ -80,10 +60,30 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
         view.addSubview(locationPermissionsView)
         locationPermissionsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            locationPermissionsView.topAnchor.constraint(equalTo: calendarPermissionsView.bottomAnchor),
+            locationPermissionsView.topAnchor.constraint(equalTo: contactsPermissionsView.bottomAnchor),
             locationPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
             locationPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             locationPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+
+        calendarPermissionsView.configure(
+            text: "Allow access to your calendar\nto know when to reach out",
+            buttonTitle: "Allow access to Calendar",
+            buttonAction: UIAction() { _ in
+                if self.currentState?.calendarAuthStatus == .notDetermined {
+                    app.calendarRepository.requestAuthorization()
+                } else {
+                    UIApplication.openAppSettings()
+                }
+            }
+        )
+        view.addSubview(calendarPermissionsView)
+        calendarPermissionsView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            calendarPermissionsView.topAnchor.constraint(equalTo: locationPermissionsView.bottomAnchor),
+            calendarPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
+            calendarPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            calendarPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         updateAuthorizationStatuses()

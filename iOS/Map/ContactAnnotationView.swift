@@ -5,7 +5,7 @@ struct ContactAnnotationViewState: Equatable {
     var isSelected: Bool
 
     init(contactLocation: ContactLocation, newState: AppState) {
-        isSelected = newState.selection?.contactLocation == contactLocation
+        isSelected = newState.mapSelection?.contactLocation == contactLocation
     }
 }
 

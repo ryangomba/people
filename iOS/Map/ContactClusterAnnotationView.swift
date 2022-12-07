@@ -6,9 +6,9 @@ struct ContactClusterAnnotationViewState: Equatable {
     var selectedContactLocation: ContactLocation?
 
     init(coordinate: CLLocationCoordinate2D, newState: AppState) {
-        isSelected = newState.selection?.coordinate == coordinate
+        isSelected = newState.mapSelection?.coordinate == coordinate
         if isSelected {
-            selectedContactLocation = newState.selection?.contactLocation
+            selectedContactLocation = newState.mapSelection?.contactLocation
         }
     }
 }

@@ -9,10 +9,10 @@ struct MapViewControllerState: Equatable {
     init(newState: AppState) {
         region = newState.mapRegion
         newState.contacts.filter({ contact in
-            if (newState.selectedAffinities.contains(contact.affinity)) {
+            if (newState.mapSelectedAffinities.contains(contact.affinity)) {
                 return true
             }
-            if (contact.id == newState.selection?.contactLocation?.contact.id) {
+            if (contact.id == newState.mapSelection?.contactLocation?.contact.id) {
                 // Show selected friend on map even if it doesn’t match affinity
                 return true
             }

@@ -11,11 +11,6 @@ enum MapZoomScale: Int {
     case regional = 2
 }
 
-struct ContactSearchResult {
-    let contact: Contact
-    let score: Int
-}
-
 struct MapContactListViewControllerState {
     var searchQuery: String?
     var clusterTitle: String?
@@ -31,15 +26,15 @@ struct MapContactListViewControllerState {
             mapZoomScale = .regional
         }
 
-        let query = newState.searchQuery
-        if (newState.isSearching) {
+        let query = newState.mapSearchQuery
+        if (newState.mapIsSearching) {
             searchQuery = query
         }
 
         let focusedCoordinate = focusedCoordinateForMapRegion(newState.mapRegion)
-        let clusterSelected = newState.selection?.fromCluster ?? false
+        let clusterSelected = newState.mapSelection?.fromCluster ?? false
         if clusterSelected {
-            let coordinate = newState.selection!.coordinate
+            let coordinate = newState.mapSelection!.coordinate
             contactLocations = []
             var postalAddresses: [PostalAddress] = []
             newState.contacts.forEach({ contact in
@@ -52,36 +47,10 @@ struct MapContactListViewControllerState {
                 }
             })
             clusterTitle = postalAddresses.sameLocationSharedDescription
-        } else if newState.isSearching {
+        } else if newState.mapIsSearching {
             let query = query.lowercased()
-            contactLocations = newState.contacts.map { contact in
-                let searchString = contact.searchString
-                var score = 0
-                if query.isEmpty {
-                    score = 1 // just needs to be non-zero
-                } else if let index = searchString.range(of: query)?.lowerBound {
-                    if index == searchString.startIndex {
-                        score = 100
-                    } else {
-                        let prevIndex = searchString.index(index, offsetBy: -1)
-                        let prevChar = searchString[prevIndex]
-                        if prevChar == Character(" ") {
-                            score = 10
-                        } else {
-                            score = 1
-                        }
-                    }
-                }
-                return ContactSearchResult(contact: contact, score: score)
-            }.filter({ searchResult in
-                return searchResult.score > 0
-            }).sorted(by: { r1, r2 in
-                if r1.score > r2.score {
-                    return true
-                }
-                return r1.contact.displayName < r2.contact.displayName // TODO: sort by best natural match
-            }).map({ searchResult in
-                return searchResult.contact.nearestHomeLocation(to: focusedCoordinate)
+            contactLocations = newState.contacts.search(query: query).map({ contact in
+                return contact.nearestHomeLocation(to: focusedCoordinate)
             }).map({ result in
                 return result.contactLocation
             })
@@ -91,7 +60,7 @@ struct MapContactListViewControllerState {
                 adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
             }
             contactLocations = newState.contacts.filter({ contact in
-                newState.selectedAffinities.contains(contact.affinity)
+                newState.mapSelectedAffinities.contains(contact.affinity)
             }).map({ contact in
                 return contact.nearestHomeLocation(to: focusedCoordinate)
             }).filter({ result in
@@ -337,7 +306,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
             break
         case Section.contactLocations.rawValue:
             let contactLocation = currentState.contactLocations[indexPath.row]
-            app.store.dispatch(ContactLocationSelected(location: contactLocation))
+            app.store.dispatch(MapContactLocationSelected(location: contactLocation))
             tableView.scrollToTop(animated: false)
         default:
             fatalError("Invalid section: \(indexPath.section)")
