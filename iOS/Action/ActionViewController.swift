@@ -153,6 +153,7 @@ class ActionViewController: UITableViewController, StoreSubscriber {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case Section.due.rawValue:
             let contact = currentState.contacts[indexPath.row]
