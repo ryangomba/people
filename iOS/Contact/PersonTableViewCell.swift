@@ -31,7 +31,7 @@ class PersonTableViewCell: UITableViewCell {
                 avatarView.persons = [person]
                 nameLabel.text = contact.displayName
                 let affinity = person.affinity
-                func setAffinity(_ affinity: ContactAffinity) {
+                func setAffinity(_ affinity: Affinity) {
                     app.store.dispatch(PersonAffinityChanged(person: person, affinity: affinity))
                 }
                 var contactActions: [UIAction] = []
@@ -65,7 +65,7 @@ class PersonTableViewCell: UITableViewCell {
                     }),
                 ])
                 let actionMenu = UIMenu(children: contactActions + [scheduleMenu] + [
-                    UIMenu(title: "\(affinity.info.title)", image: UIImage(systemName: affinity.info.selectedIconName), children: ContactAffinity.all().map({ affinityInfo in
+                    UIMenu(title: "\(affinity.info.title)", image: UIImage(systemName: affinity.info.selectedIconName), children: Affinity.all().map({ affinityInfo in
                         let selected = affinityInfo.affinity == affinity
                         return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
                             setAffinity(affinityInfo.affinity)

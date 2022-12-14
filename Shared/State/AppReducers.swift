@@ -131,7 +131,7 @@ func appReducer(action: Action, state: AppState?) -> AppState {
         state.mapSearchQuery = ""
         state.mapIsSearching = false
 
-    case let action as MapContactAffinityThresholdChanged:
+    case let action as MapAffinityThresholdChanged:
         state.mapSelectedAffinities = action.selectedAffinities
 
     case let action as MapContactDetailsDetentChanged:

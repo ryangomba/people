@@ -159,10 +159,10 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             config.imageProperties.tintColor = .label
             config.text = "\(affinityInfo.title) friend"
             config.image = .init(systemName: affinityInfo.selectedIconName)
-            func setAffinity(_ affinity: ContactAffinity) {
+            func setAffinity(_ affinity: Affinity) {
                 app.store.dispatch(PersonAffinityChanged(person: person, affinity: affinity))
             }
-            let affinityMenu = UIMenu(children: ContactAffinity.all().map({ affinityInfo in
+            let affinityMenu = UIMenu(children: Affinity.all().map({ affinityInfo in
                 let selected = affinityInfo.affinity == person.affinity
                 return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
                     setAffinity(affinityInfo.affinity)

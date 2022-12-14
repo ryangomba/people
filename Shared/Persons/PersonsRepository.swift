@@ -11,7 +11,7 @@ struct Person: Identifiable, Equatable, Comparable {
         return lhs.contact < rhs.contact
     }
     let contact: Contact
-    let affinity: ContactAffinity
+    let affinity: Affinity
     let calendarEvents: [CalendarEvent]
     let latestEvent: CalendarEvent?
     var id: String {
@@ -29,22 +29,25 @@ struct Person: Identifiable, Equatable, Comparable {
     }
 }
 
-func personFromContact(_ contact: Contact, calendarEvents: [CalendarEvent]) -> Person {
+private func personFromContact(_ contact: Contact, rawCalendarEvents: [CalendarEvent]) -> Person {
     let affinity = affinityStore.get(contact.id)
     let days = affinity.info.days
-    let latestEvent = calendarEvents.first(where: { calendarEvent in
+    let calendarEvents = rawCalendarEvents.sorted().filter { calendarEvent in
         // Look ahead the same number of days
         calendarEvent.startDate < Date().addingTimeInterval(60 * 60 * 24 * TimeInterval(days))
-    })
+    }
     return Person(
         contact: contact,
         affinity: affinity,
         calendarEvents: calendarEvents,
-        latestEvent: latestEvent
+        latestEvent: calendarEvents.first
     )
 }
 
 func personsFromContacts(_ contacts: [Contact], calendarEvents: [CalendarEvent]) -> [Person] {
+    if contacts.isEmpty || calendarEvents.isEmpty {
+        return []
+    }
     var emailToCalendarEventsMap: [String: [CalendarEvent]] = [:]
     for calendarEvent in calendarEvents {
         for attendeeEmail in calendarEvent.attendeeEmails {
@@ -60,7 +63,7 @@ func personsFromContacts(_ contacts: [Contact], calendarEvents: [CalendarEvent])
         for email in contact.emailAddresses {
             matchingCalendarEvents += emailToCalendarEventsMap[email] ?? []
         }
-        return personFromContact(contact, calendarEvents: matchingCalendarEvents)
+        return personFromContact(contact, rawCalendarEvents: matchingCalendarEvents)
     }
 }
 

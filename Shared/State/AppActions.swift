@@ -64,8 +64,8 @@ struct MapContactListDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 
-struct MapContactAffinityThresholdChanged: Action {
-    let selectedAffinities: [ContactAffinity]
+struct MapAffinityThresholdChanged: Action {
+    let selectedAffinities: [Affinity]
 }
 
 struct MapStartSearching: Action {}
@@ -104,5 +104,5 @@ struct ContactPhotoChanged: Action {
 
 struct PersonAffinityChanged: Action {
     let person: Person
-    let affinity: ContactAffinity
+    let affinity: Affinity
 }

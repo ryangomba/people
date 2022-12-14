@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-enum ContactAffinity: Int, Codable, CaseIterable {
+enum Affinity: Int, Codable, CaseIterable {
     case best = 1
     case close = 2
     case loose = 3
@@ -10,7 +10,7 @@ enum ContactAffinity: Int, Codable, CaseIterable {
 
     struct AffinityInfo: Identifiable {
         var title: String
-        var affinity: ContactAffinity
+        var affinity: Affinity
         var days: Int
         var iconName: String
         var selectedIconName: String
@@ -76,14 +76,14 @@ enum ContactAffinity: Int, Codable, CaseIterable {
     }
 }
 
-private struct ContactInfo: Codable, Equatable {
-    var affinity: ContactAffinity
+private struct Info: Codable, Equatable {
+    var affinity: Affinity
 }
 
-private typealias ContactInfoData = [String: ContactInfo]
+private typealias InfoData = [String: Info]
 
-class ContactAffinityStore {
-    private var data: ContactInfoData = [:]
+class AffinityStore {
+    private var data: InfoData = [:]
 
     init() {
         load()
@@ -92,13 +92,14 @@ class ContactAffinityStore {
     private var cacheURL: URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = paths[0]
-        return documentDirectory.appendingPathComponent("contactInfo2.json")
+        return documentDirectory.appendingPathComponent("affinities.json")
     }
 
     private func load() {
-        if FileManager.default.fileExists(atPath: cacheURL.path) {
-            let jsonData = try! String(contentsOfFile: cacheURL.path).data(using: .utf8)!
-            let decodedData = try! JSONDecoder().decode(ContactInfoData.self, from: jsonData)
+        let path = cacheURL.path
+        if FileManager.default.fileExists(atPath: path) {
+            let jsonData = try! String(contentsOfFile: path).data(using: .utf8)!
+            let decodedData = try! JSONDecoder().decode(InfoData.self, from: jsonData)
             data = decodedData
         }
     }
@@ -108,20 +109,20 @@ class ContactAffinityStore {
         try! data.write(to: cacheURL)
     }
 
-    private func getInfo(_ key: String) -> ContactInfo {
-        return data[key] ?? ContactInfo(affinity: .undefined)
+    private func getInfo(_ key: String) -> Info {
+        return data[key] ?? Info(affinity: .undefined)
     }
 
-    public func get(_ key: String) -> ContactAffinity {
+    public func get(_ key: String) -> Affinity {
         return getInfo(key).affinity
     }
 
-    private func updateInfo(_ key: String, info: ContactInfo) {
+    private func updateInfo(_ key: String, info: Info) {
         data[key] = info
         save()
     }
 
-    public func update(_ key: String, affinity: ContactAffinity) {
+    public func update(_ key: String, affinity: Affinity) {
         var info = getInfo(key)
         info.affinity = affinity
         updateInfo(key, info: info)
@@ -129,4 +130,4 @@ class ContactAffinityStore {
 }
 
 // TODO: make not global
-let affinityStore = ContactAffinityStore()
+let affinityStore = AffinityStore()

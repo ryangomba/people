@@ -2,7 +2,7 @@ import UIKit
 import ReSwift
 
 struct MapContactListHeaderState: Equatable {
-    var selectedAffinities: [ContactAffinity]
+    var selectedAffinities: [Affinity]
     var isSearching: Bool
     var searchQuery: String
 
@@ -136,7 +136,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         } else {
             var categoryName: String = ""
             var categorySuffix: String? = nil
-            if (currentState?.selectedAffinities.count == ContactAffinity.allCases.count) {
+            if (currentState?.selectedAffinities.count == Affinity.allCases.count) {
                 categoryName = "Everyone"
             } else if (currentState?.selectedAffinities.count == 1) {
                 categoryName = currentState!.selectedAffinities[0].info.title
@@ -195,7 +195,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             titleButton.setAttributedTitle(highlightedAttributedText, for: .highlighted)
 
             // HACK move
-            let affinityMeny = UIMenu(title: "Filter to", children: ContactAffinity.all().map({ affinityInfo in
+            let affinityMeny = UIMenu(title: "Filter to", children: Affinity.all().map({ affinityInfo in
                 let selected = currentState?.selectedAffinities.contains(affinityInfo.affinity) ?? false
                 return UIAction(title: "\(affinityInfo.title) friends", image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), attributes: .keepsMenuPresented, state: selected ? .on : .off, handler: { (_) in
                     var newAffinities = self.currentState?.selectedAffinities ?? []
@@ -206,7 +206,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
                     } else {
                         newAffinities.append(affinityInfo.affinity)
                     }
-                    app.store.dispatch(MapContactAffinityThresholdChanged(selectedAffinities: newAffinities))
+                    app.store.dispatch(MapAffinityThresholdChanged(selectedAffinities: newAffinities))
                 })
             }))
             titleButton.menu = affinityMeny

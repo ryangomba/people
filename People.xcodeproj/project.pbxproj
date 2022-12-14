@@ -49,7 +49,7 @@
 		94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6228AC9AC500F52EC8 /* Layout.swift */; };
 		94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6428AC9E4000F52EC8 /* Colors.swift */; };
 		94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */; };
-		94BA6CC12750B5070026B566 /* ContactAffinityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */; };
+		94BA6CC12750B5070026B566 /* AffinityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6CC02750B5070026B566 /* AffinityStore.swift */; };
 		94D36D24293BE1E900184B3B /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D36D23293BE1E900184B3B /* ContactListViewController.swift */; };
 		94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8510C28F47F67009D12EE /* ArrayExtensions.swift */; };
 		94DE155128BDAAF3002281E5 /* PostalAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */; };
@@ -124,7 +124,7 @@
 		94945F6228AC9AC500F52EC8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		94945F6428AC9E4000F52EC8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListHeader.swift; sourceTree = "<group>"; };
-		94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAffinityStore.swift; sourceTree = "<group>"; };
+		94BA6CC02750B5070026B566 /* AffinityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffinityStore.swift; sourceTree = "<group>"; };
 		94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "People--iOS--Info.plist"; sourceTree = "<group>"; };
 		94D36D23293BE1E900184B3B /* ContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListViewController.swift; sourceTree = "<group>"; };
 		94D8510C28F47F67009D12EE /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
@@ -207,7 +207,7 @@
 		94328136294A50B3001BE0DE /* Affinity */ = {
 			isa = PBXGroup;
 			children = (
-				94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */,
+				94BA6CC02750B5070026B566 /* AffinityStore.swift */,
 			);
 			path = Affinity;
 			sourceTree = "<group>";
@@ -576,7 +576,7 @@
 				9406FBCE293BBFFA000F96F1 /* SimpleFooterView.swift in Sources */,
 				94F5AAC627500F28009276E7 /* Geocoder.swift in Sources */,
 				9433AC2528ADAD1D00323AAE /* SearchBox.swift in Sources */,
-				94BA6CC12750B5070026B566 /* ContactAffinityStore.swift in Sources */,
+				94BA6CC12750B5070026B566 /* AffinityStore.swift in Sources */,
 				943DE22D29411ECE00CDAE8F /* NotificationsManager.swift in Sources */,
 				94945F5128AC5E9D00F52EC8 /* PersonAvatarView.swift in Sources */,
 				94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */,

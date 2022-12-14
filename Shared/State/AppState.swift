@@ -34,7 +34,7 @@ struct AppState {
     var mapContactListDetentIdentifier: UISheetPresentationController.Detent.Identifier = .small
     var mapIsSearching = false
     var mapSearchQuery = ""
-    var mapSelectedAffinities: [ContactAffinity] = ContactAffinity.allCases
+    var mapSelectedAffinities: [Affinity] = Affinity.allCases
     var mapContactDetailsDetentIdentifier: UISheetPresentationController.Detent.Identifier = .normal
     var mapPersonLocationForEdit: PersonLocation?
 }
