@@ -1,6 +1,6 @@
 import UIKit
 
-class ContactAvatarView: UIView {
+class PersonAvatarView: UIView {
     private static let avatarSize: CGFloat = 44
     private static let borderSize: CGFloat = 2
     private static let shadowSize: CGFloat = 2
@@ -11,19 +11,19 @@ class ContactAvatarView: UIView {
     private let imageView = UIImageView()
     private let affinityImageView = UIImageView()
 
-    var contacts: [Contact] = [] {
+    var persons: [Person] = [] {
         didSet {
-            if contacts.isEmpty {
+            if persons.isEmpty {
                 imageView.image = nil
                 affinityImageView.image = nil
-            } else if contacts != oldValue {
+            } else if persons != oldValue {
                 imageView.image = drawImage()
-                if (contacts.count == 1) {
-                    let contact = contacts.first!
-                    if let iconName = contact._affinity.info.smallIconName {
+                if (persons.count == 1) {
+                    let person = persons.first!
+                    if let iconName = person.affinity.info.smallIconName {
                         affinityImageView.image = .init(systemName: iconName)
                         affinityImageView.backgroundColor = .white
-                        affinityImageView.tintColor = contact._affinity.info.iconTintColor
+                        affinityImageView.tintColor = person.affinity.info.iconTintColor
                     } else {
                         affinityImageView.image = nil
                     }
@@ -121,51 +121,51 @@ class ContactAvatarView: UIView {
             let outset = (width - rect.width) / 2
             return CGRectInset(rect, -outset, 0)
         }
-        var contactRects: [CGRect] = []
-        switch contacts.count {
+        var personRects: [CGRect] = []
+        switch persons.count {
         case 0, 1:
-            contactRects = [contentRect]
+            personRects = [contentRect]
         case 2:
-            contactRects = [
+            personRects = [
                 CGRectMake(contentRect.origin.x, contentRect.origin.y, contentRect.width / 2, contentRect.height),
                 CGRectMake(contentRect.origin.x + contentRect.width / 2, contentRect.origin.y, contentRect.width / 2, contentRect.height),
             ]
         case 3:
-            contactRects = [
+            personRects = [
                 CGRectMake(contentRect.origin.x, contentRect.origin.y, contentRect.width / 2, contentRect.height / 2),
                 CGRectMake(contentRect.origin.x, contentRect.origin.y + contentRect.height / 2, contentRect.width / 2, contentRect.height / 2),
                 CGRectMake(contentRect.origin.x + contentRect.width / 2, contentRect.origin.y, contentRect.width / 2, contentRect.height),
             ]
         default:
-            contactRects = [
+            personRects = [
                 CGRectMake(contentRect.origin.x, contentRect.origin.y, contentRect.width / 2, contentRect.height / 2),
                 CGRectMake(contentRect.origin.x, contentRect.origin.y + contentRect.height / 2, contentRect.width / 2, contentRect.height / 2),
                 CGRectMake(contentRect.origin.x + contentRect.width / 2, contentRect.origin.y, contentRect.width / 2, contentRect.height / 2),
                 CGRectMake(contentRect.origin.x + contentRect.width / 2, contentRect.origin.y + contentRect.height / 2, contentRect.width / 2, contentRect.height / 2),
             ]
         }
-        for (i, contact) in contacts.prefix(4).enumerated() {
+        for (i, person) in persons.prefix(4).enumerated() {
             context.saveGState()
-            let contactRect = contactRects[i]
+            let personRect = personRects[i]
 
-            if contacts.count > 1 {
+            if persons.count > 1 {
                 context.saveGState()
                 borderColor.setStroke()
                 context.setLineWidth(screenScale)
-                context.stroke(contactRect)
+                context.stroke(personRect)
                 context.restoreGState()
             }
 
-            if let data = contact.thumbnailImageData {
-                let contactImage = UIImage(data: data)!
-                let imageRect = fillRectForRect(contactRect, contentSize: contactImage.size)
-                context.clip(to: contactRect)
-                contactImage.draw(in: imageRect)
+            if let data = person.contact.thumbnailImageData {
+                let personImage = UIImage(data: data)!
+                let imageRect = fillRectForRect(personRect, contentSize: personImage.size)
+                context.clip(to: personRect)
+                personImage.draw(in: imageRect)
             } else {
                 // TODO: draw initials
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .center
-                let fontSize = contactRect.width * 0.5
+                let fontSize = personRect.width * 0.5
                 var font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
                 if let descriptor = font.fontDescriptor.withDesign(.rounded) {
                     font = UIFont(descriptor: descriptor, size: fontSize)
@@ -175,10 +175,10 @@ class ContactAvatarView: UIView {
                     NSAttributedString.Key.paragraphStyle: paragraphStyle,
                     NSAttributedString.Key.foregroundColor: UIColor.white
                 ]
-                let string = contact.initials
-                let vInset = (contactRect.height - font.lineHeight) / 2
+                let string = person.contact.initials
+                let vInset = (personRect.height - font.lineHeight) / 2
                 string.draw(
-                    with: CGRectInset(contactRect, 0, vInset),
+                    with: CGRectInset(personRect, 0, vInset),
                     options: .usesLineFragmentOrigin,
                     attributes: attrs,
                     context: nil

@@ -11,7 +11,7 @@ class PersonTableViewCell: UITableViewCell {
     static let reuseIdentifier = "contactCell"
     static let preferredHeight: CGFloat = Sizing.defaultListItemHeight
 
-    private let avatarView = ContactAvatarView()
+    private let avatarView = PersonAvatarView()
     private let nameLabel = UILabel()
     private let subtitleLabel = UILabel()
     private let actionButton = UIButton()
@@ -28,11 +28,11 @@ class PersonTableViewCell: UITableViewCell {
             if let personLocation = personLocation {
                 let person = personLocation.person
                 let contact = person.contact
-                avatarView.contacts = [contact]
+                avatarView.persons = [person]
                 nameLabel.text = contact.displayName
                 let affinity = person.affinity
                 func setAffinity(_ affinity: ContactAffinity) {
-                    app.contactRepository.updateContactAffinity(contact: contact, affinity: affinity)
+                    app.store.dispatch(PersonAffinityChanged(person: person, affinity: affinity))
                 }
                 var contactActions: [UIAction] = []
                 if let phoneNumber = contact.primaryPhoneNumber {
@@ -74,7 +74,7 @@ class PersonTableViewCell: UITableViewCell {
                 ])
                 actionButton.menu = actionMenu
             } else {
-                avatarView.contacts = []
+                avatarView.persons = []
                 nameLabel.text = ""
             }
             updateSubtitleLabel()
@@ -125,8 +125,8 @@ class PersonTableViewCell: UITableViewCell {
         contentView.addSubview(avatarView)
         avatarView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            avatarView.widthAnchor.constraint(equalToConstant: ContactAvatarView.normalSize),
-            avatarView.heightAnchor.constraint(equalToConstant: ContactAvatarView.normalSize),
+            avatarView.widthAnchor.constraint(equalToConstant: PersonAvatarView.normalSize),
+            avatarView.heightAnchor.constraint(equalToConstant: PersonAvatarView.normalSize),
             avatarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.normal),
             avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])

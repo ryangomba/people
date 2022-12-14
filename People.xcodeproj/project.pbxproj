@@ -39,7 +39,7 @@
 		94945F4A28AC30BE00F52EC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F4928AC30BE00F52EC8 /* AppDelegate.swift */; };
 		94945F4C28AC31CC00F52EC8 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F4B28AC31CC00F52EC8 /* MapViewController.swift */; };
 		94945F4F28AC4EF500F52EC8 /* MapKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F4E28AC4EF500F52EC8 /* MapKitExtensions.swift */; };
-		94945F5128AC5E9D00F52EC8 /* ContactAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */; };
+		94945F5128AC5E9D00F52EC8 /* PersonAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5028AC5E9D00F52EC8 /* PersonAvatarView.swift */; };
 		94945F5328AC74CE00F52EC8 /* ContactAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5228AC74CE00F52EC8 /* ContactAnnotationView.swift */; };
 		94945F5528AC791C00F52EC8 /* MapContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */; };
 		94945F5728AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */; };
@@ -114,7 +114,7 @@
 		94945F4928AC30BE00F52EC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94945F4B28AC31CC00F52EC8 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		94945F4E28AC4EF500F52EC8 /* MapKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapKitExtensions.swift; sourceTree = "<group>"; };
-		94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAvatarView.swift; sourceTree = "<group>"; };
+		94945F5028AC5E9D00F52EC8 /* PersonAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAvatarView.swift; sourceTree = "<group>"; };
 		94945F5228AC74CE00F52EC8 /* ContactAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAnnotationView.swift; sourceTree = "<group>"; };
 		94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListViewController.swift; sourceTree = "<group>"; };
 		94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationControllerExtensions.swift; sourceTree = "<group>"; };
@@ -204,11 +204,19 @@
 			path = Persons;
 			sourceTree = "<group>";
 		};
+		94328136294A50B3001BE0DE /* Affinity */ = {
+			isa = PBXGroup;
+			children = (
+				94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */,
+			);
+			path = Affinity;
+			sourceTree = "<group>";
+		};
 		9433AC2A28AE874A00323AAE /* Common */ = {
 			isa = PBXGroup;
 			children = (
 				9433AC2428ADAD1D00323AAE /* SearchBox.swift */,
-				94945F5028AC5E9D00F52EC8 /* ContactAvatarView.swift */,
+				94945F5028AC5E9D00F52EC8 /* PersonAvatarView.swift */,
 				94E2829828DB710E0009C27F /* NetworkImageView.swift */,
 				9406FBCD293BBFFA000F96F1 /* SimpleFooterView.swift */,
 			);
@@ -250,7 +258,6 @@
 				9433AC1B28AD65EB00323AAE /* Contact.swift */,
 				9433AC3628B00CCE00323AAE /* PostalAddress.swift */,
 				94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */,
-				94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */,
 				94F5AAC227500ED3009276E7 /* ContactRepository.swift */,
 			);
 			path = Contacts;
@@ -398,6 +405,7 @@
 				94945F4428AC2FBC00F52EC8 /* State */,
 				94945F4528AC2FD900F52EC8 /* Contacts */,
 				941DA38D293FEF76002779A4 /* Calendar */,
+				94328136294A50B3001BE0DE /* Affinity */,
 				94328133294A43B1001BE0DE /* Persons */,
 				94945F4D28AC4EE700F52EC8 /* Extensions */,
 				943DE22B29411EBF00CDAE8F /* Notifications */,
@@ -570,7 +578,7 @@
 				9433AC2528ADAD1D00323AAE /* SearchBox.swift in Sources */,
 				94BA6CC12750B5070026B566 /* ContactAffinityStore.swift in Sources */,
 				943DE22D29411ECE00CDAE8F /* NotificationsManager.swift in Sources */,
-				94945F5128AC5E9D00F52EC8 /* ContactAvatarView.swift in Sources */,
+				94945F5128AC5E9D00F52EC8 /* PersonAvatarView.swift in Sources */,
 				94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */,
 				94945F2728AC2B3500F52EC8 /* AppReducers.swift in Sources */,
 				94EA8D6C28C00A5700D7E68D /* UIApplicationExtensions.swift in Sources */,

@@ -127,3 +127,6 @@ class ContactAffinityStore {
         updateInfo(key, info: info)
     }
 }
+
+// TODO: make not global
+let affinityStore = ContactAffinityStore()

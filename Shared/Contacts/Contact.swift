@@ -25,7 +25,6 @@ struct Contact: Identifiable, Equatable, Comparable {
         }!
     }
     var postalAddresses: [PostalAddress]
-    var _affinity: ContactAffinity // TODO: move to Person
     var displayName: String {
         if !nickname.isEmpty {
             return nickname

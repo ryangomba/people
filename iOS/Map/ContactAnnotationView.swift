@@ -13,12 +13,12 @@ class ContactAnnotationView: MKAnnotationView, StoreSubscriber {
     static let reuseIdentifier = "contactAnnotation"
 
     private var currentState: ContactAnnotationViewState?
-    private let avatarView = ContactAvatarView(shadowed: true)
+    private let avatarView = PersonAvatarView(shadowed: true)
 
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
-        frame = CGRect(x: 0, y: 0, width: ContactAvatarView.shadowedSize, height: ContactAvatarView.shadowedSize)
+        frame = CGRect(x: 0, y: 0, width: PersonAvatarView.shadowedSize, height: PersonAvatarView.shadowedSize)
 
         let tap = UITapGestureRecognizer()
         tap.addTarget(self, action: #selector(onTap))
@@ -29,8 +29,8 @@ class ContactAnnotationView: MKAnnotationView, StoreSubscriber {
         NSLayoutConstraint.activate([
             avatarView.centerXAnchor.constraint(equalTo: centerXAnchor),
             avatarView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarView.widthAnchor.constraint(equalToConstant: ContactAvatarView.shadowedSize),
-            avatarView.heightAnchor.constraint(equalToConstant: ContactAvatarView.shadowedSize),
+            avatarView.widthAnchor.constraint(equalToConstant: PersonAvatarView.shadowedSize),
+            avatarView.heightAnchor.constraint(equalToConstant: PersonAvatarView.shadowedSize),
         ])
     }
 
@@ -72,14 +72,14 @@ class ContactAnnotationView: MKAnnotationView, StoreSubscriber {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        avatarView.contacts = []
+        avatarView.persons = []
     }
 
     override func prepareForDisplay() {
         super.prepareForDisplay()
 
         if let annotation = annotation as? ContactAnnotation {
-            avatarView.contacts = [annotation.personLocation.person.contact]
+            avatarView.persons = [annotation.personLocation.person]
         }
     }
 

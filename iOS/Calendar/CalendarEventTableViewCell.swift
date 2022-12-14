@@ -6,22 +6,22 @@ class CalendarEventTableViewCell: UITableViewCell {
 
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
-    private let avatarView = ContactAvatarView()
+    private let avatarView = PersonAvatarView()
 
     var calendarEvent: CalendarEvent? {
         didSet {
             if let calendarEvent = calendarEvent {
                 titleLabel.text = calendarEvent.title
                 subtitleLabel.text = calendarEvent.startDate.formatRelative().capitalizedSentence
-                avatarView.contacts = app.store.state.contacts.filter({ contact in
-                    contact.emailAddresses.contains { emailAddress in
+                avatarView.persons = app.store.state.persons.filter({ person in
+                    person.contact.emailAddresses.contains { emailAddress in
                         calendarEvent.attendeeEmails.contains(emailAddress)
                     }
                 })
             } else {
                 titleLabel.text = ""
                 subtitleLabel.text = ""
-                avatarView.contacts = []
+                avatarView.persons = []
             }
         }
     }
@@ -32,8 +32,8 @@ class CalendarEventTableViewCell: UITableViewCell {
         contentView.addSubview(avatarView)
         avatarView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            avatarView.widthAnchor.constraint(equalToConstant: ContactAvatarView.normalSize),
-            avatarView.heightAnchor.constraint(equalToConstant: ContactAvatarView.normalSize),
+            avatarView.widthAnchor.constraint(equalToConstant: PersonAvatarView.normalSize),
+            avatarView.heightAnchor.constraint(equalToConstant: PersonAvatarView.normalSize),
             avatarView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Padding.normal),
             avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])

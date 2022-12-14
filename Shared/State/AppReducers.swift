@@ -159,6 +159,10 @@ func appReducer(action: Action, state: AppState?) -> AppState {
             }
         }
 
+    case let action as PersonAffinityChanged:
+        affinityStore.update(action.person.id, affinity: action.affinity)
+        state.persons = personsFromContacts(state.contacts, calendarEvents: state.calendarEvents)
+
     default:
         break
     }

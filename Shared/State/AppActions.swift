@@ -99,3 +99,10 @@ struct PersonLocationEdited: Action {
 struct ContactPhotoChanged: Action {
     let contact: Contact
 }
+
+// Affinity
+
+struct PersonAffinityChanged: Action {
+    let person: Person
+    let affinity: ContactAffinity
+}

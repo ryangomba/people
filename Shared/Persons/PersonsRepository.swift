@@ -11,15 +11,13 @@ struct Person: Identifiable, Equatable, Comparable {
         return lhs.contact < rhs.contact
     }
     let contact: Contact
+    let affinity: ContactAffinity
     let calendarEvents: [CalendarEvent]
     let latestEvent: CalendarEvent?
     var id: String {
         get {
             return contact.id
         }
-    }
-    var affinity: ContactAffinity {
-        return contact._affinity
     }
     var overdue: Bool {
         if let latestEvent = latestEvent {
@@ -32,13 +30,15 @@ struct Person: Identifiable, Equatable, Comparable {
 }
 
 func personFromContact(_ contact: Contact, calendarEvents: [CalendarEvent]) -> Person {
-    let days = contact._affinity.info.days
+    let affinity = affinityStore.get(contact.id)
+    let days = affinity.info.days
     let latestEvent = calendarEvents.first(where: { calendarEvent in
         // Look ahead the same number of days
         calendarEvent.startDate < Date().addingTimeInterval(60 * 60 * 24 * TimeInterval(days))
     })
     return Person(
         contact: contact,
+        affinity: affinity,
         calendarEvents: calendarEvents,
         latestEvent: latestEvent
     )

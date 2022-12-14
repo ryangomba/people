@@ -16,12 +16,12 @@ struct ContactClusterAnnotationViewState: Equatable {
 final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
     public static let reuseIdentifier = "contactCluster"
     private var currentState: ContactClusterAnnotationViewState?
-    private let avatarView = ContactAvatarView(shadowed: true)
+    private let avatarView = PersonAvatarView(shadowed: true)
 
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
-        frame = CGRect(x: 0, y: 0, width: ContactAvatarView.shadowedSize, height: ContactAvatarView.shadowedSize)
+        frame = CGRect(x: 0, y: 0, width: PersonAvatarView.shadowedSize, height: PersonAvatarView.shadowedSize)
 
         let tap = UITapGestureRecognizer()
         tap.addTarget(self, action: #selector(onAvatarViewTapped))
@@ -32,8 +32,8 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
         NSLayoutConstraint.activate([
             avatarView.centerXAnchor.constraint(equalTo: centerXAnchor),
             avatarView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            avatarView.widthAnchor.constraint(equalToConstant: ContactAvatarView.shadowedSize),
-            avatarView.heightAnchor.constraint(equalToConstant: ContactAvatarView.shadowedSize),
+            avatarView.widthAnchor.constraint(equalToConstant: PersonAvatarView.shadowedSize),
+            avatarView.heightAnchor.constraint(equalToConstant: PersonAvatarView.shadowedSize),
         ])
     }
 
@@ -100,9 +100,9 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
         let selectedPersonLocation = currentState?.selectedPersonLocation
 
         if let selectedPersonLocation = selectedPersonLocation {
-            avatarView.contacts = [selectedPersonLocation.person.contact]
+            avatarView.persons = [selectedPersonLocation.person]
         } else {
-            avatarView.contacts = contactAnnotations.map({ $0.personLocation.person.contact })
+            avatarView.persons = contactAnnotations.map({ $0.personLocation.person })
         }
 
         func applyChanges() {

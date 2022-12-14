@@ -160,7 +160,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             config.text = "\(affinityInfo.title) friend"
             config.image = .init(systemName: affinityInfo.selectedIconName)
             func setAffinity(_ affinity: ContactAffinity) {
-                app.contactRepository.updateContactAffinity(contact: contact, affinity: affinity)
+                app.store.dispatch(PersonAffinityChanged(person: person, affinity: affinity))
             }
             let affinityMenu = UIMenu(children: ContactAffinity.all().map({ affinityInfo in
                 let selected = affinityInfo.affinity == person.affinity

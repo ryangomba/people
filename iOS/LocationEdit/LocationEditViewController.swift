@@ -180,13 +180,14 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
             postalAddress.value.street = postalAddress.value.subLocality;
             postalAddress.value.subLocality = "";
         }
+        // TODO: the following is so ugly
         var newContact: Contact
         if let oldPostalAddress = personLocation.postalAddress {
             newContact = app.contactRepository.updatePostalAddress(contact: personLocation.person.contact, old: oldPostalAddress, new: postalAddress)
         } else {
             newContact = app.contactRepository.addPostalAddress(contact: personLocation.person.contact, postalAddress: postalAddress)
         }
-        let newPerson = Person(contact: newContact, calendarEvents: personLocation.person.calendarEvents, latestEvent: personLocation.person.latestEvent)
+        let newPerson = Person(contact: newContact, affinity: personLocation.person.affinity, calendarEvents: personLocation.person.calendarEvents, latestEvent: personLocation.person.latestEvent)
         let newPersonLocation = PersonLocation(
             person: newPerson,
             postalAddress: postalAddress
