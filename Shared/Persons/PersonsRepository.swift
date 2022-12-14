@@ -3,6 +3,11 @@ import CoreLocation
 
 struct Person: Identifiable, Equatable, Comparable {
     static func < (lhs: Person, rhs: Person) -> Bool {
+        let a1 = lhs.affinity;
+        let a2 = rhs.affinity;
+        if (a1 != a2) {
+            return a1.rawValue < a2.rawValue
+        }
         return lhs.contact < rhs.contact
     }
     let contact: Contact
@@ -13,9 +18,12 @@ struct Person: Identifiable, Equatable, Comparable {
             return contact.id
         }
     }
+    var affinity: ContactAffinity {
+        return contact._affinity
+    }
     var overdue: Bool {
         if let latestEvent = latestEvent {
-            let days = contact.affinity.info.days
+            let days = affinity.info.days
             return Date().timeIntervalSince(latestEvent.endDate) > 60 * 60 * 24 * TimeInterval(days)
         } else {
             return true
@@ -24,7 +32,7 @@ struct Person: Identifiable, Equatable, Comparable {
 }
 
 func personFromContact(_ contact: Contact, calendarEvents: [CalendarEvent]) -> Person {
-    let days = contact.affinity.info.days
+    let days = contact._affinity.info.days
     let latestEvent = calendarEvents.first(where: { calendarEvent in
         // Look ahead the same number of days
         calendarEvent.startDate < Date().addingTimeInterval(60 * 60 * 24 * TimeInterval(days))

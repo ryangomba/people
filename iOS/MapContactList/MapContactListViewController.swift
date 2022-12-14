@@ -60,7 +60,7 @@ struct MapContactListViewControllerState {
                 adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
             }
             personLocations = newState.persons.filter({ person in
-                newState.mapSelectedAffinities.contains(person.contact.affinity)
+                newState.mapSelectedAffinities.contains(person.affinity)
             }).map({ person in
                 return person.nearestHomeLocation(to: focusedCoordinate)
             }).filter({ result in
@@ -71,8 +71,8 @@ struct MapContactListViewControllerState {
                 }
             }).sorted(by: { r1, r2 in
                 // Prioritize affinity over distance from center
-                let a1 = r1.personLocation.person.contact.affinity.rawValue
-                let a2 = r2.personLocation.person.contact.affinity.rawValue
+                let a1 = r1.personLocation.person.affinity.rawValue
+                let a2 = r2.personLocation.person.affinity.rawValue
                 if (a1 != a2) {
                     return a1 < a2
                 }

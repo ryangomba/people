@@ -7,7 +7,7 @@ struct ActionViewControllerState: Equatable {
 
     init(newState: AppState) {
         let affinityPersons = newState.persons.filter({ person in
-            person.contact.affinity != .undefined && person.contact.affinity != .keep // TODO: show keep with a toggle
+            person.affinity != .undefined && person.affinity != .keep // TODO: show keep with a toggle
         })
         persons = affinityPersons.filter({ person in person.overdue })
         calendarEvents = newState.calendarEvents.filter({ calendarEvent in

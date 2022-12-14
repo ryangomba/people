@@ -20,10 +20,10 @@ class ContactAvatarView: UIView {
                 imageView.image = drawImage()
                 if (contacts.count == 1) {
                     let contact = contacts.first!
-                    if let iconName = contact.affinity.info.smallIconName {
+                    if let iconName = contact._affinity.info.smallIconName {
                         affinityImageView.image = .init(systemName: iconName)
                         affinityImageView.backgroundColor = .white
-                        affinityImageView.tintColor = contact.affinity.info.iconTintColor
+                        affinityImageView.tintColor = contact._affinity.info.iconTintColor
                     } else {
                         affinityImageView.image = nil
                     }

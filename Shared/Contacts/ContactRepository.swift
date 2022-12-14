@@ -157,7 +157,7 @@ class ContactRepository {
                         coordinate: coordinate
                     )
                 }),
-                affinity: affinityStore.get(deviceContact.identifier)
+                _affinity: affinityStore.get(deviceContact.identifier)
             )
         })
     }
@@ -358,7 +358,7 @@ class ContactRepository {
         for contactID in contactIDs {
             let contact = getContact(contactID)
             var newContact = contact
-            newContact.affinity = affinity
+            newContact._affinity = affinity
             affinityStore.update(contact.id, affinity: affinity)
             newContacts.append(newContact)
         }

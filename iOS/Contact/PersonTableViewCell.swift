@@ -26,10 +26,11 @@ class PersonTableViewCell: UITableViewCell {
     var personLocation: PersonLocation? {
         didSet {
             if let personLocation = personLocation {
-                let contact = personLocation.person.contact
+                let person = personLocation.person
+                let contact = person.contact
                 avatarView.contacts = [contact]
                 nameLabel.text = contact.displayName
-                let affinity = contact.affinity
+                let affinity = person.affinity
                 func setAffinity(_ affinity: ContactAffinity) {
                     app.contactRepository.updateContactAffinity(contact: contact, affinity: affinity)
                 }
