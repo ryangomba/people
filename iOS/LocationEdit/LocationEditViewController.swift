@@ -2,7 +2,7 @@ import UIKit
 import MapKit
 
 class LocationEditViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MKLocalSearchCompleterDelegate {
-    private let contactLocation: ContactLocation
+    private let personLocation: PersonLocation
     private let headerView = LocationEditHeader()
     private let tableView = UITableView()
     private let footerView = SimpleFooterView()
@@ -19,8 +19,8 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
         }
     }
 
-    init(contactLocation: ContactLocation) {
-        self.contactLocation = contactLocation
+    init(personLocation: PersonLocation) {
+        self.personLocation = personLocation
         super.init(nibName: nil, bundle: nil)
 
         completer.delegate = self
@@ -181,16 +181,17 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
             postalAddress.value.subLocality = "";
         }
         var newContact: Contact
-        if let oldPostalAddress = contactLocation.postalAddress {
-            newContact = app.contactRepository.updatePostalAddress(contact: contactLocation.contact, old: oldPostalAddress, new: postalAddress)
+        if let oldPostalAddress = personLocation.postalAddress {
+            newContact = app.contactRepository.updatePostalAddress(contact: personLocation.person.contact, old: oldPostalAddress, new: postalAddress)
         } else {
-            newContact = app.contactRepository.addPostalAddress(contact: contactLocation.contact, postalAddress: postalAddress)
+            newContact = app.contactRepository.addPostalAddress(contact: personLocation.person.contact, postalAddress: postalAddress)
         }
-        let newContactLocation = ContactLocation(
-            contact: newContact,
+        let newPerson = Person(contact: newContact, calendarEvents: personLocation.person.calendarEvents, latestEvent: personLocation.person.latestEvent)
+        let newPersonLocation = PersonLocation(
+            person: newPerson,
             postalAddress: postalAddress
         )
-        app.store.dispatch(ContactLocationEdited(location: newContactLocation))
+        app.store.dispatch(PersonLocationEdited(location: newPersonLocation))
     }
 
     func updateFooterVisibility() {

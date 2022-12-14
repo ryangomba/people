@@ -3,12 +3,12 @@ import ReSwift
 
 struct ContactClusterAnnotationViewState: Equatable {
     var isSelected: Bool
-    var selectedContactLocation: ContactLocation?
+    var selectedPersonLocation: PersonLocation?
 
     init(coordinate: CLLocationCoordinate2D, newState: AppState) {
         isSelected = newState.mapSelection?.coordinate == coordinate
         if isSelected {
-            selectedContactLocation = newState.mapSelection?.contactLocation
+            selectedPersonLocation = newState.mapSelection?.personLocation
         }
     }
 }
@@ -75,7 +75,7 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
                 fatalError("Expected contact annotations as members")
             }
             return memberAnnotations.sorted {
-                $0.contactLocation.contact < $1.contactLocation.contact
+                $0.personLocation.person < $1.personLocation.person
             }
         }
         return []
@@ -97,12 +97,12 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
 
     private func updateSelection(animated: Bool) {
         let isSelected = currentState?.isSelected ?? false
-        let selectedContactLocation = currentState?.selectedContactLocation
+        let selectedPersonLocation = currentState?.selectedPersonLocation
 
-        if let selectedContactLocation = selectedContactLocation {
-            avatarView.contacts = [selectedContactLocation.contact]
+        if let selectedPersonLocation = selectedPersonLocation {
+            avatarView.contacts = [selectedPersonLocation.person.contact]
         } else {
-            avatarView.contacts = contactAnnotations.map({ $0.contactLocation.contact })
+            avatarView.contacts = contactAnnotations.map({ $0.personLocation.person.contact })
         }
 
         func applyChanges() {
@@ -125,7 +125,7 @@ final class ContactClusterAnnotationView: MKAnnotationView, StoreSubscriber {
         if let annotation = annotation as? MKClusterAnnotation {
             app.store.dispatch(MapAnnotationSelected(
                 coordinate: fixedAnnotationCoordinate(annotation),
-                contactLocation: nil,
+                personLocation: nil,
                 isCluster: true
             ))
         }

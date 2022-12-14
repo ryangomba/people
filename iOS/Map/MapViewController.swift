@@ -4,23 +4,23 @@ import ReSwift
 
 struct MapViewControllerState: Equatable {
     var region: MKCoordinateRegion
-    var locatedContacts: [ContactLocation] = []
+    var locatedContacts: [PersonLocation] = []
 
     init(newState: AppState) {
         region = newState.mapRegion
-        newState.contacts.filter({ contact in
-            if (newState.mapSelectedAffinities.contains(contact.affinity)) {
+        newState.persons.filter({ person in
+            if (newState.mapSelectedAffinities.contains(person.contact.affinity)) {
                 return true
             }
-            if (contact.id == newState.mapSelection?.contactLocation?.contact.id) {
+            if (person.id == newState.mapSelection?.personLocation?.person.id) {
                 // Show selected friend on map even if it doesn’t match affinity
                 return true
             }
             return false
-        }).forEach { contact in
-            contact.homeAddresses.forEach { postalAddress in
+        }).forEach { person in
+            person.contact.homeAddresses.forEach { postalAddress in
                 if postalAddress.coordinate != nil {
-                    locatedContacts.append(ContactLocation(contact: contact, postalAddress: postalAddress))
+                    locatedContacts.append(PersonLocation(person: person, postalAddress: postalAddress))
                 }
             }
         }
@@ -104,20 +104,20 @@ class MapViewController: UIViewController, StoreSubscriber, MKMapViewDelegate {
         }
     }
 
-    private func updateContactAnnotations(locatedContacts: [ContactLocation]) {
+    private func updateContactAnnotations(locatedContacts: [PersonLocation]) {
         let existingAnnotations = mapView.annotations.filter { annotation in
             return annotation is ContactAnnotation
         } as! [ContactAnnotation]
 
         let annotationsToRemove = existingAnnotations.filter { existingAnnotation in
-            return !locatedContacts.contains(existingAnnotation.contactLocation)
+            return !locatedContacts.contains(existingAnnotation.personLocation)
         }
 
-        let existingContactLocations = existingAnnotations.map { $0.contactLocation }
-        let annotationsToUpdate = locatedContacts.filter { contactLocation in
-            return !existingContactLocations.contains(contactLocation)
-        }.map { contactLocation in
-            ContactAnnotation(contactLocation)
+        let existingPersonLocations = existingAnnotations.map { $0.personLocation }
+        let annotationsToUpdate = locatedContacts.filter { personLocation in
+            return !existingPersonLocations.contains(personLocation)
+        }.map { personLocation in
+            ContactAnnotation(personLocation)
         }
 
         print("Removing \(annotationsToRemove.count) annotations and updating \(annotationsToUpdate.count)")

@@ -2,10 +2,10 @@ import UIKit
 import ReSwift
 
 struct ContactListViewControllerState {
-    var contacts: [Contact]
+    var persons: [Person]
 
     init(newState: AppState) {
-        contacts = newState.contacts.search(query: newState.listSearchQuery)
+        persons = newState.persons.search(query: newState.listSearchQuery)
     }
 }
 
@@ -34,7 +34,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(LocationSearchResultTableViewCell.self, forCellReuseIdentifier: LocationSearchResultTableViewCell.reuseIdentifier)
-        tableView.register(ContactTableViewCell.self, forCellReuseIdentifier: ContactTableViewCell.reuseIdentifier)
+        tableView.register(PersonTableViewCell.self, forCellReuseIdentifier: PersonTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.scrollIndicatorInsets = .init(top: 0, left: 0, bottom: Padding.normal, right: 0)
@@ -73,7 +73,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
         let prevState = currentState
         currentState = state
 
-        if state.contacts != prevState.contacts {
+        if state.persons != prevState.persons {
             tableView.scrollToTop(animated: false)
             tableView.reloadData()
             updateFooter();
@@ -82,7 +82,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
 
     func updateFooter() {
         footerView.text = "No results";
-        let hasResults = currentState.contacts.count > 0;
+        let hasResults = currentState.persons.count > 0;
         footerView.isHidden = hasResults;
     }
 
@@ -117,7 +117,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return currentState.contacts.count
+            return currentState.persons.count
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -126,7 +126,7 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return ContactTableViewCell.preferredHeight
+            return PersonTableViewCell.preferredHeight
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -135,10 +135,10 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.reuseIdentifier, for: indexPath) as! ContactTableViewCell
-            let contact = currentState.contacts[indexPath.row];
-            let contactLocation = ContactLocation(contact: contact, postalAddress: nil) // TODO: different type of cell?
-            cell.contactLocation = contactLocation
+            let cell = tableView.dequeueReusableCell(withIdentifier: PersonTableViewCell.reuseIdentifier, for: indexPath) as! PersonTableViewCell
+            let person = currentState.persons[indexPath.row];
+            let personLocation = PersonLocation(person: person, postalAddress: nil) // TODO: different type of cell?
+            cell.personLocation = personLocation
             return cell
         default:
             fatalError("Invalid section: \(indexPath.section)")
@@ -148,10 +148,10 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         switch indexPath.section {
         case 0:
-            let contact = currentState.contacts[indexPath.row]
+            let person = currentState.persons[indexPath.row]
             return UISwipeActionsConfiguration(actions: [
                 UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
-                    self.onConfirmDeleteContact(contact, didDelete: onCompletion)
+                    self.onConfirmDeleteContact(person.contact, didDelete: onCompletion)
                 })
             ])
         default:
@@ -162,9 +162,9 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            let contact = currentState.contacts[indexPath.row]
-            let contactLocation = ContactLocation(contact: contact, postalAddress: nil) // TODO: change
-            let vc = ContactDetailViewController(contactLocation: contactLocation)
+            let person = currentState.persons[indexPath.row]
+            let personLocation = PersonLocation(person: person, postalAddress: nil) // TODO: change
+            let vc = ContactDetailViewController(personLocation: personLocation)
             vc.hidesBottomBarWhenPushed = true;
             self.navigationController?.pushViewController(vc, animated: true)
         default:

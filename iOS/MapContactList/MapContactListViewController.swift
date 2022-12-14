@@ -3,7 +3,7 @@ import MapKit
 import ReSwift
 
 private enum Section: Int {
-    case searchResults, contactLocations, count
+    case searchResults, personLocations, count
 }
 
 enum MapZoomScale: Int {
@@ -14,7 +14,7 @@ enum MapZoomScale: Int {
 struct MapContactListViewControllerState {
     var searchQuery: String?
     var clusterTitle: String?
-    var contactLocations: [ContactLocation]
+    var personLocations: [PersonLocation]
     var mapZoomScale: MapZoomScale = .regional
 
     init(newState: AppState) {
@@ -35,50 +35,50 @@ struct MapContactListViewControllerState {
         let clusterSelected = newState.mapSelection?.fromCluster ?? false
         if clusterSelected {
             let coordinate = newState.mapSelection!.coordinate
-            contactLocations = []
+            personLocations = []
             var postalAddresses: [PostalAddress] = []
-            newState.contacts.forEach({ contact in
+            newState.persons.forEach({ person in
                 // Be sure to only select the first matching address in the case of duplicates
-                contact.homeAddresses.forEach { postalAddress in
+                person.contact.homeAddresses.forEach { postalAddress in
                     if postalAddress.coordinate == coordinate {
                         postalAddresses.append(postalAddress)
-                        contactLocations.append(ContactLocation(contact: contact, postalAddress: postalAddress))
+                        personLocations.append(PersonLocation(person: person, postalAddress: postalAddress))
                     }
                 }
             })
             clusterTitle = postalAddresses.sameLocationSharedDescription
         } else if newState.mapIsSearching {
             let query = query.lowercased()
-            contactLocations = newState.contacts.search(query: query).map({ contact in
-                return contact.nearestHomeLocation(to: focusedCoordinate)
+            personLocations = newState.persons.search(query: query).map({ person in
+                return person.nearestHomeLocation(to: focusedCoordinate)
             }).map({ result in
-                return result.contactLocation
+                return result.personLocation
             })
         } else {
             var adjustedRegion = newState.mapRegion
             if adjustedRegion.span.longitudeDelta == 0 {
                 adjustedRegion.span.longitudeDelta = adjustedRegion.span.latitudeDelta * 0.66 // TODO: this is super hacky
             }
-            contactLocations = newState.contacts.filter({ contact in
-                newState.mapSelectedAffinities.contains(contact.affinity)
-            }).map({ contact in
-                return contact.nearestHomeLocation(to: focusedCoordinate)
+            personLocations = newState.persons.filter({ person in
+                newState.mapSelectedAffinities.contains(person.contact.affinity)
+            }).map({ person in
+                return person.nearestHomeLocation(to: focusedCoordinate)
             }).filter({ result in
-                if let coordinate = result.contactLocation.postalAddress?.coordinate {
+                if let coordinate = result.personLocation.postalAddress?.coordinate {
                     return adjustedRegion.contains(coordinate)
                 } else {
                     return false
                 }
             }).sorted(by: { r1, r2 in
                 // Prioritize affinity over distance from center
-                let a1 = r1.contactLocation.contact.affinity.rawValue
-                let a2 = r2.contactLocation.contact.affinity.rawValue
+                let a1 = r1.personLocation.person.contact.affinity.rawValue
+                let a2 = r2.personLocation.person.contact.affinity.rawValue
                 if (a1 != a2) {
                     return a1 < a2
                 }
                 return r1.distance < r2.distance
             }).map({ result in
-                return result.contactLocation
+                return result.personLocation
             })
         }
     }
@@ -113,7 +113,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(LocationSearchResultTableViewCell.self, forCellReuseIdentifier: LocationSearchResultTableViewCell.reuseIdentifier)
-        tableView.register(ContactTableViewCell.self, forCellReuseIdentifier: ContactTableViewCell.reuseIdentifier)
+        tableView.register(PersonTableViewCell.self, forCellReuseIdentifier: PersonTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.scrollIndicatorInsets = .init(top: 0, left: 0, bottom: Padding.normal, right: 0)
@@ -171,7 +171,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
                 completer.queryFragment = ""
             }
         }
-        if state.contactLocations != prevState.contactLocations || state.mapZoomScale != prevState.mapZoomScale {
+        if state.personLocations != prevState.personLocations || state.mapZoomScale != prevState.mapZoomScale {
             tableView.reloadData()
         }
         if state.clusterTitle != prevState.clusterTitle {
@@ -187,7 +187,7 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         } else {
             footerView.text = "Nobody nearby";
         }
-        let hasResults = currentState.contactLocations.count + filteredLocationResults.count > 0;
+        let hasResults = currentState.personLocations.count + filteredLocationResults.count > 0;
         let isSearching = !completer.queryFragment.isEmpty && completer.isSearching;
         footerView.isHidden = hasResults || isSearching;
     }
@@ -228,8 +228,8 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         switch section {
         case Section.searchResults.rawValue:
             return min(filteredLocationResults.count, 1)
-        case Section.contactLocations.rawValue:
-            return currentState.contactLocations.count
+        case Section.personLocations.rawValue:
+            return currentState.personLocations.count
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -239,8 +239,8 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         switch indexPath.section {
         case Section.searchResults.rawValue:
             return LocationSearchResultTableViewCell.preferredHeight
-        case Section.contactLocations.rawValue:
-            return ContactTableViewCell.preferredHeight
+        case Section.personLocations.rawValue:
+            return PersonTableViewCell.preferredHeight
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -254,9 +254,9 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
             cell.title = result.title
             cell.subtitle = result.subtitle
             return cell
-        case Section.contactLocations.rawValue:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContactTableViewCell.reuseIdentifier, for: indexPath) as! ContactTableViewCell
-            cell.contactLocation = currentState.contactLocations[indexPath.row]
+        case Section.personLocations.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: PersonTableViewCell.reuseIdentifier, for: indexPath) as! PersonTableViewCell
+            cell.personLocation = currentState.personLocations[indexPath.row]
             switch currentState.mapZoomScale {
             case .local:
                 cell.subtitleType = .addressLocal
@@ -273,11 +273,11 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         switch indexPath.section {
         case Section.searchResults.rawValue:
             return nil
-        case Section.contactLocations.rawValue:
-            let contactLocation = currentState.contactLocations[indexPath.row]
+        case Section.personLocations.rawValue:
+            let personLocation = currentState.personLocations[indexPath.row]
             return UISwipeActionsConfiguration(actions: [
                 UIContextualAction(style: .destructive, title: "Delete", handler: { (action, view, onCompletion) in
-                    self.onConfirmDeleteContact(contactLocation.contact, didDelete: onCompletion)
+                    self.onConfirmDeleteContact(personLocation.person.contact, didDelete: onCompletion)
                 })
             ])
         default:
@@ -304,9 +304,9 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
                 }
             }
             break
-        case Section.contactLocations.rawValue:
-            let contactLocation = currentState.contactLocations[indexPath.row]
-            app.store.dispatch(MapContactLocationSelected(location: contactLocation))
+        case Section.personLocations.rawValue:
+            let personLocation = currentState.personLocations[indexPath.row]
+            app.store.dispatch(MapPersonLocationSelected(location: personLocation))
             tableView.scrollToTop(animated: false)
         default:
             fatalError("Invalid section: \(indexPath.section)")

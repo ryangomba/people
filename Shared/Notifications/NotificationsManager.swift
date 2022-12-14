@@ -62,21 +62,15 @@ class NotificationsManager {
     }
 
     public func requestAuthorization() {
-        requestAuthorization { ok, error in
-            // noop
+        UNUserNotificationCenter.current().requestAuthorization(options: .badge) { ok, error in
+            self.updateAuthorizationStatusAsync()
         }
-    }
-
-    private func requestAuthorization(completionHandler: @escaping (Bool, Error?) -> Void) {
-        assert(Thread.isMainThread)
-
-        UNUserNotificationCenter.current().requestAuthorization(options: .badge, completionHandler: completionHandler)
     }
 
     public func updateBadgeCount(badgeCount: Int) {
         assert(Thread.isMainThread)
 
-        requestAuthorization { ok, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: .badge) { ok, error in
             if ok {
                 UNUserNotificationCenter.current().setBadgeCount(badgeCount)
             }

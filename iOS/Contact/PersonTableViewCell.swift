@@ -1,13 +1,13 @@
 import UIKit
 
-enum ContactTableViewCellSubtitleType: Int {
+enum PersonTableViewCellSubtitleType: Int {
     case addressLocal = 1
     case addressRegional = 2
     case lastSeen = 3
     case none = 4
 }
 
-class ContactTableViewCell: UITableViewCell {
+class PersonTableViewCell: UITableViewCell {
     static let reuseIdentifier = "contactCell"
     static let preferredHeight: CGFloat = Sizing.defaultListItemHeight
 
@@ -17,16 +17,16 @@ class ContactTableViewCell: UITableViewCell {
     private let actionButton = UIButton()
     private var subtitleConstraints: [NSLayoutConstraint] = []
 
-    var subtitleType: ContactTableViewCellSubtitleType = .none {
+    var subtitleType: PersonTableViewCellSubtitleType = .none {
         didSet {
             updateSubtitleLabel()
         }
     }
 
-    var contactLocation: ContactLocation? {
+    var personLocation: PersonLocation? {
         didSet {
-            if let contactLocation = contactLocation {
-                let contact = contactLocation.contact
+            if let personLocation = personLocation {
+                let contact = personLocation.person.contact
                 avatarView.contacts = [contact]
                 nameLabel.text = contact.displayName
                 let affinity = contact.affinity
@@ -49,7 +49,21 @@ class ContactTableViewCell: UITableViewCell {
                         }),
                     ]
                 }
-                let actionMenu = UIMenu(children: contactActions + [
+                let scheduleMenu = UIMenu(title: "Schedule", image: UIImage(systemName: "calendar.badge.plus"), children: [
+                    UIAction(title: "We talked", image: UIImage(systemName: "phone.fill"), handler: { (_) in
+                        app.calendarRepository.createCalendarEventForRecentCall(contact: contact)
+                    }),
+                    UIAction(title: "We texted", image: UIImage(systemName: "text.bubble.fill"), handler: { (_) in
+                        app.calendarRepository.createCalendarEventForRecentTexting(contact: contact)
+                    }),
+                    UIAction(title: "Schedule call", image: UIImage(systemName: "phone.fill.badge.plus"), handler: { (_) in
+                        app.calendarRepository.createCalendarEventForUpcomingCall(contact: contact)
+                    }),
+                    UIAction(title: "Schedule meetup", image: UIImage(systemName: "person.2.fill"), handler: { (_) in
+                        app.calendarRepository.createCalendarEventForUpcomingMeetup(contact: contact)
+                    }),
+                ])
+                let actionMenu = UIMenu(children: contactActions + [scheduleMenu] + [
                     UIMenu(title: "\(affinity.info.title)", image: UIImage(systemName: affinity.info.selectedIconName), children: ContactAffinity.all().map({ affinityInfo in
                         let selected = affinityInfo.affinity == affinity
                         return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
@@ -67,33 +81,23 @@ class ContactTableViewCell: UITableViewCell {
     }
 
     func updateSubtitleLabel() {
-        if let contactLocation = contactLocation {
+        if let personLocation = personLocation {
             switch subtitleType {
             case .addressLocal:
-                if let postalAddress = contactLocation.postalAddress {
+                if let postalAddress = personLocation.postalAddress {
                     subtitleLabel.text = postalAddress.value.formattedStreet ?? postalAddress.value.formattedCityState
                 } else {
                     subtitleLabel.text = "No location"
                 }
             case .addressRegional:
-                if let postalAddress = contactLocation.postalAddress {
+                if let postalAddress = personLocation.postalAddress {
                     subtitleLabel.text = postalAddress.value.formattedCityState
                 } else {
                     subtitleLabel.text = "No location"
                 }
             case .lastSeen:
-                // TODO: do this upstream, and de-dupe logic
-                let days = contactLocation.contact.affinity.info.days
-                let lastEvent = app.store.state.calendarEvents.filter({ calendarEvent in
-                    // Look ahead the same number of days
-                    calendarEvent.startDate < Date().addingTimeInterval(60 * 60 * 24 * TimeInterval(days))
-                }).first { calendarEvent in
-                    calendarEvent.attendeeEmails.contains { emailAddress in
-                        contactLocation.contact.emailAddresses.contains(emailAddress)
-                    }
-                }
-                if let lastEvent = lastEvent {
-                    subtitleLabel.text = lastEvent.endDate.formatRelative()
+                if let latestEvent = personLocation.person.latestEvent {
+                    subtitleLabel.text = latestEvent.endDate.formatRelative()
                 } else {
                     subtitleLabel.text = "No event"
                 }

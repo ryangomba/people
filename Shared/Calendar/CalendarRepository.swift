@@ -123,6 +123,7 @@ class CalendarRepository {
                 })
                 calendarEvents.append(CalendarEvent(
                     id: event.eventIdentifier,
+                    externalID: event.calendarItemExternalIdentifier,
                     title: event.title,
                     startDate: event.startDate,
                     endDate: event.endDate,
@@ -149,6 +150,75 @@ class CalendarRepository {
         assert(Thread.isMainThread)
 
         return calendarEvents.first { c in c.id == id }!
+    }
+
+    // Opening
+
+    public func openCalendarEvent(_ calendarEvent: CalendarEvent, googleCalendar: Bool = true) {
+        if (googleCalendar) {
+            let compositeIDString = String(calendarEvent.externalID.split(separator: "@").first!) + " ryan@ryangomba.com" // TODO: hack!
+            let eventID = compositeIDString.data(using: .utf8)!.base64EncodedString()
+            let url = URL(string: "com.google.calendar://?action=view&type=event&eid=\(eventID)")!
+            UIApplication.shared.open(url)
+        } else {
+            // It seems that it only accepts an offset from January 01, 2001.
+            let seconds = Int(calendarEvent.startDate.timeIntervalSinceReferenceDate)
+            let url = URL(string: "calshow:\(seconds)")!
+            UIApplication.shared.open(url)
+        }
+    }
+
+    // Create
+
+    public func createCalendarEventForRecentCall(contact: Contact) {
+        let start = Date()
+        let end = Date().addingTimeInterval(60*30) // 30 min
+        openGoogleCalendarEventCreationPrompt(contact: contact, start: start, end: end, prefix: "Called")
+    }
+
+    public func createCalendarEventForRecentTexting(contact: Contact) {
+        let start = Date()
+        let end = Date().addingTimeInterval(60*30) // 30 min
+        openGoogleCalendarEventCreationPrompt(contact: contact, start: start, end: end, prefix: "Texted")
+    }
+
+    public func createCalendarEventForUpcomingCall(contact: Contact) {
+        let start = Date()
+        let end = Date().addingTimeInterval(60*30) // 30 min
+        openGoogleCalendarEventCreationPrompt(contact: contact, start: start, end: end, prefix: "Call")
+    }
+
+    public func createCalendarEventForUpcomingMeetup(contact: Contact) {
+        let start = Date()
+        let end = Date().addingTimeInterval(60*180) // 1.5 hours
+        openGoogleCalendarEventCreationPrompt(contact: contact, start: start, end: end, prefix: "Meet with")
+    }
+
+    // TODO: create local event instead?
+    private func openGoogleCalendarEventCreationPrompt(contact: Contact, start: Date, end: Date, prefix: String) {
+        var urlString = "com.google.calendar://?action=create"
+
+        var title = (prefix + " ").addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        title += contact.displayName.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        urlString += "&title=\(title)"
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
+        let startString = dateFormatter.string(from: start)
+        let endString = dateFormatter.string(from: end)
+        let dateString = "\(startString)/\(endString)"
+        urlString += "&dates=\(dateString)"
+
+        urlString += "&add=" + contact.aliasEmail
+
+        // Other options:
+        // urlString += "&description="
+        // urlString += "&location="
+        // urlString += "&isallday="
+
+        let url = URL(string: urlString)!
+        UIApplication.shared.open(url)
     }
 
 }

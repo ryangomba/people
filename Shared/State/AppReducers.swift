@@ -33,20 +33,22 @@ func appReducer(action: Action, state: AppState?) -> AppState {
 
     case let action as ContactsChanged:
         state.contacts = action.newContacts
+        state.persons = personsFromContacts(state.contacts, calendarEvents: state.calendarEvents)
         // Make sure we update the selected contact
         // because information about it might have changed
         // TODO: this is inelegant
-        if let selectedContactLocation = state.mapSelection?.contactLocation {
-            if let updatedContact = action.newContacts.first(where: { $0.id == selectedContactLocation.contact.id }) {
-                state.mapSelection?.contactLocation = ContactLocation(
-                    contact: updatedContact,
-                    postalAddress: selectedContactLocation.postalAddress
+        if let selectedPersonLocation = state.mapSelection?.personLocation {
+            if let updatedPerson = state.persons.first(where: { $0.id == selectedPersonLocation.person.id }) {
+                state.mapSelection?.personLocation = PersonLocation(
+                    person: updatedPerson,
+                    postalAddress: selectedPersonLocation.postalAddress
                 )
             }
         }
 
     case let action as CalendarChanged:
         state.calendarEvents = action.newCalendarEvents
+        state.persons = personsFromContacts(state.contacts, calendarEvents: state.calendarEvents)
 
     case let action as GeocoderQueueCountChanged:
         state.geocoderQueueCount = action.newCount
@@ -76,14 +78,14 @@ func appReducer(action: Action, state: AppState?) -> AppState {
         zoomToCoordinate(coordinate: action.coordinate)
         state.mapSelection = MapContactSelection(
             coordinate: action.coordinate,
-            contactLocation: action.contactLocation,
+            personLocation: action.personLocation,
             fromCluster: action.isCluster
         )
         if action.isCluster && state.mapContactListDetentIdentifier == .collapsed {
             state.mapContactListDetentIdentifier = .small
         }
 
-    case let action as MapContactLocationSelected:
+    case let action as MapPersonLocationSelected:
         state.mapSearchQuery = ""
         state.mapIsSearching = false
         if state.mapContactListDetentIdentifier == .large {
@@ -98,13 +100,13 @@ func appReducer(action: Action, state: AppState?) -> AppState {
         }
         state.mapSelection = MapContactSelection(
             coordinate: coordinate,
-            contactLocation: action.location,
+            personLocation: action.location,
             fromCluster: state.mapSelection?.fromCluster ?? false
         )
 
     case _ as MapContactDetailsDismissed:
         if state.mapSelection?.fromCluster ?? false {
-            state.mapSelection?.contactLocation = nil
+            state.mapSelection?.personLocation = nil
         } else {
             state.mapSelection = nil
         }
@@ -135,15 +137,15 @@ func appReducer(action: Action, state: AppState?) -> AppState {
     case let action as MapContactDetailsDetentChanged:
         state.mapContactDetailsDetentIdentifier = action.detentIdentifier
 
-    case let action as MapContactLocationSelectedForEdit:
-        state.mapContactLocationForEdit = action.location
+    case let action as MapPersonLocationSelectedForEdit:
+        state.mapPersonLocationForEdit = action.location
 
-    case let action as ContactLocationEdited:
-        state.mapContactLocationForEdit = nil
+    case let action as PersonLocationEdited:
+        state.mapPersonLocationForEdit = nil
         let coordinate = action.location.postalAddress?.coordinate
         state.mapSelection = MapContactSelection(
             coordinate: coordinate,
-            contactLocation: action.location,
+            personLocation: action.location,
             fromCluster: false
         )
         if let coordinate = coordinate {
@@ -151,7 +153,7 @@ func appReducer(action: Action, state: AppState?) -> AppState {
         }
 
     case let action as ContactPhotoChanged:
-        if action.contact.id == state.mapSelection?.contactLocation?.contact.id {
+        if action.contact.id == state.mapSelection?.personLocation?.person.contact.id {
             if state.mapContactDetailsDetentIdentifier == .large {
                 state.mapContactDetailsDetentIdentifier = .normal
             }

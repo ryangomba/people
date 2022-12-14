@@ -4,7 +4,7 @@ import MapKit
 
 struct MapContactSelection: Equatable {
     var coordinate: CLLocationCoordinate2D?
-    var contactLocation: ContactLocation?
+    var personLocation: PersonLocation?
     var fromCluster: Bool
 }
 
@@ -18,6 +18,7 @@ struct AppState {
     // Data
     var contacts: [Contact] = []
     var calendarEvents: [CalendarEvent] = []
+    var persons: [Person] = []
     var geocoderQueueCount: Int = 0
 
     // List
@@ -35,5 +36,5 @@ struct AppState {
     var mapSearchQuery = ""
     var mapSelectedAffinities: [ContactAffinity] = ContactAffinity.allCases
     var mapContactDetailsDetentIdentifier: UISheetPresentationController.Detent.Identifier = .normal
-    var mapContactLocationForEdit: ContactLocation?
+    var mapPersonLocationForEdit: PersonLocation?
 }

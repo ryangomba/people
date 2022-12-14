@@ -12,6 +12,7 @@ struct CalendarEvent: Identifiable, Equatable, Comparable {
         return lhs.id < rhs.id
     }
     var id: String
+    var externalID: String
     var title: String
     var startDate: Date
     var endDate: Date

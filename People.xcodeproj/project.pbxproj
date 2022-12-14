@@ -14,8 +14,9 @@
 		941DA39429402270002779A4 /* CalendarEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */; };
 		941DA39629411009002779A4 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA39529411009002779A4 /* DateExtensions.swift */; };
 		941DA398294111A5002779A4 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA397294111A5002779A4 /* StringExtensions.swift */; };
-		941DA39A2941167C002779A4 /* ContactSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA3992941167C002779A4 /* ContactSearch.swift */; };
+		941DA39A2941167C002779A4 /* PersonSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DA3992941167C002779A4 /* PersonSearch.swift */; };
 		94324F2A28BF34B000D9B104 /* LocationAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94324F2928BF34B000D9B104 /* LocationAuthManager.swift */; };
+		94328135294A43C3001BE0DE /* PersonsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94328134294A43C3001BE0DE /* PersonsRepository.swift */; };
 		9433AC1C28AD65EB00323AAE /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1B28AD65EB00323AAE /* Contact.swift */; };
 		9433AC1F28AD81E400323AAE /* CoreLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */; };
 		9433AC2228AD8C7900323AAE /* MapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9433AC2128AD8C7900323AAE /* MapLayout.swift */; };
@@ -42,7 +43,7 @@
 		94945F5328AC74CE00F52EC8 /* ContactAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5228AC74CE00F52EC8 /* ContactAnnotationView.swift */; };
 		94945F5528AC791C00F52EC8 /* MapContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */; };
 		94945F5728AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */; };
-		94945F5928AC7EBB00F52EC8 /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */; };
+		94945F5928AC7EBB00F52EC8 /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5828AC7EBB00F52EC8 /* PersonTableViewCell.swift */; };
 		94945F5E28AC897F00F52EC8 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5D28AC897F00F52EC8 /* RootViewController.swift */; };
 		94945F6028AC8BC200F52EC8 /* ContactDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */; };
 		94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6228AC9AC500F52EC8 /* Layout.swift */; };
@@ -89,8 +90,9 @@
 		941DA39329402270002779A4 /* CalendarEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventTableViewCell.swift; sourceTree = "<group>"; };
 		941DA39529411009002779A4 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		941DA397294111A5002779A4 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
-		941DA3992941167C002779A4 /* ContactSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSearch.swift; sourceTree = "<group>"; };
+		941DA3992941167C002779A4 /* PersonSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonSearch.swift; sourceTree = "<group>"; };
 		94324F2928BF34B000D9B104 /* LocationAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAuthManager.swift; sourceTree = "<group>"; };
+		94328134294A43C3001BE0DE /* PersonsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsRepository.swift; sourceTree = "<group>"; };
 		9433AC1B28AD65EB00323AAE /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		9433AC1E28AD81E400323AAE /* CoreLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationExtensions.swift; sourceTree = "<group>"; };
 		9433AC2128AD8C7900323AAE /* MapLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayout.swift; sourceTree = "<group>"; };
@@ -116,7 +118,7 @@
 		94945F5228AC74CE00F52EC8 /* ContactAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAnnotationView.swift; sourceTree = "<group>"; };
 		94945F5428AC791C00F52EC8 /* MapContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListViewController.swift; sourceTree = "<group>"; };
 		94945F5628AC7A1900F52EC8 /* UISheetPresentationControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationControllerExtensions.swift; sourceTree = "<group>"; };
-		94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
+		94945F5828AC7EBB00F52EC8 /* PersonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTableViewCell.swift; sourceTree = "<group>"; };
 		94945F5D28AC897F00F52EC8 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailViewController.swift; sourceTree = "<group>"; };
 		94945F6228AC9AC500F52EC8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
@@ -193,6 +195,15 @@
 			path = Calendar;
 			sourceTree = "<group>";
 		};
+		94328133294A43B1001BE0DE /* Persons */ = {
+			isa = PBXGroup;
+			children = (
+				94328134294A43C3001BE0DE /* PersonsRepository.swift */,
+				941DA3992941167C002779A4 /* PersonSearch.swift */,
+			);
+			path = Persons;
+			sourceTree = "<group>";
+		};
 		9433AC2A28AE874A00323AAE /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,7 +248,6 @@
 			isa = PBXGroup;
 			children = (
 				9433AC1B28AD65EB00323AAE /* Contact.swift */,
-				941DA3992941167C002779A4 /* ContactSearch.swift */,
 				9433AC3628B00CCE00323AAE /* PostalAddress.swift */,
 				94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */,
 				94BA6CC02750B5070026B566 /* ContactAffinityStore.swift */,
@@ -295,7 +305,7 @@
 		94945F5C28AC88A500F52EC8 /* Contact */ = {
 			isa = PBXGroup;
 			children = (
-				94945F5828AC7EBB00F52EC8 /* ContactTableViewCell.swift */,
+				94945F5828AC7EBB00F52EC8 /* PersonTableViewCell.swift */,
 				94945F5F28AC8BC200F52EC8 /* ContactDetailViewController.swift */,
 				9433AC2828AE834400323AAE /* ContactDetailHeader.swift */,
 				9433AC2B28AE877E00323AAE /* ContactLocationTableViewCell.swift */,
@@ -388,6 +398,7 @@
 				94945F4428AC2FBC00F52EC8 /* State */,
 				94945F4528AC2FD900F52EC8 /* Contacts */,
 				941DA38D293FEF76002779A4 /* Calendar */,
+				94328133294A43B1001BE0DE /* Persons */,
 				94945F4D28AC4EE700F52EC8 /* Extensions */,
 				943DE22B29411EBF00CDAE8F /* Notifications */,
 				94945F4828AC304600F52EC8 /* Geocoding */,
@@ -552,6 +563,7 @@
 				94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */,
 				94EA8D6E28C0122C00D7E68D /* AppPermissionsView.swift in Sources */,
 				9433AC3928B1FF2300323AAE /* ContactClusterAnnotationView.swift in Sources */,
+				94328135294A43C3001BE0DE /* PersonsRepository.swift in Sources */,
 				945FB16D28BD9BEC002D3023 /* UITableViewExtensions.swift in Sources */,
 				9406FBCE293BBFFA000F96F1 /* SimpleFooterView.swift in Sources */,
 				94F5AAC627500F28009276E7 /* Geocoder.swift in Sources */,
@@ -575,9 +587,9 @@
 				94EA8D6228BFE41400D7E68D /* OnboardingViewController.swift in Sources */,
 				94945F4F28AC4EF500F52EC8 /* MapKitExtensions.swift in Sources */,
 				94945F4C28AC31CC00F52EC8 /* MapViewController.swift in Sources */,
-				941DA39A2941167C002779A4 /* ContactSearch.swift in Sources */,
+				941DA39A2941167C002779A4 /* PersonSearch.swift in Sources */,
 				94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */,
-				94945F5928AC7EBB00F52EC8 /* ContactTableViewCell.swift in Sources */,
+				94945F5928AC7EBB00F52EC8 /* PersonTableViewCell.swift in Sources */,
 				94945F2128AC2AAA00F52EC8 /* AppActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

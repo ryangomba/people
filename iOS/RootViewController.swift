@@ -8,7 +8,7 @@ struct RootViewControllerState: Equatable {
     var mapContentListDetentIdentifer: UISheetPresentationController.Detent.Identifier
     var mapContentDetailsDetentIdentifer: UISheetPresentationController.Detent.Identifier
     var mapSelectedContact: MapContactSelection?
-    var mapSelectedContactLocationForEdit: ContactLocation?
+    var mapSelectedPersonLocationForEdit: PersonLocation?
 
     init(newState: AppState) {
         accessGranted = (
@@ -21,7 +21,7 @@ struct RootViewControllerState: Equatable {
         mapContentListDetentIdentifer = newState.mapContactListDetentIdentifier
         mapContentDetailsDetentIdentifer = newState.mapContactDetailsDetentIdentifier
         mapSelectedContact = newState.mapSelection
-        mapSelectedContactLocationForEdit = newState.mapContactLocationForEdit
+        mapSelectedPersonLocationForEdit = newState.mapPersonLocationForEdit
     }
 }
 
@@ -30,7 +30,7 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     private let mapVC = MapViewController()
     private let contactListVC = MapContactListViewController()
     private var contactDetailVC: ContactDetailViewController?
-    private var contactLocationEditVC: LocationEditViewController?
+    private var personLocationEditVC: LocationEditViewController?
     private var onboardingVC: OnboardingViewController?
 
     init() {
@@ -114,17 +114,17 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
             }
         }
         if state.mapSelectedContact != prevState?.mapSelectedContact {
-            if let mapSelectedContactLocation = state.mapSelectedContact?.contactLocation {
-                presentContactDetails(mapSelectedContactLocation)
+            if let mapSelectedPersonLocation = state.mapSelectedContact?.personLocation {
+                presentContactDetails(mapSelectedPersonLocation)
             } else {
                 dismissContactDetails()
             }
         }
-        if state.mapSelectedContactLocationForEdit != prevState?.mapSelectedContactLocationForEdit {
-            if let location = state.mapSelectedContactLocationForEdit {
-                presentContactLocationForEdit(contactLocation: location)
+        if state.mapSelectedPersonLocationForEdit != prevState?.mapSelectedPersonLocationForEdit {
+            if let location = state.mapSelectedPersonLocationForEdit {
+                presentPersonLocationForEdit(personLocation: location)
             } else {
-                dismissContactLocationForEdit()
+                dismissPersonLocationForEdit()
             }
         }
         presentOrDismissOnboarding()
@@ -199,12 +199,12 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
         mapVC.present(contactListVC, animated: false)
     }
 
-    private func presentContactDetails(_ contactLocation: ContactLocation) {
+    private func presentContactDetails(_ personLocation: PersonLocation) {
         if let contactDetailVC = contactDetailVC {
-            contactDetailVC.contactLocation = contactLocation
+            contactDetailVC.personLocation = personLocation
             return // already presented
         }
-        let contactDetailVC = ContactDetailViewController(contactLocation: contactLocation)
+        let contactDetailVC = ContactDetailViewController(personLocation: personLocation)
         contactDetailVC.isModalInPresentation = true // prevent dismissal
         if let sheet = contactDetailVC.sheetPresentationController {
             sheet.detents = [.collapsed, .normal, .large()]
@@ -222,26 +222,26 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
         contactDetailVC = nil
     }
 
-    private func presentContactLocationForEdit(contactLocation: ContactLocation) {
-        if contactLocationEditVC != nil {
+    private func presentPersonLocationForEdit(personLocation: PersonLocation) {
+        if personLocationEditVC != nil {
             return // already presented
         }
         guard let contactDetailVC = contactDetailVC else {
             fatalError("No contact details presented; cannot edit location")
         }
-        let contactLocationEditVC = LocationEditViewController(contactLocation: contactLocation)
-        contactLocationEditVC.isModalInPresentation = true // prevent dismissal
-        if let sheet = contactLocationEditVC.sheetPresentationController {
+        let personLocationEditVC = LocationEditViewController(personLocation: personLocation)
+        personLocationEditVC.isModalInPresentation = true // prevent dismissal
+        if let sheet = personLocationEditVC.sheetPresentationController {
             sheet.detents = [.large()]
             sheet.delegate = self
         }
-        contactDetailVC.present(contactLocationEditVC, animated: true)
-        self.contactLocationEditVC = contactLocationEditVC
+        contactDetailVC.present(personLocationEditVC, animated: true)
+        self.personLocationEditVC = personLocationEditVC
     }
 
-    private func dismissContactLocationForEdit() {
-        contactLocationEditVC?.dismiss(animated: true)
-        contactLocationEditVC = nil
+    private func dismissPersonLocationForEdit() {
+        personLocationEditVC?.dismiss(animated: true)
+        personLocationEditVC = nil
     }
 
 }

@@ -4,8 +4,8 @@ import ReSwift
 struct ContactAnnotationViewState: Equatable {
     var isSelected: Bool
 
-    init(contactLocation: ContactLocation, newState: AppState) {
-        isSelected = newState.mapSelection?.contactLocation == contactLocation
+    init(personLocation: PersonLocation, newState: AppState) {
+        isSelected = newState.mapSelection?.personLocation == personLocation
     }
 }
 
@@ -44,7 +44,7 @@ class ContactAnnotationView: MKAnnotationView, StoreSubscriber {
         if let contactAnnotation = annotation as? ContactAnnotation {
             app.store.dispatch(MapAnnotationSelected(
                 coordinate: contactAnnotation.coordinate,
-                contactLocation: contactAnnotation.contactLocation,
+                personLocation: contactAnnotation.personLocation,
                 isCluster: false
             ))
         }
@@ -57,8 +57,8 @@ class ContactAnnotationView: MKAnnotationView, StoreSubscriber {
             if let contactAnnotation = annotation as? ContactAnnotation {
                 app.store.subscribe(self) { subscription in
                     return subscription.select { newState in
-                        let contactLocation = contactAnnotation.contactLocation
-                        return ContactAnnotationViewState(contactLocation: contactLocation, newState: newState)
+                        let personLocation = contactAnnotation.personLocation
+                        return ContactAnnotationViewState(personLocation: personLocation, newState: newState)
                     }
                 }
             }
@@ -79,7 +79,7 @@ class ContactAnnotationView: MKAnnotationView, StoreSubscriber {
         super.prepareForDisplay()
 
         if let annotation = annotation as? ContactAnnotation {
-            avatarView.contacts = [annotation.contactLocation.contact]
+            avatarView.contacts = [annotation.personLocation.person.contact]
         }
     }
 

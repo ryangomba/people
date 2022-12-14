@@ -54,7 +54,7 @@ struct FocusRegionalLocation: Action {
 
 struct MapAnnotationSelected: Action {
     let coordinate: CLLocationCoordinate2D
-    let contactLocation: ContactLocation?
+    let personLocation: PersonLocation?
     let isCluster: Bool
 }
 
@@ -74,8 +74,8 @@ struct MapSearchQueryChanged: Action {
     let searchQuery: String
 }
 
-struct MapContactLocationSelected: Action {
-    let location: ContactLocation
+struct MapPersonLocationSelected: Action {
+    let location: PersonLocation
 }
 
 struct MapContactDetailsDismissed: Action {}
@@ -84,16 +84,16 @@ struct MapLocationDetailsDismissed: Action {}
 
 // Map selected contact
 
-struct MapContactLocationSelectedForEdit: Action {
-    let location: ContactLocation?
+struct MapPersonLocationSelectedForEdit: Action {
+    let location: PersonLocation?
 }
 
 struct MapContactDetailsDetentChanged: Action {
     let detentIdentifier: UISheetPresentationController.Detent.Identifier
 }
 
-struct ContactLocationEdited: Action {
-    let location: ContactLocation
+struct PersonLocationEdited: Action {
+    let location: PersonLocation
 }
 
 struct ContactPhotoChanged: Action {
