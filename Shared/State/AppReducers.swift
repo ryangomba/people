@@ -25,15 +25,12 @@ func appReducer(action: Action, state: AppState?) -> AppState {
     case let action as ContactsAccessChanged:
         state.contactsAuthStatus = action.status
 
-    case let action as CalendarAccessChanged:
-        state.calendarAuthStatus = action.status
-
     case let action as NotificationsAccessChanged:
         state.notificationsAuthStatus = action.status
 
     case let action as ContactsChanged:
         state.contacts = action.newContacts
-        state.persons = personsFromContacts(state.contacts, calendarEvents: state.calendarEvents)
+        state.persons = personsFromContacts(state.contacts)
         // Make sure we update the selected contact
         // because information about it might have changed
         // TODO: this is inelegant
@@ -45,10 +42,6 @@ func appReducer(action: Action, state: AppState?) -> AppState {
                 )
             }
         }
-
-    case let action as CalendarChanged:
-        state.calendarEvents = action.newCalendarEvents
-        state.persons = personsFromContacts(state.contacts, calendarEvents: state.calendarEvents)
 
     case let action as GeocoderQueueCountChanged:
         state.geocoderQueueCount = action.newCount
@@ -161,7 +154,7 @@ func appReducer(action: Action, state: AppState?) -> AppState {
 
     case let action as PersonAffinityChanged:
         affinityStore.update(action.person.id, affinity: action.affinity)
-        state.persons = personsFromContacts(state.contacts, calendarEvents: state.calendarEvents)
+        state.persons = personsFromContacts(state.contacts)
 
     default:
         break

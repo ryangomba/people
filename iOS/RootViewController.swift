@@ -13,7 +13,6 @@ struct RootViewControllerState: Equatable {
     init(newState: AppState) {
         accessGranted = (
             newState.contactsAuthStatus == .authorized &&
-            newState.calendarAuthStatus == .authorized &&
             newState.locationAuthStatus == .authorized &&
             newState.notificationsAuthStatus == .authorized
         )
@@ -36,18 +35,14 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     init() {
         super.init(nibName: nil, bundle: nil)
 
-        let actionVC = UINavigationController(rootViewController: ActionViewController())
-        actionVC.tabBarItem = UITabBarItem(title: "Act", image: .init(systemName: "bolt"), selectedImage: .init(systemName: "bolt.fill"))
-        actionVC.navigationBar.prefersLargeTitles = true
-
         let listVC = UINavigationController(rootViewController: ContactListViewController())
         listVC.navigationBar.prefersLargeTitles = true
         listVC.tabBarItem = UITabBarItem(title: "List", image: .init(systemName: "list.bullet"), selectedImage: .init(systemName: "list.bullet"))
 
         mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), selectedImage: .init(systemName: "map.fill"))
 
-        self.viewControllers = [actionVC, listVC, mapVC]
-        self.selectedViewController = actionVC
+        self.viewControllers = [listVC, mapVC]
+        self.selectedViewController = listVC
         self.delegate = self
     }
 

@@ -3,7 +3,6 @@ import UIKit
 enum PersonTableViewCellSubtitleType: Int {
     case addressLocal = 1
     case addressRegional = 2
-    case lastSeen = 3
     case none = 4
 }
 
@@ -50,21 +49,7 @@ class PersonTableViewCell: UITableViewCell {
                         }),
                     ]
                 }
-                let scheduleMenu = UIMenu(title: "Schedule", image: UIImage(systemName: "calendar.badge.plus"), children: [
-                    UIAction(title: "We talked", image: UIImage(systemName: "phone.fill"), handler: { (_) in
-                        app.calendarRepository.createCalendarEventForRecentCall(contact: contact)
-                    }),
-                    UIAction(title: "We texted", image: UIImage(systemName: "text.bubble.fill"), handler: { (_) in
-                        app.calendarRepository.createCalendarEventForRecentTexting(contact: contact)
-                    }),
-                    UIAction(title: "Schedule call", image: UIImage(systemName: "phone.fill.badge.plus"), handler: { (_) in
-                        app.calendarRepository.createCalendarEventForUpcomingCall(contact: contact)
-                    }),
-                    UIAction(title: "Schedule meetup", image: UIImage(systemName: "person.2.fill"), handler: { (_) in
-                        app.calendarRepository.createCalendarEventForUpcomingMeetup(contact: contact)
-                    }),
-                ])
-                let actionMenu = UIMenu(children: contactActions + [scheduleMenu] + [
+                let actionMenu = UIMenu(children: contactActions + [
                     UIMenu(title: "\(affinity.info.title)", image: UIImage(systemName: affinity.info.selectedIconName), children: Affinity.all().map({ affinityInfo in
                         let selected = affinityInfo.affinity == affinity
                         return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
@@ -95,12 +80,6 @@ class PersonTableViewCell: UITableViewCell {
                     subtitleLabel.text = postalAddress.value.formattedCityState
                 } else {
                     subtitleLabel.text = "No location"
-                }
-            case .lastSeen:
-                if let latestEvent = personLocation.person.latestEvent {
-                    subtitleLabel.text = latestEvent.endDate.formatRelative()
-                } else {
-                    subtitleLabel.text = "No event"
                 }
             default:
                 subtitleLabel.text = ""

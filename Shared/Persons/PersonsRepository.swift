@@ -12,61 +12,27 @@ struct Person: Identifiable, Equatable, Comparable {
     }
     let contact: Contact
     let affinity: Affinity
-    let calendarEvents: [CalendarEvent]
-    let latestEvent: CalendarEvent?
     var id: String {
         get {
             return contact.id
         }
     }
-    // Percent overdue. 0.5 would be 50% overdue.
-    var overdue: Double {
-        if let latestEvent = latestEvent {
-            let days = affinity.info.days
-            let secondsUntilOverdue = 60 * 60 * 24 * TimeInterval(days)
-            let secondsSinceLatestEvent = Date().timeIntervalSince(latestEvent.endDate)
-            return (secondsSinceLatestEvent / secondsUntilOverdue) - 1
-        } else {
-            return 0
-        }
-    }
 }
 
-private func personFromContact(_ contact: Contact, rawCalendarEvents: [CalendarEvent]) -> Person {
+private func personFromContact(_ contact: Contact) -> Person {
     let affinity = affinityStore.get(contact.id)
-    let days = affinity.info.days
-    let calendarEvents = rawCalendarEvents.sorted().filter { calendarEvent in
-        // Look ahead the same number of days
-        calendarEvent.startDate < Date().addingTimeInterval(60 * 60 * 24 * TimeInterval(days))
-    }
     return Person(
         contact: contact,
-        affinity: affinity,
-        calendarEvents: calendarEvents,
-        latestEvent: calendarEvents.first
+        affinity: affinity
     )
 }
 
-func personsFromContacts(_ contacts: [Contact], calendarEvents: [CalendarEvent]) -> [Person] {
-    if contacts.isEmpty || calendarEvents.isEmpty {
+func personsFromContacts(_ contacts: [Contact]) -> [Person] {
+    if contacts.isEmpty {
         return []
     }
-    var emailToCalendarEventsMap: [String: [CalendarEvent]] = [:]
-    for calendarEvent in calendarEvents {
-        for attendeeEmail in calendarEvent.attendeeEmails {
-            if let events = emailToCalendarEventsMap[attendeeEmail] {
-                emailToCalendarEventsMap[attendeeEmail] = events + [calendarEvent]
-            } else {
-                emailToCalendarEventsMap[attendeeEmail] = [calendarEvent]
-            }
-        }
-    }
     return contacts.map { contact in
-        var matchingCalendarEvents: [CalendarEvent] = []
-        for email in contact.emailAddresses {
-            matchingCalendarEvents += emailToCalendarEventsMap[email] ?? []
-        }
-        return personFromContact(contact, rawCalendarEvents: matchingCalendarEvents)
+        return personFromContact(contact)
     }
 }
 

@@ -187,7 +187,7 @@ class LocationEditViewController: UIViewController, UITableViewDataSource, UITab
         } else {
             newContact = app.contactRepository.addPostalAddress(contact: personLocation.person.contact, postalAddress: postalAddress)
         }
-        let newPerson = Person(contact: newContact, affinity: personLocation.person.affinity, calendarEvents: personLocation.person.calendarEvents, latestEvent: personLocation.person.latestEvent)
+        let newPerson = Person(contact: newContact, affinity: personLocation.person.affinity)
         let newPersonLocation = PersonLocation(
             person: newPerson,
             postalAddress: postalAddress

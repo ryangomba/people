@@ -3,13 +3,11 @@ import ReSwift
 
 struct PermissionsViewControllerState: Equatable {
     var contactsAuthStatus: ContactsAuthStatus
-    var calendarAuthStatus: CalendarAuthStatus
     var locationAuthStatus: LocationAuthStatus
     var notificationsAuthStatus: NotificationsAuthStatus
 
     init(newState: AppState) {
         contactsAuthStatus = newState.contactsAuthStatus
-        calendarAuthStatus = newState.calendarAuthStatus
         locationAuthStatus = newState.locationAuthStatus
         notificationsAuthStatus = newState.notificationsAuthStatus
     }
@@ -18,7 +16,6 @@ struct PermissionsViewControllerState: Equatable {
 class PermissionsViewController: UIViewController, StoreSubscriber {
     public var currentState: PermissionsViewControllerState?
     private var contactsPermissionsView = AppPermissionsView()
-    private var calendarPermissionsView = AppPermissionsView()
     private var locationPermissionsView = AppPermissionsView()
     private var notificationsPermissionsView = AppPermissionsView()
 
@@ -69,26 +66,6 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
             locationPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        calendarPermissionsView.configure(
-            text: "Allow access to your calendar\nto know when to reach out",
-            buttonTitle: "Allow access to Calendar",
-            buttonAction: UIAction() { _ in
-                if self.currentState?.calendarAuthStatus == .notDetermined {
-                    app.calendarRepository.requestAuthorization()
-                } else {
-                    UIApplication.openAppSettings()
-                }
-            }
-        )
-        view.addSubview(calendarPermissionsView)
-        calendarPermissionsView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            calendarPermissionsView.topAnchor.constraint(equalTo: locationPermissionsView.bottomAnchor),
-            calendarPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
-            calendarPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            calendarPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-
         notificationsPermissionsView.configure(
             text: "Allow notifications\nto badge the app",
             buttonTitle: "Enable app badge",
@@ -103,7 +80,7 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
         view.addSubview(notificationsPermissionsView)
         notificationsPermissionsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            notificationsPermissionsView.topAnchor.constraint(equalTo: calendarPermissionsView.bottomAnchor),
+            notificationsPermissionsView.topAnchor.constraint(equalTo: locationPermissionsView.bottomAnchor),
             notificationsPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
             notificationsPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             notificationsPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -135,9 +112,6 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
     func updateAuthorizationStatuses() {
         if currentState?.contactsAuthStatus == .authorized {
             contactsPermissionsView.completed = true
-        }
-        if currentState?.calendarAuthStatus == .authorized {
-            calendarPermissionsView.completed = true
         }
         if currentState?.locationAuthStatus == .authorized {
             locationPermissionsView.completed = true

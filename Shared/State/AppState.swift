@@ -12,12 +12,10 @@ struct AppState {
     // Auth statuses
     var locationAuthStatus: LocationAuthStatus
     var contactsAuthStatus: ContactsAuthStatus
-    var calendarAuthStatus: CalendarAuthStatus
     var notificationsAuthStatus: NotificationsAuthStatus
 
     // Data
     var contacts: [Contact] = []
-    var calendarEvents: [CalendarEvent] = []
     var persons: [Person] = []
     var geocoderQueueCount: Int = 0
 
