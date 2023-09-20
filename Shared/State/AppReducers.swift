@@ -25,9 +25,6 @@ func appReducer(action: Action, state: AppState?) -> AppState {
     case let action as ContactsAccessChanged:
         state.contactsAuthStatus = action.status
 
-    case let action as NotificationsAccessChanged:
-        state.notificationsAuthStatus = action.status
-
     case let action as ContactsChanged:
         state.contacts = action.newContacts
         state.persons = personsFromContacts(state.contacts)

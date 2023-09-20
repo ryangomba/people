@@ -4,12 +4,10 @@ import ReSwift
 struct PermissionsViewControllerState: Equatable {
     var contactsAuthStatus: ContactsAuthStatus
     var locationAuthStatus: LocationAuthStatus
-    var notificationsAuthStatus: NotificationsAuthStatus
 
     init(newState: AppState) {
         contactsAuthStatus = newState.contactsAuthStatus
         locationAuthStatus = newState.locationAuthStatus
-        notificationsAuthStatus = newState.notificationsAuthStatus
     }
 }
 
@@ -17,7 +15,6 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
     public var currentState: PermissionsViewControllerState?
     private var contactsPermissionsView = AppPermissionsView()
     private var locationPermissionsView = AppPermissionsView()
-    private var notificationsPermissionsView = AppPermissionsView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,26 +61,6 @@ class PermissionsViewController: UIViewController, StoreSubscriber {
             locationPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
             locationPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             locationPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-
-        notificationsPermissionsView.configure(
-            text: "Allow notifications\nto badge the app",
-            buttonTitle: "Enable app badge",
-            buttonAction: UIAction() { _ in
-                if self.currentState?.notificationsAuthStatus == .notDetermined {
-                    app.notificationsManager.requestAuthorization()
-                } else {
-                    UIApplication.openAppSettings()
-                }
-            }
-        )
-        view.addSubview(notificationsPermissionsView)
-        notificationsPermissionsView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            notificationsPermissionsView.topAnchor.constraint(equalTo: locationPermissionsView.bottomAnchor),
-            notificationsPermissionsView.heightAnchor.constraint(equalToConstant: permissionViewHeight),
-            notificationsPermissionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            notificationsPermissionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         updateAuthorizationStatuses()

@@ -12,7 +12,6 @@ struct AppState {
     // Auth statuses
     var locationAuthStatus: LocationAuthStatus
     var contactsAuthStatus: ContactsAuthStatus
-    var notificationsAuthStatus: NotificationsAuthStatus
 
     // Data
     var contacts: [Contact] = []

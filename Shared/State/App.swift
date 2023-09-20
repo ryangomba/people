@@ -4,7 +4,6 @@ import ReSwift
 class App {
     let locationAuthManager = LocationAuthManager()
     let contactRepository = ContactRepository()
-    let notificationsManager = NotificationsManager()
 
     let store: Store<AppState>
 
@@ -13,8 +12,7 @@ class App {
             reducer: appReducer,
             state: AppState(
                 locationAuthStatus: locationAuthManager.authorizationStatus,
-                contactsAuthStatus: contactRepository.authorizationStatus,
-                notificationsAuthStatus: notificationsManager.authorizationStatus
+                contactsAuthStatus: contactRepository.authorizationStatus
             )
         )
         locationAuthManager.listenForChanges()
