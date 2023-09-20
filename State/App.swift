@@ -8,6 +8,8 @@ class App {
     let store: Store<AppState>
 
     init() {
+        URLCache.shared.memoryCapacity = 10000000 // 10MB
+        URLCache.shared.diskCapacity = 100000000 // 100MB
         store = Store<AppState>(
             reducer: appReducer,
             state: AppState(
@@ -15,10 +17,11 @@ class App {
                 contactsAuthStatus: contactRepository.authorizationStatus
             )
         )
-        locationAuthManager.listenForChanges()
         contactRepository.sync()
-        URLCache.shared.memoryCapacity = 10000000 // 10MB
-        URLCache.shared.diskCapacity = 100000000 // 100MB
+        // HACK: this call requires the singleton "app" to be defined below
+        DispatchQueue.main.async {
+            self.locationAuthManager.listenForChanges()
+        }
     }
 }
 

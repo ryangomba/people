@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "94F5AA8C274FF834009276E7"
                BuildableName = "People.app"
-               BlueprintName = "People (iOS)"
+               BlueprintName = "People"
                ReferencedContainer = "container:People.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -56,7 +56,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "94F5AA8C274FF834009276E7"
             BuildableName = "People.app"
-            BlueprintName = "People (iOS)"
+            BlueprintName = "People"
             ReferencedContainer = "container:People.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -73,7 +73,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "94F5AA8C274FF834009276E7"
             BuildableName = "People.app"
-            BlueprintName = "People (iOS)"
+            BlueprintName = "People"
             ReferencedContainer = "container:People.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -44,6 +44,7 @@
 		94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6228AC9AC500F52EC8 /* Layout.swift */; };
 		94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6428AC9E4000F52EC8 /* Colors.swift */; };
 		94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */; };
+		94B7118E2ABAA7B500A8F83F /* People-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94B7118D2ABAA7B500A8F83F /* People-Info.plist */; };
 		94BA6CC12750B5070026B566 /* AffinityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6CC02750B5070026B566 /* AffinityStore.swift */; };
 		94D36D24293BE1E900184B3B /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D36D23293BE1E900184B3B /* ContactListViewController.swift */; };
 		94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8510C28F47F67009D12EE /* ArrayExtensions.swift */; };
@@ -114,13 +115,14 @@
 		94945F6228AC9AC500F52EC8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		94945F6428AC9E4000F52EC8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContactListHeader.swift; sourceTree = "<group>"; };
+		94B7118C2ABAA77400A8F83F /* People.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = People.entitlements; sourceTree = "<group>"; };
+		94B7118D2ABAA7B500A8F83F /* People-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "People-Info.plist"; sourceTree = SOURCE_ROOT; };
 		94BA6CC02750B5070026B566 /* AffinityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffinityStore.swift; sourceTree = "<group>"; };
-		94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "People--iOS--Info.plist"; sourceTree = "<group>"; };
 		94D36D23293BE1E900184B3B /* ContactListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListViewController.swift; sourceTree = "<group>"; };
 		94D8510C28F47F67009D12EE /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		94DE154E28BDAAF3002281E5 /* PeopleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeopleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		94DE155028BDAAF3002281E5 /* PostalAddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostalAddressTests.swift; sourceTree = "<group>"; };
-		94E2829728DB70CD0009C27F /* Config-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Config-debug.xcconfig"; path = "Shared/Config-debug.xcconfig"; sourceTree = SOURCE_ROOT; };
+		94E2829728DB70CD0009C27F /* Config-debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Config-debug.xcconfig"; sourceTree = SOURCE_ROOT; };
 		94E2829828DB710E0009C27F /* NetworkImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkImageView.swift; sourceTree = "<group>"; };
 		94E2829A28DB71160009C27F /* ContactProfilePhotoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactProfilePhotoTableViewCell.swift; sourceTree = "<group>"; };
 		94E2829D28DB71210009C27F /* ProfilePhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotoCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -288,25 +290,6 @@
 			path = Appearance;
 			sourceTree = "<group>";
 		};
-		94D0C27B2752147700B3BBEC /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				94945F4928AC30BE00F52EC8 /* AppDelegate.swift */,
-				94945F5D28AC897F00F52EC8 /* RootViewController.swift */,
-				9433AC2A28AE874A00323AAE /* Common */,
-				94EA8D6028BFE40400D7E68D /* Onboarding */,
-				94945F5A28AC889A00F52EC8 /* Map */,
-				94945F5B28AC889F00F52EC8 /* MapContactList */,
-				94D36D22293BE1D300184B3B /* ContactList */,
-				94945F5C28AC88A500F52EC8 /* Contact */,
-				9433AC2D28AEA38300323AAE /* LocationEdit */,
-				94E2829C28DB71210009C27F /* ImageSearch */,
-				94D0C27A2752144A00B3BBEC /* People--iOS--Info.plist */,
-				94E2829728DB70CD0009C27F /* Config-debug.xcconfig */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
 		94D36D22293BE1D300184B3B /* ContactList */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,21 +298,14 @@
 			path = ContactList;
 			sourceTree = "<group>";
 		};
-		94E2829C28DB71210009C27F /* ImageSearch */ = {
-			isa = PBXGroup;
-			children = (
-				94E282A028DB71210009C27F /* ProfilePhotosViewController.swift */,
-				94E2829D28DB71210009C27F /* ProfilePhotoCollectionViewCell.swift */,
-				94E2829E28DB71210009C27F /* ProfilePhotoView.swift */,
-				94E2829F28DB71210009C27F /* ProfilePhotosHeader.swift */,
-			);
-			path = ImageSearch;
-			sourceTree = "<group>";
-		};
 		94E282A528DB713C0009C27F /* ImageSearch */ = {
 			isa = PBXGroup;
 			children = (
 				94E282A628DB713C0009C27F /* GoogleImageSearcher.swift */,
+				94E282A028DB71210009C27F /* ProfilePhotosViewController.swift */,
+				94E2829D28DB71210009C27F /* ProfilePhotoCollectionViewCell.swift */,
+				94E2829E28DB71210009C27F /* ProfilePhotoView.swift */,
+				94E2829F28DB71210009C27F /* ProfilePhotosHeader.swift */,
 			);
 			path = ImageSearch;
 			sourceTree = "<group>";
@@ -348,15 +324,12 @@
 		94F5AA80274FF834009276E7 = {
 			isa = PBXGroup;
 			children = (
-				94F5AA85274FF834009276E7 /* Shared */,
-				94D0C27B2752147700B3BBEC /* iOS */,
-				94F5AA8E274FF834009276E7 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		94F5AA85274FF834009276E7 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
+				94B7118C2ABAA77400A8F83F /* People.entitlements */,
+				94F5AA88274FF834009276E7 /* Assets.xcassets */,
+				94B7118D2ABAA7B500A8F83F /* People-Info.plist */,
+				94E2829728DB70CD0009C27F /* Config-debug.xcconfig */,
+				94945F4928AC30BE00F52EC8 /* AppDelegate.swift */,
+				94945F5D28AC897F00F52EC8 /* RootViewController.swift */,
 				94945F4428AC2FBC00F52EC8 /* State */,
 				94945F4528AC2FD900F52EC8 /* Contacts */,
 				94328136294A50B3001BE0DE /* Affinity */,
@@ -364,10 +337,16 @@
 				94945F4D28AC4EE700F52EC8 /* Extensions */,
 				94945F4828AC304600F52EC8 /* Geocoding */,
 				94945F6128AC9AB500F52EC8 /* Appearance */,
+				9433AC2A28AE874A00323AAE /* Common */,
+				94EA8D6028BFE40400D7E68D /* Onboarding */,
+				94945F5A28AC889A00F52EC8 /* Map */,
+				94945F5B28AC889F00F52EC8 /* MapContactList */,
+				94D36D22293BE1D300184B3B /* ContactList */,
+				94945F5C28AC88A500F52EC8 /* Contact */,
+				9433AC2D28AEA38300323AAE /* LocationEdit */,
 				94E282A528DB713C0009C27F /* ImageSearch */,
-				94F5AA88274FF834009276E7 /* Assets.xcassets */,
+				94F5AA8E274FF834009276E7 /* Products */,
 			);
-			path = Shared;
 			sourceTree = "<group>";
 		};
 		94F5AA8E274FF834009276E7 /* Products */ = {
@@ -400,9 +379,9 @@
 			productReference = 94DE154E28BDAAF3002281E5 /* PeopleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		94F5AA8C274FF834009276E7 /* People (iOS) */ = {
+		94F5AA8C274FF834009276E7 /* People */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 94F5AAB6274FF834009276E7 /* Build configuration list for PBXNativeTarget "People (iOS)" */;
+			buildConfigurationList = 94F5AAB6274FF834009276E7 /* Build configuration list for PBXNativeTarget "People" */;
 			buildPhases = (
 				94F5AA89274FF834009276E7 /* Sources */,
 				94F5AA8A274FF834009276E7 /* Frameworks */,
@@ -412,7 +391,7 @@
 			);
 			dependencies = (
 			);
-			name = "People (iOS)";
+			name = People;
 			packageProductDependencies = (
 				94945F1B28AC2A7000F52EC8 /* ReSwift */,
 			);
@@ -455,7 +434,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				94F5AA8C274FF834009276E7 /* People (iOS) */,
+				94F5AA8C274FF834009276E7 /* People */,
 				94DE154D28BDAAF3002281E5 /* PeopleTests */,
 			);
 		};
@@ -474,6 +453,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94F5AAB2274FF834009276E7 /* Assets.xcassets in Resources */,
+				94B7118E2ABAA7B500A8F83F /* People-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,7 +535,7 @@
 /* Begin PBXTargetDependency section */
 		94DE155328BDAAF3002281E5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 94F5AA8C274FF834009276E7 /* People (iOS) */;
+			target = 94F5AA8C274FF834009276E7 /* People */;
 			targetProxy = 94DE155228BDAAF3002281E5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -725,12 +705,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = People.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NKSX667Z2K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "iOS/People--iOS--Info.plist";
+				INFOPLIST_FILE = "People-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Allow access to your Contacts so you can see them on a map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to your location to automatically center the map";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -747,11 +729,11 @@
 				PRODUCT_NAME = People;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -760,12 +742,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = People.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NKSX667Z2K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "iOS/People--iOS--Info.plist";
+				INFOPLIST_FILE = "People-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSContactsUsageDescription = "Allow access to your Contacts so you can see them on a map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to your location to automatically center the map";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -782,11 +766,11 @@
 				PRODUCT_NAME = People;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -812,7 +796,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		94F5AAB6274FF834009276E7 /* Build configuration list for PBXNativeTarget "People (iOS)" */ = {
+		94F5AAB6274FF834009276E7 /* Build configuration list for PBXNativeTarget "People" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				94F5AAB7274FF834009276E7 /* Debug */,

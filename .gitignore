@@ -1,6 +1,4 @@
 .DS_Store
-
 xcuserdata
-
-Shared/Config-debug.xcconfig
+Config-debug.xcconfig
 
