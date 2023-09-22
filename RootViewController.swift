@@ -40,8 +40,14 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
 
         mapVC.tabBarItem = UITabBarItem(title: "Map", image: .init(systemName: "map"), selectedImage: .init(systemName: "map.fill"))
 
+#if AFFINITES_ENABLED
         self.viewControllers = [listVC, mapVC]
         self.selectedViewController = listVC
+#else
+        self.viewControllers = [mapVC]
+        self.selectedViewController = mapVC
+#endif
+
         self.delegate = self
     }
 
@@ -52,23 +58,19 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        // TODO: this is so, so hacky
-        view.window!.addSubview(self.tabBar)
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-//        mapVC.willMove(toParent: self)
-//        view.addSubview(mapVC.view)
-//        addChild(mapVC)
-//        mapVC.didMove(toParent: self)
+#if AFFINITES_ENABLED
+            // TODO: this is so, so hacky
+            view.window!.addSubview(self.tabBar)
+#endif
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-//        presentContactsList()
+        if selectedViewController == mapVC {
+            presentContactsList()
+        }
+
         presentOrDismissOnboarding()
 
         app.store.subscribe(self) { subscription in
@@ -181,7 +183,6 @@ class RootViewController: UITabBarController, StoreSubscriber, UISheetPresentati
     }
 
     private func presentContactsList() {
-//        contactListVC.view.tag = 99 // TODO: make constant
         contactListVC.isModalInPresentation = true // prevent dismissal
         if let sheet = contactListVC.sheetPresentationController {
             sheet.detents = [.collapsed, .small, .large()]

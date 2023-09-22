@@ -49,14 +49,16 @@ class PersonTableViewCell: UITableViewCell {
                         }),
                     ]
                 }
-                let actionMenu = UIMenu(children: contactActions + [
-                    UIMenu(title: "\(affinity.info.title)", image: UIImage(systemName: affinity.info.selectedIconName), children: Affinity.all().map({ affinityInfo in
-                        let selected = affinityInfo.affinity == affinity
-                        return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
-                            setAffinity(affinityInfo.affinity)
-                        })
-                    })),
-                ])
+                var children: [UIMenuElement] = contactActions
+#if AFFINITES_ENABLED
+                children.append(UIMenu(title: "\(affinity.info.title)", image: UIImage(systemName: affinity.info.selectedIconName), children: Affinity.all().map({ affinityInfo in
+                    let selected = affinityInfo.affinity == affinity
+                    return UIAction(title: affinityInfo.title, image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), state: selected ? .on : .off, handler: { (_) in
+                        setAffinity(affinityInfo.affinity)
+                    })
+                })))
+#endif
+                let actionMenu = UIMenu(children: children)
                 actionButton.menu = actionMenu
             } else {
                 avatarView.persons = []

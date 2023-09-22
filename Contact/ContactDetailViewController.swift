@@ -2,7 +2,14 @@ import UIKit
 import ReSwift
 
 private enum Section: Int {
-    case affinity, locations, photos, count
+#if AFFINITES_ENABLED
+    case affinity
+#endif
+    case locations
+#if PHOTOS_ENABLED
+    case photos
+#endif
+    case count
 }
 
 class ContactDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -100,12 +107,16 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
+#if AFFINITES_ENABLED
         case Section.affinity.rawValue:
             return nil
+#endif
         case Section.locations.rawValue:
             return nil
+#if PHOTOS_ENABLED
         case Section.photos.rawValue:
             return "Suggested photos"
+#endif
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -113,12 +124,16 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
+#if AFFINITES_ENABLED
         case Section.affinity.rawValue:
             return 1;
+#endif
         case Section.locations.rawValue:
             return homeAddresses.count + 1 // for add location cell
+#if PHOTOS_ENABLED
         case Section.photos.rawValue:
             return 1
+#endif
         default:
             fatalError("Invalid section: \(section)")
         }
@@ -126,16 +141,20 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+#if AFFINITES_ENABLED
         case Section.affinity.rawValue:
             return Sizing.defaultListItemHeight
+#endif
         case Section.locations.rawValue:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
                 return PersonLocationTableViewCell.preferredHeightForAddress(postalAddress: postalAddress)
             }
             return Sizing.defaultListItemHeight
+#if PHOTOS_ENABLED
         case Section.photos.rawValue:
             return ContactProfilePhotoTableViewCell.preferredHeight
+#endif
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -143,6 +162,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
+#if AFFINITES_ENABLED
         case Section.affinity.rawValue:
             let affinityInfo = person.affinity.info
             let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
@@ -171,6 +191,7 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
             cell.contentConfiguration = config
             cell.accessoryView = changeButton
             return cell
+#endif
         case Section.locations.rawValue:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
@@ -186,10 +207,12 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 cell.contentConfiguration = config
                 return cell
             }
+#if PHOTOS_ENABLED
         case Section.photos.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactProfilePhotoTableViewCell.reuseIdentifier, for: indexPath) as! ContactProfilePhotoTableViewCell
             cell.contact = contact
             return cell
+#endif
         default:
             fatalError("Invalid section: \(indexPath.section)")
         }
@@ -220,9 +243,11 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
+#if AFFINITES_ENABLED
         case Section.affinity.rawValue:
             // TODO: change affinity
             return
+#endif
         case Section.locations.rawValue:
             if indexPath.row < homeAddresses.count {
                 let postalAddress = homeAddresses[indexPath.row]
@@ -232,9 +257,11 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
                 let newPersonLocation = PersonLocation(person: person, postalAddress: nil)
                 app.store.dispatch(MapPersonLocationSelectedForEdit(location: newPersonLocation))
             }
+#if PHOTOS_ENABLED
         case Section.photos.rawValue:
             let vc = ProfilePhotosViewController(contact: contact)
             present(vc, animated: true)
+#endif
         default:
             return // noop
         }

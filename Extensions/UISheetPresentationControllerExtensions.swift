@@ -8,7 +8,11 @@ extension UISheetPresentationController.Detent.Identifier {
 
 extension UISheetPresentationController.Detent {
     public static let collapsed = UISheetPresentationController.Detent.custom(identifier: .collapsed) { context in
+        #if AFFINITES_ENABLED
         return 128
+        #else
+        return 72
+        #endif
     }
     public static let normal = UISheetPresentationController.Detent.custom(identifier: .normal) { context in
         return (context.maximumDetentValue * 0.4).rounded()

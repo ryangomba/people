@@ -191,26 +191,32 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
             attributedText.append(NSAttributedString(string: extraString))
             highlightedAttributedText.append(NSAttributedString(string: extraString))
 
-            titleButton.setAttributedTitle(attributedText, for: .normal)
-            titleButton.setAttributedTitle(highlightedAttributedText, for: .highlighted)
+#if AFFINITES_ENABLED
+                titleButton.setAttributedTitle(attributedText, for: .normal)
+                titleButton.setAttributedTitle(highlightedAttributedText, for: .highlighted)
 
-            // HACK move
-            let affinityMeny = UIMenu(title: "Filter to", children: Affinity.all().map({ affinityInfo in
-                let selected = currentState?.selectedAffinities.contains(affinityInfo.affinity) ?? false
-                return UIAction(title: "\(affinityInfo.title) friends", image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), attributes: .keepsMenuPresented, state: selected ? .on : .off, handler: { (_) in
-                    var newAffinities = self.currentState?.selectedAffinities ?? []
-                    if (newAffinities.contains(affinityInfo.affinity)) {
-                        if (newAffinities.count > 1) {
-                            newAffinities.removeAll { affinity in affinity == affinityInfo.affinity }
+                // HACK move
+                let affinityMenu = UIMenu(title: "Filter to", children: Affinity.all().map({ affinityInfo in
+                    let selected = currentState?.selectedAffinities.contains(affinityInfo.affinity) ?? false
+                    return UIAction(title: "\(affinityInfo.title) friends", image: UIImage(systemName: selected ? affinityInfo.selectedIconName : affinityInfo.iconName), attributes: .keepsMenuPresented, state: selected ? .on : .off, handler: { (_) in
+                        var newAffinities = self.currentState?.selectedAffinities ?? []
+                        if (newAffinities.contains(affinityInfo.affinity)) {
+                            if (newAffinities.count > 1) {
+                                newAffinities.removeAll { affinity in affinity == affinityInfo.affinity }
+                            }
+                        } else {
+                            newAffinities.append(affinityInfo.affinity)
                         }
-                    } else {
-                        newAffinities.append(affinityInfo.affinity)
-                    }
-                    app.store.dispatch(MapAffinityThresholdChanged(selectedAffinities: newAffinities))
-                })
-            }))
-            titleButton.menu = affinityMeny
-            titleButton.showsMenuAsPrimaryAction = true
+                        app.store.dispatch(MapAffinityThresholdChanged(selectedAffinities: newAffinities))
+                    })
+                }))
+                titleButton.menu = affinityMenu
+                titleButton.showsMenuAsPrimaryAction = true
+#else
+                titleButton.setTitle(attributedText.string, for: .normal)
+                titleButton.setTitleColor(UIColor.label, for: .normal)
+                titleButton.menu = nil
+#endif
 
             searchButton.isHidden = false
             dismissButton.isHidden = true

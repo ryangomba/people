@@ -12,12 +12,14 @@ enum MapZoomScale: Int {
 }
 
 struct MapContactListViewControllerState {
+    var didLoadPersons: Bool
     var searchQuery: String?
     var clusterTitle: String?
     var personLocations: [PersonLocation]
     var mapZoomScale: MapZoomScale = .regional
 
     init(newState: AppState) {
+        didLoadPersons = !newState.persons.isEmpty
         let regionSpan = newState.mapRegion.span
         switch regionSpan.latitudeDelta {
         case 0..<0.33:
@@ -189,7 +191,8 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         }
         let hasResults = currentState.personLocations.count + filteredLocationResults.count > 0;
         let isSearching = !completer.queryFragment.isEmpty && completer.isSearching;
-        footerView.isHidden = hasResults || isSearching;
+        let showNoResults = currentState.didLoadPersons && !hasResults && !isSearching
+        footerView.isHidden = !showNoResults
     }
 
     @objc

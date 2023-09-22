@@ -9,15 +9,20 @@ class PersonAvatarView: UIView {
 
     private let shadowed: Bool
     private let imageView = UIImageView()
+#if AFFINITES_ENABLED
     private let affinityImageView = UIImageView()
+#endif
 
     var persons: [Person] = [] {
         didSet {
             if persons.isEmpty {
                 imageView.image = nil
+#if AFFINITES_ENABLED
                 affinityImageView.image = nil
+#endif
             } else if persons != oldValue {
                 imageView.image = drawImage()
+#if AFFINITES_ENABLED
                 if (persons.count == 1) {
                     let person = persons.first!
                     if let iconName = person.affinity.info.smallIconName {
@@ -30,8 +35,11 @@ class PersonAvatarView: UIView {
                 } else {
                     affinityImageView.image = nil
                 }
+#endif
             }
+#if AFFINITES_ENABLED
             affinityImageView.isHidden = affinityImageView.image == nil
+#endif
         }
     }
 
@@ -48,6 +56,7 @@ class PersonAvatarView: UIView {
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
+#if AFFINITES_ENABLED
         if (!shadowed) {
             // HACK: make the option to show the affinity a top-level property
             affinityImageView.layer.cornerRadius = 8
@@ -60,6 +69,7 @@ class PersonAvatarView: UIView {
                 affinityImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: shadowed ? -1 : 2),
             ])
         }
+#endif
     }
 
     required init?(coder: NSCoder) {

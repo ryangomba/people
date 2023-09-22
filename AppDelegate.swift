@@ -4,12 +4,14 @@ import CoreLocation
 class Window: UIWindow {
     override func layoutSubviews() {
         super.layoutSubviews()
+#if AFFINITES_ENABLED
         let tabBar = subviews.first { view in
             return type(of: view) == UITabBar.self
         }
         if let tabBar = tabBar {
             addSubview(tabBar)
         }
+#endif
     }
 }
 

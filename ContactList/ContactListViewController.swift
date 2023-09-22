@@ -2,9 +2,11 @@ import UIKit
 import ReSwift
 
 struct ContactListViewControllerState {
+    var didLoadPersons: Bool
     var persons: [Person]
 
     init(newState: AppState) {
+        didLoadPersons = !newState.persons.isEmpty
         persons = newState.persons.search(query: newState.listSearchQuery)
     }
 }
@@ -83,7 +85,8 @@ class ContactListViewController: UIViewController, UITableViewDataSource, UITabl
     func updateFooter() {
         footerView.text = "No results";
         let hasResults = currentState.persons.count > 0;
-        footerView.isHidden = hasResults;
+        let showNoResults = currentState.didLoadPersons && !hasResults
+        footerView.isHidden = !showNoResults;
     }
 
     func updateSearchResults(for searchController: UISearchController) {
