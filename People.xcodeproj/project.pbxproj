@@ -44,7 +44,6 @@
 		94945F6328AC9AC500F52EC8 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6228AC9AC500F52EC8 /* Layout.swift */; };
 		94945F6528AC9E4000F52EC8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6428AC9E4000F52EC8 /* Colors.swift */; };
 		94945F6728AC9FC400F52EC8 /* MapContactListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94945F6628AC9FC400F52EC8 /* MapContactListHeader.swift */; };
-		94B7118E2ABAA7B500A8F83F /* People-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94B7118D2ABAA7B500A8F83F /* People-Info.plist */; };
 		94BA6CC12750B5070026B566 /* AffinityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6CC02750B5070026B566 /* AffinityStore.swift */; };
 		94D36D24293BE1E900184B3B /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D36D23293BE1E900184B3B /* ContactListViewController.swift */; };
 		94D8510D28F47F67009D12EE /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8510C28F47F67009D12EE /* ArrayExtensions.swift */; };
@@ -453,7 +452,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				94F5AAB2274FF834009276E7 /* Assets.xcassets in Resources */,
-				94B7118E2ABAA7B500A8F83F /* People-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,7 +717,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -756,7 +754,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

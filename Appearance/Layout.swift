@@ -9,6 +9,11 @@ struct Sizing {
     static let searchBarHeight: CGFloat = 36
     static let titleBarHeight: CGFloat = 40
     static let defaultListItemHeight: CGFloat = 64
+    #if targetEnvironment(macCatalyst)
+    static let defaultListItemPadding: CGFloat = 10 // scroll insets
+    #else
+    static let defaultListItemPadding: CGFloat = 20
+    #endif
 }
         
 struct Padding {

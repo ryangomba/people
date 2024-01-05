@@ -89,17 +89,19 @@ struct MapContactListViewControllerState {
 class MapContactListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, MKLocalSearchCompleterDelegate, StoreSubscriber {
     private var currentState = MapContactListViewControllerState(newState: app.store.state)
     private let headerView = MapContactListHeader()
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .plain)
     private let completer = MKLocalSearchCompleter()
     private let footerView = SimpleFooterView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        #if !targetEnvironment(macCatalyst)
         let blurEffect = UIBlurEffect(style: .systemThickMaterial)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = self.view.frame
         view.insertSubview(blurEffectView, at: 0)
+        #endif
 
         view.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -118,7 +120,11 @@ class MapContactListViewController: UIViewController, UITableViewDataSource, UIT
         tableView.register(PersonTableViewCell.self, forCellReuseIdentifier: PersonTableViewCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        #if targetEnvironment(macCatalyst)
+        tableView.contentInset = .init(top: Padding.tight, left: 0, bottom: 0, right: 0)
+        #else
         tableView.scrollIndicatorInsets = .init(top: 0, left: 0, bottom: Padding.normal, right: 0)
+        #endif
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

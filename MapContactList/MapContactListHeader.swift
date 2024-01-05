@@ -31,7 +31,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         titleButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             titleButton.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 2),
-            titleButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.normal),
+            titleButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Padding.normal),
             titleButton.heightAnchor.constraint(equalToConstant: Sizing.titleBarHeight),
         ])
 
@@ -45,7 +45,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchButton.centerYAnchor.constraint(equalTo: titleButton.centerYAnchor),
-            searchButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            searchButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             searchButton.widthAnchor.constraint(equalToConstant: searchButton.frame.width + Padding.normal * 2),
             searchButton.heightAnchor.constraint(equalToConstant: searchButton.frame.height + Padding.normal * 2),
         ])
@@ -60,7 +60,7 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             cancelButton.centerYAnchor.constraint(equalTo: titleButton.centerYAnchor),
-            cancelButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            cancelButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             cancelButton.widthAnchor.constraint(equalToConstant: cancelButton.frame.width + Padding.normal * 2),
             cancelButton.heightAnchor.constraint(equalToConstant: cancelButton.frame.height + Padding.normal * 2),
         ])
@@ -75,9 +75,9 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
         addSubview(searchBox)
         searchBox.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchBox.topAnchor.constraint(equalTo: topAnchor, constant: Padding.normal),
+            searchBox.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Padding.normal),
             searchBox.heightAnchor.constraint(equalToConstant: Sizing.titleBarHeight),
-            searchBox.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.normal),
+            searchBox.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Padding.normal),
             searchBox.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
         ])
 
@@ -130,7 +130,12 @@ class MapContactListHeader: UIView, UITextFieldDelegate, StoreSubscriber {
 
     private func updateClusterTitle() {
         if let clusterTitle = clusterTitle {
+            #if AFFINITES_ENABLED
             titleButton.setAttributedTitle(NSAttributedString(string: clusterTitle), for: .normal)
+            #else
+            titleButton.setTitle(clusterTitle, for: .normal)
+            titleButton.setTitleColor(UIColor.label, for: .normal)
+            #endif
             searchButton.isHidden = true
             dismissButton.isHidden = false
         } else {

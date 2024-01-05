@@ -30,11 +30,13 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
 
         var topAnchor = view.topAnchor;
         if (self.navigationController == nil) {
+            #if !targetEnvironment(macCatalyst)
             tableView.backgroundColor = .clear
             let blurEffect = UIBlurEffect(style: .systemThickMaterial)
             let blurEffectView = UIVisualEffectView(effect: blurEffect)
             blurEffectView.frame = self.view.frame
             view.insertSubview(blurEffectView, at: 0)
+            #endif
 
             view.addSubview(headerView)
             headerView.translatesAutoresizingMaskIntoConstraints = false

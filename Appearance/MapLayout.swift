@@ -7,15 +7,23 @@ struct MapSpanDelta {
 }
 
 func focusedCoordinateToMapCenter(_ coordinate: CLLocationCoordinate2D, for mapSpan: MKCoordinateSpan) -> CLLocationCoordinate2D {
+    var latitude = coordinate.latitude
+    #if !targetEnvironment(macCatalyst)
+    latitude -= mapSpan.latitudeDelta / 6
+    #endif
     return CLLocationCoordinate2D(
-        latitude: coordinate.latitude - mapSpan.latitudeDelta / 6,
+        latitude: latitude,
         longitude: coordinate.longitude
     )
 }
 
 func focusedCoordinateForMapRegion(_ region: MKCoordinateRegion) -> CLLocationCoordinate2D {
+    var latitude = region.center.latitude
+    #if !targetEnvironment(macCatalyst)
+    latitude += region.span.latitudeDelta / 6
+    #endif
     return CLLocationCoordinate2D(
-        latitude: region.center.latitude + region.span.latitudeDelta / 6,
+        latitude: latitude,
         longitude: region.center.longitude
     )
 }

@@ -72,6 +72,11 @@ class MapViewController: UIViewController, StoreSubscriber, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        #if targetEnvironment(macCatalyst)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+        navigationController?.setToolbarHidden(true, animated: animated)
+        #endif
+
         app.store.subscribe(self) { subscription in
             return subscription.select(MapViewControllerState.init)
         }

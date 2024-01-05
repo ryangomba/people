@@ -123,7 +123,7 @@ extension [PostalAddress] {
         let values = self.map { $0.value }
         if let firstValue = values.first {
             if values.allSatisfy({ !$0.street.isEmpty }) {
-                return firstValue.street
+                return firstValue.formattedStreet!
             }
             var subLocalitiesAllEqual = false
             var matchingSubLocality = ""

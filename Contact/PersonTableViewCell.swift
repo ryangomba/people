@@ -108,7 +108,7 @@ class PersonTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             avatarView.widthAnchor.constraint(equalToConstant: PersonAvatarView.normalSize),
             avatarView.heightAnchor.constraint(equalToConstant: PersonAvatarView.normalSize),
-            avatarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Padding.normal),
+            avatarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Sizing.defaultListItemPadding),
             avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
 
@@ -124,7 +124,7 @@ class PersonTableViewCell: UITableViewCell {
         contentView.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            actionButton.widthAnchor.constraint(equalToConstant: actionButton.frame.width + 2 * Padding.normal),
+            actionButton.widthAnchor.constraint(equalToConstant: actionButton.frame.width + 2 * Sizing.defaultListItemPadding),
             actionButton.heightAnchor.constraint(equalToConstant: contentView.frame.height),
             actionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             actionButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -135,7 +135,7 @@ class PersonTableViewCell: UITableViewCell {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: Padding.tight),
-            nameLabel.trailingAnchor.constraint(equalTo: actionButton.trailingAnchor, constant: -Padding.normal),
+            nameLabel.trailingAnchor.constraint(equalTo: actionButton.leadingAnchor),
         ])
 
         subtitleLabel.textColor = .gray
