@@ -23,19 +23,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = Window(frame: UIScreen.main.bounds)
 
         #if targetEnvironment(macCatalyst)
-        let splitVC = UISplitViewController(style: .doubleColumn)
-        splitVC.primaryBackgroundStyle = .sidebar
-        splitVC.preferredDisplayMode = .oneBesideSecondary
-        splitVC.displayModeButtonVisibility = .never
-        let contactListVC = MapContactListViewController()
-        splitVC.setViewController(contactListVC, for: .primary)
-        let mapVC = MapViewController()
-        splitVC.setViewController(mapVC, for: .secondary)
-        window!.rootViewController = splitVC
+        let rootVC = BigScreenRootViewController()
+        window!.rootViewController = rootVC
         window?.windowScene?.titlebar?.titleVisibility = .hidden
         window?.windowScene?.titlebar?.toolbar = nil
         #else
-        let rootVC = RootViewController()
+        let rootVC = SmallScreenRootViewController()
         window!.rootViewController = rootVC
         #endif
 
