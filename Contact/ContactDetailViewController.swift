@@ -28,22 +28,29 @@ class ContactDetailViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        var topAnchor = view.topAnchor;
+#if !targetEnvironment(macCatalyst)
         if (self.navigationController == nil) {
-            #if !targetEnvironment(macCatalyst)
             tableView.backgroundColor = .clear
             let blurEffect = UIBlurEffect(style: .systemThickMaterial)
             let blurEffectView = UIVisualEffectView(effect: blurEffect)
             blurEffectView.frame = self.view.frame
             view.insertSubview(blurEffectView, at: 0)
-            #endif
+        }
+#endif
 
+        var shouldShowHeader = true;
+#if !targetEnvironment(macCatalyst)
+        shouldShowHeader = self.navigationController == nil
+#endif
+
+        var topAnchor = view.topAnchor;
+        if (shouldShowHeader) {
             view.addSubview(headerView)
             headerView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             ])
             topAnchor = headerView.bottomAnchor;
         }
