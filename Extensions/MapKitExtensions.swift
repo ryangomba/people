@@ -1,12 +1,12 @@
 import MapKit
 
-extension MKCoordinateSpan: Equatable {
+extension MKCoordinateSpan: @retroactive Equatable {
     public static func == (lhs: MKCoordinateSpan, rhs: MKCoordinateSpan) -> Bool {
         return lhs.latitudeDelta == rhs.latitudeDelta && lhs.longitudeDelta == rhs.longitudeDelta
     }
 }
 
-extension MKCoordinateRegion: Equatable {
+extension MKCoordinateRegion: @retroactive Equatable {
     public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
         return lhs.center == rhs.center && lhs.span == rhs.span
     }
