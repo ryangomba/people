@@ -15,7 +15,7 @@ extension MKCoordinateRegion: Equatable {
 extension MKCoordinateRegion {
     public func contains(_ coordinate: CLLocationCoordinate2D) -> Bool {
         return (
-            cos((center.latitude - coordinate.latitude) * CGFloat.pi / 180) > cos(span.latitudeDelta / 2 * CGFloat.pi / 180) &&
+            cos((center.latitude - coordinate.latitude) * CGFloat.pi / 180) > cos(span.latitudeDelta / 2 * CGFloat.pi / 180.0) &&
             cos((center.longitude - coordinate.longitude) * CGFloat.pi / 180) > cos(span.longitudeDelta / 2 * CGFloat.pi / 180.0)
         )
     }
