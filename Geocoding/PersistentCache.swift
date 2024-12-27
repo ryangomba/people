@@ -29,14 +29,20 @@ class PersistentCache<T: Codable> {
     private func load() {
         if FileManager.default.fileExists(atPath: cacheURL.path) {
             let jsonData = try! String(contentsOfFile: cacheURL.path).data(using: .utf8)!
-            let decodedData = try! JSONDecoder().decode(CacheData<T>.self, from: jsonData)
-            cacheData = decodedData
+            do {
+                let decodedData = try JSONDecoder().decode(CacheData<T>.self, from: jsonData)
+                cacheData = decodedData
+            } catch {
+                print("Unexpected error decoding cache: \(error).")
+            }
         }
     }
 
     private func save() {
-        let data = try! JSONEncoder().encode(cacheData)
-        try! data.write(to: cacheURL)
+        if !cacheData.requests.isEmpty {
+            let data = try! JSONEncoder().encode(cacheData)
+            try! data.write(to: cacheURL)
+        }
     }
 
     func get(_ key: String) -> (cached: Bool, result: T?) {
