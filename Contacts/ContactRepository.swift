@@ -10,7 +10,7 @@ enum ContactsAuthStatus: Int {
     case denied = 3
 }
 
-class ContactRepository {
+class ContactRepository: @unchecked Sendable {
     public var authorizationStatus = getAuthorizationStatus()
     private let store = CNContactStore()
     private let geocoder = Geocoder()
